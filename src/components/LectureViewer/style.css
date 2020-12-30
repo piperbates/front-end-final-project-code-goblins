@@ -1,0 +1,15 @@
+#display {
+    display: flex;
+
+}
+
+h1, h2 {
+    display: inline;
+}
+
+h2 {
+    color: rgb(128, 128, 128);
+    font-size: small;
+    margin-left: 20px;
+
+}
