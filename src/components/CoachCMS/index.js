@@ -1,181 +1,185 @@
-import React from 'react'
-import 'antd/dist/antd.css';
-import { Form, Input, Button, Checkbox } from 'antd';
+import React from "react";
+import "antd/dist/antd.css";
+import { Form, Input, Button, DatePicker, InputNumber, Space } from "antd";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import Tags from "./tags";
 
+const ruleSet = [
+  {
+    required: false,
+    message: "Input required",
+  },
+];
+
 const layout = {
-    labelCol: {
-      span: 8,
-    },
-    wrapperCol: {
-      span: 16,
-    },
-  };
-  const tailLayout = {
-    wrapperCol: {
-      offset: 8,
-      span: 16,
-    },
-  };
+  labelCol: {
+    span: 8,
+  },
+  wrapperCol: {
+    span: 8,
+  },
+};
+const tailLayout = {
+  wrapperCol: {
+    offset: 8,
+    span: 8,
+  },
+};
 
-  function CoachCMS () {
-    const onFinish = (values) => {
-      console.log('Success:', values);
-    };
-  
-    const onFinishFailed = (errorInfo) => {
-      console.log('Failed:', errorInfo);
-    };
-  
-    return (
-      <Form
-        {...layout}
-        name="basic"
-        initialValues={{
-          remember: true,
-        }}
-        onFinish={onFinish}
-        onFinishFailed={onFinishFailed}
-      >
-        <Form.Item
-          label="Title"
-          name="title"
-          rules={[
-            {
-              required: true,
-              message: 'Please input title!',
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-  
-        <Form.Item
-          label="Lecturer"
-          name="lecturer"
-          rules={[
-            {
-              required: true,
-              message: 'Please input an Lecturer!',
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        
-        <Form.Item
-          label="Video URL"
-          name="video-url"
-          rules={[
-            {
-              required: true,
-              message: 'Please input Video URL!',
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label="Thumbnail URL"
-          name="thumbnail-url"
-          rules={[
-            {
-              required: true,
-              message: 'Please input Thumbnail URL!',
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Tags />
-
-        <Form.Item
-          label="Lecture Date"
-          name="lecture-date"
-          rules={[
-            {
-              required: true,
-              message: 'Please input Lecture Date!',
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label="Bootcamp Week"
-          name="bootcamp week"
-          rules={[
-            {
-              required: true,
-              message: 'Please input Bootcamp week!',
-            },
-          ]}
-        > {/* Drop down */}
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label="Video Description"
-          name="video-description"
-          rules={[
-            {
-              required: true,
-              message: 'Please input Video Description!',
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label="Github Links"
-          name="github-links"
-          rules={[
-            {
-              required: true,
-              message: 'Please input Github Links!',
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>{/* Array */}
-
-        <Form.Item
-          label="Slides"
-          name="slides"
-          rules={[
-            {
-              required: true,
-              message: 'Please input Slides!',
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item
-          label="Other Links"
-          name="other-links"
-          rules={[
-            {
-              required: false,
-              message: 'Please input Other Links!',
-            },
-          ]}
-        >
-          <Input />
-        </Form.Item>{/* Array */}
-  
-        <Form.Item {...tailLayout}>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
-        </Form.Item>
-      </Form>
-    );
+function CoachCMS() {
+  const onFinish = (values) => {
+    console.log(values);
   };
 
-export default CoachCMS
+  return (
+    <Form
+      {...layout}
+      name="cms"
+      initialValues={{
+        remember: true,
+      }}
+      onFinish={onFinish}
+    >
+      <Form.Item label="Video Title" name="videoTitle" rules={ruleSet}>
+        <Input />
+      </Form.Item>
+      <Form.Item label="Lecturer Name" name="lecturer" rules={ruleSet}>
+        <Input />
+      </Form.Item>
+      <Form.Item label="Video URL" name="videoUrl" rules={ruleSet}>
+        <Input />
+      </Form.Item>
+      <Form.Item label="Thumbnail URL" name="thumbnailUrl" rules={ruleSet}>
+        <Input />
+      </Form.Item>
+      <Form.Item label="Tags" name="tags" rules={ruleSet}>
+        <Tags name="tags" />
+      </Form.Item>
+
+      <Form.Item label="Lecture Date" name="date" rules={ruleSet} showToday>
+        <DatePicker />
+      </Form.Item>
+      <Form.Item label="Bootcamp Week" name="week" rules={ruleSet}>
+        <InputNumber />
+      </Form.Item>
+      <Form.Item label="Video Description" name="videoDesc" rules={ruleSet}>
+        <Input.TextArea />
+      </Form.Item>
+      <Form.Item label="Github Links" rules={ruleSet}>
+        <Form.List name="gitLinks">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map((field) => (
+                <Space
+                  key={field.key}
+                  style={{ display: "flex", marginBottom: 0 }}
+                  align="baseline"
+                >
+                  <Form.Item
+                    {...field}
+                    name={[field.name, "gitlink"]}
+                    fieldKey={[field.fieldKey, "gitlink"]}
+                    rules={ruleSet}
+                  >
+                    <Input placeholder="url" />
+                  </Form.Item>
+                  <MinusCircleOutlined onClick={() => remove(field.name)} />
+                </Space>
+              ))}
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  block
+                  icon={<PlusOutlined />}
+                >
+                  Add Github Link
+                </Button>
+              </Form.Item>
+            </>
+          )}
+        </Form.List>
+      </Form.Item>
+
+      <Form.Item label="Slide Links" rules={ruleSet}>
+        <Form.List name="slideLinks">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map((field) => (
+                <Space
+                  key={field.key}
+                  style={{ display: "flex", marginBottom: 0 }}
+                  align="baseline"
+                >
+                  <Form.Item
+                    {...field}
+                    name={[field.name, "slidelink"]}
+                    fieldKey={[field.fieldKey, "slidelink"]}
+                    rules={ruleSet}
+                  >
+                    <Input placeholder="url" />
+                  </Form.Item>
+                  <MinusCircleOutlined onClick={() => remove(field.name)} />
+                </Space>
+              ))}
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  block
+                  icon={<PlusOutlined />}
+                >
+                  Add Slide Link
+                </Button>
+              </Form.Item>
+            </>
+          )}
+        </Form.List>
+      </Form.Item>
+
+      <Form.Item label="Other Links" rules={ruleSet}>
+        <Form.List name="otherLinks">
+          {(fields, { add, remove }) => (
+            <>
+              {fields.map((field) => (
+                <Space
+                  key={field.key}
+                  style={{ display: "flex", marginBottom: 0 }}
+                  align="baseline"
+                >
+                  <Form.Item
+                    {...field}
+                    name={[field.name, "otherlink"]}
+                    fieldKey={[field.fieldKey, "otherlink"]}
+                    rules={ruleSet}
+                  >
+                    <Input placeholder="url" />
+                  </Form.Item>
+                  <MinusCircleOutlined onClick={() => remove(field.name)} />
+                </Space>
+              ))}
+              <Form.Item>
+                <Button
+                  type="dashed"
+                  onClick={() => add()}
+                  block
+                  icon={<PlusOutlined />}
+                >
+                  Add Other Link
+                </Button>
+              </Form.Item>
+            </>
+          )}
+        </Form.List>
+      </Form.Item>
+
+      <Form.Item {...tailLayout}>
+        <Button type="primary" htmlType="submit">
+          Submit
+        </Button>
+      </Form.Item>
+    </Form>
+  );
+}
+
+export default CoachCMS;

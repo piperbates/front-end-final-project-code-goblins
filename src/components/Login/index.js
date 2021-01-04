@@ -3,6 +3,7 @@ import { withRouter, Redirect } from "react-router";
 import app from "../../firebase/Base";
 import { AuthContext } from "../../firebase/Auth";
 import { Form, Input, Button } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 const layout = {
   labelCol: {
@@ -44,25 +45,21 @@ const Login = ({ history }) => {
     <div>
       <h1>Log in</h1>
 
-      <Form
-        {...layout}
-        name="basic"
-        initialValues={{
-          remember: true,
-        }}
-        onFinish={handleLogin}
-      >
+      <Form {...layout} name="login" onFinish={handleLogin}>
         <Form.Item
           label="Email"
           name="email"
           rules={[
             {
               required: true,
-              message: "Please input your email!",
+              message: "Email address required",
             },
           ]}
         >
-          <Input />
+          <Input
+            prefix={<UserOutlined className="site-form-item-icon" />}
+            placeholder="Email"
+          />
         </Form.Item>
 
         <Form.Item
@@ -71,11 +68,15 @@ const Login = ({ history }) => {
           rules={[
             {
               required: true,
-              message: "Please input your password!",
+              message: "Password required",
             },
           ]}
         >
-          <Input.Password />
+          <Input.Password
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            type="password"
+            placeholder="Password"
+          />
         </Form.Item>
 
         <Form.Item {...tailLayout}>
