@@ -1,29 +1,37 @@
-import React from "react";
-import { Card, Col, Row  } from "antd";
-import socLogo from "../../soc-logo.png";
-import {Link} from "react-router-dom";
+import React, { useContext } from "react";
+import { Card, Col, Row, Tag } from "antd";
+import placeholder from "../../placeholder.png";
+import { Link } from "react-router-dom";
+import { DataContext } from "../../contexts/dataContext";
 
 export default function VideoSelectionPage() {
-return <div>
-<Row gutter={5}>
-<Col span={8}>
-<Link to="/viewer/1">
-  <Card title="Video title" bordered={false} className="video-card">
-    <img src={socLogo} alt="Video Thumbnail" className="video-thumbnail" /><br />
-    Video Description
-  </Card>
-  </Link>
-</Col>
-<Col span={8}>
-  <Card title="Video title" bordered={false}>
-    Video Description
-  </Card>
-</Col>
-<Col span={8}>
-  <Card title="Video title" bordered={false}>
-    Video Description
-  </Card>
-</Col>
-</Row>
-</div>
+  const mockData = useContext(DataContext);
+
+  return (
+    <>
+      <Row gutter={15}>
+        {mockData.map((card) => {
+          return (
+            <Col>
+              <Link to={`/videoviewer/${card.id}`}>
+                <Card
+                  hoverable
+                  style={{ width: 200, height: 320 }}
+                  bordered={true}
+                  className="video-card"
+                  title={card.title}
+                  cover={<img alt="placeholder" src={placeholder} />}
+                >
+                  <p>Lecturer: {card.lecturer}</p>
+                  {card.tags.map((tag) => (
+                    <Tag>{tag}</Tag>
+                  ))}
+                </Card>
+              </Link>
+            </Col>
+          );
+        })}
+      </Row>
+    </>
+  );
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import "./App.css";
 // import "antd/dist/antd.css";
 import { Layout } from "antd";
@@ -8,7 +8,13 @@ import VideoSelectionPage from "../VideoSelectionPage";
 import LectureViewer from "../LectureViewer";
 import CoachCMS from "../CoachCMS";
 import HeaderBar from "../HeaderBar";
-import {Route} from "react-router-dom"
+import Login from "../Login";
+import PrivateRoute from "../PrivateRoute";
+import Restricted from "../Restricted";
+
+import { Route, Switch } from "react-router-dom";
+import { AuthContext } from "../../firebase/Auth";
+import { AdminUsersContext } from "../../contexts/adminUsersContext";
 
 const gridStyle = {
   width: "25%",
@@ -18,27 +24,43 @@ const gridStyle = {
 const { Footer, Content } = Layout;
 
 function App() {
+  const { currentUser } = useContext(AuthContext);
+  const adminUsers = useContext(AdminUsersContext);
+
   return (
     <div>
-      <HeaderBar />
-      <Route path="/" exact>
-          <VideoSelectionPage />
-      </Route>
+      <Switch>
+        <Route exact path="/login" component={Login} />
 
-      <Route path="/CoachCMS" exact>
-          <CoachCMS />
-      </Route>
-      <Route path="/Viewer" exact>
-          <LectureViewer />
-      </Route>
-      <Route path="/viewer/1" exact>
-          <LectureViewer />
-      </Route>
-      <Layout>
-        <Footer>
-          <footer>Footer</footer>
-        </Footer>
-      </Layout>
+        <PrivateRoute
+          exact
+          path="/"
+          render={() => (
+            <>
+              <HeaderBar />
+              <VideoSelectionPage />
+            </>
+          )}
+        />
+
+        <PrivateRoute
+          exact
+          path={"/videoviewer/:id"}
+          render={() => <LectureViewer />}
+        />
+
+        <PrivateRoute
+          exact
+          path={"/cms"}
+          render={() =>
+            adminUsers[0].find((user) => user.email === currentUser.email) ? (
+              <CoachCMS />
+            ) : (
+              <Restricted />
+            )
+          }
+        />
+      </Switch>
     </div>
   );
 }
