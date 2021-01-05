@@ -1,0 +1,10 @@
+#cms-form-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.cms-form {
+    margin: 10px;
+    border: 1px solid black;
+}
