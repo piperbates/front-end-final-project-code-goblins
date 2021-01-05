@@ -1,24 +1,12 @@
 import React, { useState } from "react";
 import "antd/dist/antd.css";
-import "./style.css"
-import { Modal, Button, message, Input, Space } from "antd";
-// const {  message, Button, Space  } = antd;
+import "./style.css";
+import { Modal, Button, Input } from "antd";
 const { TextArea } = Input;
+
 export default function FeedbackModal() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [feedback, setFeedback] = useState("");
-
-  // const success = () => {
-  //   message.success("This is a success message");
-  // };
-
-  // const error = () => {
-  //   message.error("This is an error message");
-  // };
-
-  // const warning = () => {
-  //   message.warning("This is a warning message");
-  // };
 
   function postFeedback(videoId) {
     fetch(`http://localhost:5000/feedback`, {
@@ -33,7 +21,7 @@ export default function FeedbackModal() {
       .then((res) => res.json()) //res.json() is an async function
       .then((data) => {
         console.log(data, "Thanks for the data");
-        setFeedback("")
+        setFeedback("");
 
         setIsModalVisible(false);
       }) //In the browser

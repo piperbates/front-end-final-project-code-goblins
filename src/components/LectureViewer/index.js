@@ -1,10 +1,10 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import FeedbackForm from "../FeedbackForm";
-import "./style.css";
-import { Tabs, Spin } from "antd";
-import ReactPlayer from "react-player";
-import { DataContext } from "../../contexts/dataContext";
 import { useLocation } from "react-router-dom";
+import ReactPlayer from "react-player";
+import "./style.css";
+import FeedbackForm from "../FeedbackForm";
+import { Tabs, Spin } from "antd";
+import { DataContext } from "../../contexts/dataContext";
 
 const { TabPane } = Tabs;
 

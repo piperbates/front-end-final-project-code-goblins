@@ -1,14 +1,13 @@
 import React, { useContext } from "react";
-import { Button, Layout } from "antd";
-import socLogo from "../../soc-logo.png";
-import { Input } from "antd";
 import { Link } from "react-router-dom";
+import socLogo from "../../images/soc-logo.png";
 import app from "../../firebase/Base";
-import ContentManagementLink from "../ContentManagementLink";
 import { AuthContext } from "../../firebase/Auth";
+import ContentManagementLink from "../ContentManagementLink";
 import { AdminUsersContext } from "../../contexts/adminUsersContext";
-const { Header } = Layout;
+import { Button, Layout, Input } from "antd";
 
+const { Header } = Layout;
 const { Search } = Input;
 const onSearch = (value) => console.log(value);
 

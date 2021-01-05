@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Card, Col, Row, Tag } from "antd";
-import placeholder from "../../placeholder.png";
+import placeholder from "../../images/placeholder.png";
 import { Link } from "react-router-dom";
 import { DataContext } from "../../contexts/dataContext";
 

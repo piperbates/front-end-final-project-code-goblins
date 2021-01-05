@@ -1,9 +1,12 @@
 import React, { useContext } from "react";
+import { Route, Switch } from "react-router-dom";
 import "./App.css";
-// import "antd/dist/antd.css";
+
 import { Layout } from "antd";
-// import { Input } from "antd";
-// import socLogo from "../../soc-logo.png";
+
+import { AuthContext } from "../../firebase/Auth";
+import { AdminUsersContext } from "../../contexts/adminUsersContext";
+
 import VideoSelectionPage from "../VideoSelectionPage";
 import LectureViewer from "../LectureViewer";
 import CoachCMS from "../CoachCMS";
@@ -11,10 +14,6 @@ import HeaderBar from "../HeaderBar";
 import Login from "../Login";
 import PrivateRoute from "../PrivateRoute";
 import Restricted from "../Restricted";
-
-import { Route, Switch } from "react-router-dom";
-import { AuthContext } from "../../firebase/Auth";
-import { AdminUsersContext } from "../../contexts/adminUsersContext";
 
 const gridStyle = {
   width: "25%",
