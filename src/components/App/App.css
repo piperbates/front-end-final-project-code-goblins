@@ -1,25 +1,11 @@
 main {
   padding: 20px; margin: 20px;
-}
-
-
-#soc-logo {
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
-}
-
-nav ul {
-  list-style-type: none;
-}
-
-nav li {
-  display: inline;
-  padding: 10px;
-  text-transform: uppercase;
 
 }
+
+
+
+
 .video-card {
   border-radius: 50%;
 }
@@ -31,19 +17,19 @@ nav li:hover {
   text-decoration: underline;
 }
 
-header {
+/* header {
   height: 100px;
-}
+} */
 
-#header {
+/* #header {
   color: white;
   display: flex;
   height: 100%;
-}
+} */
 
-#header input, #header button {
+/* #header input, #header button {
   color: black;
-}
+} */
 
 #search-box {
   margin: 10px;

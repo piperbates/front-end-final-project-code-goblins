@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Route, Switch } from "react-router-dom";
 import "./App.css";
 
-import { Layout } from "antd";
+// import { Layout } from "antd";
 
 import { AuthContext } from "../../firebase/Auth";
 import { AdminUsersContext } from "../../contexts/adminUsersContext";
@@ -20,7 +20,7 @@ const gridStyle = {
   textAlign: "center",
 };
 
-const { Footer, Content } = Layout;
+// const { Footer, Content } = Layout;
 
 const api = `/`;
 
@@ -40,7 +40,6 @@ function App() {
 
   return (
     <div>
-      <HeaderBar />
       <Switch>
         <Route exact path="/login" component={Login} />
 
@@ -49,6 +48,7 @@ function App() {
           path="/"
           render={() => (
             <>
+      <HeaderBar />
               <VideoSelectionPage allVideoData={allVideoData} />
             </>
           )}
@@ -57,7 +57,8 @@ function App() {
         <PrivateRoute
           exact
           path={"/videoviewer/:id"}
-          render={() => <LectureViewer allVideoData={allVideoData} />}
+          render={() => <><HeaderBar />
+          <LectureViewer allVideoData={allVideoData} /></>}
         />
 
         <PrivateRoute
@@ -65,7 +66,10 @@ function App() {
           path={"/cms"}
           render={() =>
             adminUsers[0].find((user) => user.email === currentUser.email) ? (
+              <>
+              <HeaderBar />
               <CoachCMS />
+              </>
             ) : (
               <Restricted />
             )
