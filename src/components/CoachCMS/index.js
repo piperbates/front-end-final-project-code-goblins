@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "antd/dist/antd.css";
 import {
   Form,
@@ -11,6 +11,8 @@ import {
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import selectTags from "../../data/tags"; //datasource
+
+const { Option } = Select;
 
 const ruleSetRequired = [
   {
@@ -36,10 +38,12 @@ const tailLayout = {
 
 function CoachCMS() {
   const [tags, setTags] = useState([]);
+  const [vimeoVideoSelect, setVimeoVideoSelect] = useState([]);
+
   const [form] = Form.useForm();
 
   const submitForm = (values) => {
-    console.log({ ...values, tags: tags });
+    console.log({ ...values, tags: tags }); //POST API
   };
 
   const onReset = () => {
@@ -47,18 +51,66 @@ function CoachCMS() {
     setTags([]);
   };
 
+  useEffect(() => {
+    async function getVimeoVideoList() {
+      const response = await fetch(`https://api.vimeo.com/me/videos`, {
+        method: "GET",
+        headers: {
+          Authorization: "bearer " + process.env.REACT_APP_VIMEO_TOKEN,
+          "Content-Type": "application/json",
+          Accept: "application/vnd.vimeo.*+json;version=3.4",
+        },
+      });
+      const data = await response.json();
+
+      setVimeoVideoSelect(
+        <Select
+          style={{ width: 250 }}
+          onChange={(value) => {
+            form.setFieldsValue({
+              videoTitle: value[0],
+              videoUrl: value[1],
+              thumbnailUrl: value[2],
+            });
+          }}
+        >
+          {data.data.map((video) => (
+            <Option
+              key={video.link}
+              value={[
+                video.name,
+                video.link,
+                video.pictures.sizes[5].link,
+                video.created_time,
+              ]}
+            >
+              {`${video.name} - ${video.created_time
+                .split("T")[0]
+                .split("-")
+                .reverse()
+                .join("-")}`}
+            </Option>
+          ))}
+        </Select>
+      );
+    }
+    getVimeoVideoList();
+  }, []);
+
   return (
     <>
       <h1>Coach CMS Form</h1>
+
       <Form
         {...layout}
         name="cms"
         form={form}
         initialValues={{
-          remember: true,
+          remember: false,
         }}
         onFinish={submitForm}
       >
+        <Form.Item>{vimeoVideoSelect}</Form.Item>
         <Form.Item
           label="Video Title"
           name="videoTitle"
