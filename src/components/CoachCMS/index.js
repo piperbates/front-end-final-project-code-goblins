@@ -9,6 +9,7 @@ import {
   Space,
   Select,
   TimePicker,
+  Spin,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import selectTags from "../../data/tags"; //new datasource, see data folder /******** API + DB TABLE REQUIRED ********/
@@ -147,7 +148,9 @@ function CoachCMS() {
         }}
         onFinish={submitForm}
       >
-        <Form.Item label="Vimeo API Video Select">{vimeoVideoSelect}</Form.Item>
+        <Form.Item label="Vimeo API Video Select">
+          {!!vimeoVideoSelect ? vimeoVideoSelect : <Spin />}
+        </Form.Item>
         <Form.Item
           label="Video Title"
           name="videoTitle"
