@@ -8,12 +8,15 @@ import {
   InputNumber,
   Space,
   Select,
+  TimePicker,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import selectTags from "../../data/tags"; //datasource
+import selectTags from "../../data/tags"; //new datasource, see data folder /******** API + DB TABLE REQUIRED ********/
+import tutors from "../../data/tutors"; //new datasource, see data folder /******** API + DB TABLE REQUIRED ********/
 
 const { Option } = Select;
 
+//global required field rules object, default false
 const ruleSetRequired = [
   {
     required: true,
@@ -21,6 +24,7 @@ const ruleSetRequired = [
   },
 ];
 
+//simple layout configuation objects
 const layout = {
   labelCol: {
     span: 8,
@@ -36,21 +40,53 @@ const tailLayout = {
   },
 };
 
+//start of component function
 function CoachCMS() {
-  const [tags, setTags] = useState([]);
-  const [vimeoVideoSelect, setVimeoVideoSelect] = useState([]);
+  const [tags, setTags] = useState([]); //used for tags field
+  const [vimeoVideoSelect, setVimeoVideoSelect] = useState([]); //used for API call to vimeo for video selector
 
+  //direct form control via usefor - do not use setState
   const [form] = Form.useForm();
 
+  //time converstion function for form submit object, returns total seconds for each instance
+  function timeCovertToSeconds(timeString) {
+    const timeSplit = String(timeString).split(" ")[4].split(":");
+    const hoursToSeconds = Number(timeSplit[0]) * 60 * 60;
+    const minutesToSeconds = Number(timeSplit[1]) * 60;
+    const timeInSeconds =
+      hoursToSeconds + minutesToSeconds + Number(timeSplit[2]);
+    return timeInSeconds;
+  }
+
+  //submit form function
   const submitForm = (values) => {
-    console.log({ ...values, tags: tags }); //POST API
+    const timestamps = [];
+
+    values.timestamps.map((timeObj) => {
+      timestamps.push({
+        timeString: String(timeObj.timestampSelect._d).split(" ")[4],
+        timeSecondsValue: timeCovertToSeconds(timeObj.timestampSelect._d),
+        timeDesc: timeObj.timestampDesc,
+      });
+    });
+
+    /******** API REQUIRED ********/
+    console.log({
+      ...values,
+      tags: tags,
+      date: String(values.date._d).split(" ").slice(0, 4).join(" "),
+      timestamps: timestamps,
+    }); //POST API
+    console.log();
   };
 
+  //form reset button function
   const onReset = () => {
     form.resetFields();
     setTags([]);
   };
 
+  //api call to vimeo for video selection, also creates and populates select component input
   useEffect(() => {
     async function getVimeoVideoList() {
       const response = await fetch(`https://api.vimeo.com/me/videos`, {
@@ -97,6 +133,7 @@ function CoachCMS() {
     getVimeoVideoList();
   }, []);
 
+  //start of rendering
   return (
     <>
       <h1>Coach CMS Form</h1>
@@ -110,7 +147,7 @@ function CoachCMS() {
         }}
         onFinish={submitForm}
       >
-        <Form.Item>{vimeoVideoSelect}</Form.Item>
+        <Form.Item label="Vimeo API Video Select">{vimeoVideoSelect}</Form.Item>
         <Form.Item
           label="Video Title"
           name="videoTitle"
@@ -119,11 +156,11 @@ function CoachCMS() {
           <Input />
         </Form.Item>
         <Form.Item
-          label="Lecturer Name"
+          label="Lecturer / Speaker Name"
           name="lecturer"
           rules={ruleSetRequired}
         >
-          <Input />
+          <Select allowClear>{tutors.map((tutor) => tutor)}</Select>
         </Form.Item>
         <Form.Item label="Video URL" name="videoUrl" rules={ruleSetRequired}>
           <Input />
@@ -155,15 +192,63 @@ function CoachCMS() {
           <DatePicker />
         </Form.Item>
         <Form.Item label="Bootcamp Week" name="week" rules={ruleSetRequired}>
-          <InputNumber />
+          <InputNumber min={1} />
         </Form.Item>
         <Form.Item
           label="Video Description"
           name="videoDesc"
           rules={ruleSetRequired}
         >
-          <Input.TextArea />
+          <Input.TextArea autoSize={{ minRows: 8 }} />
         </Form.Item>
+
+        <Form.Item label="Timestamps" required>
+          <Form.List name="timestamps" rules={ruleSetRequired}>
+            {(fields, { add, remove }) => (
+              <>
+                {fields.map((field) => (
+                  <Space
+                    key={field.key}
+                    style={{ display: "flex", marginBottom: 0 }}
+                    align="baseline"
+                  >
+                    <Form.Item
+                      {...field}
+                      name={[field.name, "timestampSelect"]}
+                      fieldKey={[field.fieldKey, "timestampSelect"]}
+                      rules={ruleSetRequired}
+                    >
+                      <TimePicker />
+                    </Form.Item>
+
+                    <Form.Item
+                      {...field}
+                      name={[field.name, "timestampDesc"]}
+                      label="Description"
+                      style={{ width: "350px" }}
+                      fieldKey={[field.fieldKey, "timestampDesc"]}
+                      rules={ruleSetRequired}
+                    >
+                      <Input />
+                    </Form.Item>
+                    <MinusCircleOutlined onClick={() => remove(field.name)} />
+                  </Space>
+                ))}
+                <Form.Item>
+                  <Button
+                    type="dashed"
+                    onClick={() => add()}
+                    block
+                    icon={<PlusOutlined />}
+                  >
+                    Add Timestamp
+                  </Button>
+                </Form.Item>
+              </>
+            )}
+          </Form.List>
+        </Form.Item>
+
         <Form.Item label="Github Links">
           <Form.List name="gitLinks">
             {(fields, { add, remove }) => (
