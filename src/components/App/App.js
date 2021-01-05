@@ -40,6 +40,7 @@ function App() {
 
   return (
     <div>
+      <HeaderBar />
       <Switch>
         <Route exact path="/login" component={Login} />
 
@@ -48,7 +49,6 @@ function App() {
           path="/"
           render={() => (
             <>
-              <HeaderBar />
               <VideoSelectionPage allVideoData={allVideoData} />
             </>
           )}
