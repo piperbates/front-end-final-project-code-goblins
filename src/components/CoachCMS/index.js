@@ -59,10 +59,25 @@ function CoachCMS() {
     return timeInSeconds;
   }
 
+  //Post request async function 
+  function postResource(resource) {
+    console.log(resource)
+    fetch(`http://localhost:5000`, {
+      method: "post",
+      body: JSON.stringify(resource),
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((res) => res.json())
+      .then((data) => {console.log(data); onReset()}) 
+      .catch((error) => console.log(error, "my error")); 
+  } 
+
+
+
   //submit form function
   const submitForm = (values) => {
     const timestamps = [];
-
+    console.log(values)
     values.timestamps.map((timeObj) => {
       timestamps.push({
         timeString: String(timeObj.timestampSelect._d).split(" ")[4],
@@ -72,14 +87,15 @@ function CoachCMS() {
     });
 
     /******** API REQUIRED ********/
-    console.log({
+    postResource({
       ...values,
       tags: tags,
-      date: String(values.date._d).split(" ").slice(0, 4).join(" "),
+      date: String(values.lecture_date._d).split(" ").slice(0, 4).join(" "),
       timestamps: timestamps,
-    }); //POST API
-    console.log();
+    });
+
   };
+  
 
   //form reset button function
   const onReset = () => {
@@ -108,9 +124,9 @@ function CoachCMS() {
           style={{ width: 250 }}
           onChange={(value) => {
             form.setFieldsValue({
-              videoTitle: value[0],
-              videoUrl: value[1],
-              thumbnailUrl: value[2],
+              title: value[0],
+              video_url: value[1],
+              thumbnail_url: value[2],
             });
           }}
         >
@@ -156,7 +172,7 @@ function CoachCMS() {
         </Form.Item>
         <Form.Item
           label="Video Title"
-          name="videoTitle"
+          name="title"
           rules={ruleSetRequired}
         >
           <Input />
@@ -168,12 +184,12 @@ function CoachCMS() {
         >
           <Select allowClear>{tutors.map((tutor) => tutor)}</Select>
         </Form.Item>
-        <Form.Item label="Video URL" name="videoUrl" rules={ruleSetRequired}>
+        <Form.Item label="Video URL" name="video_url" rules={ruleSetRequired}>
           <Input />
         </Form.Item>
         <Form.Item
           label="Thumbnail URL"
-          name="thumbnailUrl"
+          name="thumbnail_url"
           rules={ruleSetRequired}
         >
           <Input />
@@ -194,15 +210,15 @@ function CoachCMS() {
           </Select>
         </Form.Item>
 
-        <Form.Item label="Lecture Date" name="date" rules={ruleSetRequired}>
+        <Form.Item label="Lecture Date" name="lecture_date" rules={ruleSetRequired}>
           <DatePicker />
         </Form.Item>
-        <Form.Item label="Bootcamp Week" name="week" rules={ruleSetRequired}>
+        <Form.Item label="Bootcamp Week" name="bootcamp_week" rules={ruleSetRequired}>
           <InputNumber min={1} />
         </Form.Item>
         <Form.Item
           label="Video Description"
-          name="videoDesc"
+          name="description"
           rules={ruleSetRequired}
         >
           <Input.TextArea autoSize={{ minRows: 8 }} />
@@ -256,7 +272,7 @@ function CoachCMS() {
         </Form.Item>
 
         <Form.Item label="Github Links">
-          <Form.List name="gitLinks">
+          <Form.List name="git_links">
             {(fields, { add, remove }) => (
               <>
                 {fields.map((field) => (
@@ -293,7 +309,7 @@ function CoachCMS() {
         </Form.Item>
 
         <Form.Item label="Slide Links">
-          <Form.List name="slideLinks">
+          <Form.List name="slides">
             {(fields, { add, remove }) => (
               <>
                 {fields.map((field) => (
@@ -330,7 +346,7 @@ function CoachCMS() {
         </Form.Item>
 
         <Form.Item label="Other Links">
-          <Form.List name="otherLinks">
+          <Form.List name="other_links">
             {(fields, { add, remove }) => (
               <>
                 {fields.map((field) => (
