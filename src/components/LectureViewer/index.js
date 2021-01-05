@@ -1,34 +1,26 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
 import ReactPlayer from "react-player";
 import "./style.css";
 import FeedbackForm from "../FeedbackForm";
 import { Tabs, Spin } from "antd";
-import { DataContext } from "../../contexts/dataContext";
 
 const { TabPane } = Tabs;
 
-export default function LectureViewer() {
+export default function LectureViewer({ allVideoData }) {
   const id = useLocation().pathname.split("/").pop();
   const player = useRef(null);
   const [videoData, setVideoData] = useState(null);
-  const mockData = useContext(DataContext);
 
   useEffect(() => {
     if (videoData === null) {
-      const data = mockData.filter((obj) => obj.id === Number(id));
+      const data = allVideoData.filter((obj) => obj.id === Number(id));
       setVideoData(data[0]);
     }
   }, [videoData]);
-
+  console.log(videoData);
   function seekToTimestamp(seconds) {
     return player.current.seekTo(seconds);
-  }
-
-  function convertSeconds(time) {
-    let minutes = Math.floor(time / 60);
-    let seconds = time - minutes * 60;
-    return minutes === 0 && seconds === 0 ? `start` : `${minutes}m ${seconds}s`;
   }
 
   if (!videoData) {
@@ -41,18 +33,20 @@ export default function LectureViewer() {
         {videoData.title} - {videoData.lecturer}
       </h1>
       <p>
-        <strong>video id:</strong> {id}
+        <strong>video id:</strong> {videoData.id}
       </p>
       <div id="display">
-        <ReactPlayer ref={player} url={videoData.url} controls={true} />
+        <ReactPlayer ref={player} url={videoData.video_url} controls={true} />
         <div id="video-sidebar">
           <div id="video-timestamps">
             <h3>Timestamps</h3>
             {videoData.timestamps.map((value) => {
               return (
                 <div>
-                  <button onClick={() => seekToTimestamp(value.time)}>
-                    {`${convertSeconds(value.time)} - ${value.timedesc}`}
+                  <button
+                    onClick={() => seekToTimestamp(value.timeSecondsValue)}
+                  >
+                    {`${value.timeString} - ${value.timeDesc}`}
                   </button>
                   <br />
                 </div>
@@ -66,11 +60,29 @@ export default function LectureViewer() {
             </TabPane>
             <TabPane tab="Resources" key="2">
               Here are some resource links <br />
-              Github repo
+              <a
+                href={videoData.github_links}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Github
+              </a>
               <br />
-              Slides
+              <a
+                href={videoData.slides}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Slides
+              </a>
               <br />
-              Other stuff
+              <a
+                href={videoData.other_links}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Additional Reading
+              </a>
             </TabPane>
           </Tabs>
         </div>

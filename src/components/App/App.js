@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Route, Switch } from "react-router-dom";
 import "./App.css";
 
@@ -22,9 +22,21 @@ const gridStyle = {
 
 const { Footer, Content } = Layout;
 
+const api = `/`;
+
 function App() {
   const { currentUser } = useContext(AuthContext);
   const adminUsers = useContext(AdminUsersContext);
+  const [allVideoData, setAllVideoData] = useState([]);
+
+  useEffect(() => {
+    async function getAllVideoData() {
+      const response = await fetch(process.env.REACT_APP_BACKEND_URL + api);
+      const data = await response.json();
+      setAllVideoData(data);
+    }
+    getAllVideoData();
+  }, []);
 
   return (
     <div>
@@ -37,7 +49,7 @@ function App() {
           render={() => (
             <>
               <HeaderBar />
-              <VideoSelectionPage />
+              <VideoSelectionPage allVideoData={allVideoData} />
             </>
           )}
         />
@@ -45,7 +57,7 @@ function App() {
         <PrivateRoute
           exact
           path={"/videoviewer/:id"}
-          render={() => <LectureViewer />}
+          render={() => <LectureViewer allVideoData={allVideoData} />}
         />
 
         <PrivateRoute
