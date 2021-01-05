@@ -28,7 +28,7 @@ function App() {
   const { currentUser } = useContext(AuthContext);
   const adminUsers = useContext(AdminUsersContext);
   const [allVideoData, setAllVideoData] = useState([]);
-
+  console.log(allVideoData);
   useEffect(() => {
     async function getAllVideoData() {
       const response = await fetch(process.env.REACT_APP_BACKEND_URL + api);
