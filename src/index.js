@@ -7,16 +7,13 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { AuthProvider } from "./firebase/Auth";
 import { AdminUsersProvider } from "./contexts/adminUsersContext";
-import { DataProvider } from "./contexts/dataContext";
 
 ReactDOM.render(
   <AuthProvider>
     <BrowserRouter>
-      <DataProvider>
-        <AdminUsersProvider>
-          <App />
-        </AdminUsersProvider>
-      </DataProvider>
+      <AdminUsersProvider>
+        <App />
+      </AdminUsersProvider>
     </BrowserRouter>
   </AuthProvider>,
   document.getElementById("root")
