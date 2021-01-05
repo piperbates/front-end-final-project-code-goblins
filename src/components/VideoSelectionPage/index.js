@@ -4,8 +4,6 @@ import placeholder from "../../images/placeholder.png";
 import { Link } from "react-router-dom";
 
 export default function VideoSelectionPage({ allVideoData }) {
-  console.log(allVideoData);
-
   if (!allVideoData) {
     return <p>loading...</p>;
   } else

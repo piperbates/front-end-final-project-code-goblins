@@ -59,25 +59,13 @@ function CoachCMS() {
     return timeInSeconds;
   }
 
-  //Post request async function 
-  function postResource(resource) {
-    console.log(resource)
-    fetch(`http://localhost:5000`, {
-      method: "post",
-      body: JSON.stringify(resource),
-      headers: { "Content-Type": "application/json" },
-    })
-      .then((res) => res.json())
-      .then((data) => {console.log(data); onReset()}) 
-      .catch((error) => console.log(error, "my error")); 
-  } 
-
-
+  function convertArrayToString(array) {
+    return array.map((value) => JSON.stringify(value).split('"')[3]);
+  }
 
   //submit form function
   const submitForm = (values) => {
     const timestamps = [];
-    console.log(values)
     values.timestamps.map((timeObj) => {
       timestamps.push({
         timeString: String(timeObj.timestampSelect._d).split(" ")[4],
@@ -86,16 +74,17 @@ function CoachCMS() {
       });
     });
 
-    /******** API REQUIRED ********/
     postResource({
       ...values,
       tags: tags,
       date: String(values.lecture_date._d).split(" ").slice(0, 4).join(" "),
       timestamps: timestamps,
+      other_links: convertArrayToString(values.other_links),
+      slides: convertArrayToString(values.slides),
+      github_links: convertArrayToString(values.git_links),
     });
-
+    onReset();
   };
-  
 
   //form reset button function
   const onReset = () => {
@@ -105,6 +94,16 @@ function CoachCMS() {
     });
     setTags([]);
   };
+
+  //Post request async function
+  async function postResource(resource) {
+    const api = "/";
+    await fetch(process.env.REACT_APP_BACKEND_URL + api, {
+      method: "POST",
+      body: JSON.stringify(resource),
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 
   //api call to vimeo for video selection, also creates and populates select component input
   useEffect(() => {
@@ -167,14 +166,10 @@ function CoachCMS() {
         }}
         onFinish={submitForm}
       >
-        <Form.Item label="Vimeo API Video Select" name="vimeoAPI">
+        <Form.Item label="Vimeo API Video Select">
           {!!vimeoVideoSelect ? vimeoVideoSelect : <Spin />}
         </Form.Item>
-        <Form.Item
-          label="Video Title"
-          name="title"
-          rules={ruleSetRequired}
-        >
+        <Form.Item label="Video Title" name="title" rules={ruleSetRequired}>
           <Input />
         </Form.Item>
         <Form.Item
@@ -210,10 +205,18 @@ function CoachCMS() {
           </Select>
         </Form.Item>
 
-        <Form.Item label="Lecture Date" name="lecture_date" rules={ruleSetRequired}>
+        <Form.Item
+          label="Lecture Date"
+          name="lecture_date"
+          rules={ruleSetRequired}
+        >
           <DatePicker />
         </Form.Item>
-        <Form.Item label="Bootcamp Week" name="bootcamp_week" rules={ruleSetRequired}>
+        <Form.Item
+          label="Bootcamp Week"
+          name="bootcamp_week"
+          rules={ruleSetRequired}
+        >
           <InputNumber min={1} />
         </Form.Item>
         <Form.Item
@@ -286,7 +289,6 @@ function CoachCMS() {
                       name={[field.name, "gitlink"]}
                       style={{ width: "300px" }}
                       fieldKey={[field.fieldKey, "gitlink"]}
-                      rules={ruleSetRequired}
                     >
                       <Input placeholder="url" />
                     </Form.Item>
@@ -323,7 +325,6 @@ function CoachCMS() {
                       name={[field.name, "slidelink"]}
                       style={{ width: "300px" }}
                       fieldKey={[field.fieldKey, "slidelink"]}
-                      rules={ruleSetRequired}
                     >
                       <Input placeholder="url" />
                     </Form.Item>
@@ -360,7 +361,6 @@ function CoachCMS() {
                       name={[field.name, "otherlink"]}
                       style={{ width: "300px" }}
                       fieldKey={[field.fieldKey, "otherlink"]}
-                      rules={ruleSetRequired}
                     >
                       <Input placeholder="url" />
                     </Form.Item>
