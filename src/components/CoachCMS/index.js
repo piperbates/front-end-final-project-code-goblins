@@ -84,6 +84,9 @@ function CoachCMS() {
   //form reset button function
   const onReset = () => {
     form.resetFields();
+    form.setFieldsValue({
+      vimeoAPI: "",
+    });
     setTags([]);
   };
 
@@ -148,7 +151,7 @@ function CoachCMS() {
         }}
         onFinish={submitForm}
       >
-        <Form.Item label="Vimeo API Video Select">
+        <Form.Item label="Vimeo API Video Select" name="vimeoAPI">
           {!!vimeoVideoSelect ? vimeoVideoSelect : <Spin />}
         </Form.Item>
         <Form.Item
