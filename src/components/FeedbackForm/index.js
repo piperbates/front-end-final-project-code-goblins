@@ -2,26 +2,37 @@ import React, { useState } from "react";
 import "antd/dist/antd.css";
 import "./style.css";
 import { Modal, Button, Input } from "antd";
-const { TextArea } = Input;
-let url = window.location.href;
-let split = url.split("/");
-let ref = split[split.length - 1];
-console.log({ref});
+import { message, Space } from "antd";
 
+const { TextArea } = Input;
+
+//Feedback success messages. Edit these to display different messages depending the success of the feedback form submit.
+
+function successMsg() { //Displays on feedback success
+  message.success("Thanks for your feedback!");
+}
+
+function errorMsg() {//Displays on feedback error
+  message.error("An error occured. Please try again.");
+}
+
+//Gets the video id from the url
+let url = window.location.href; //gets the whole url
+let split = url.split("/"); //splits the url into an array by /
+let ref = split[split.length - 1]; //Collects the last part of the array, which in this case will be the video id that is displaying on this page
+
+//Sets whether or not the modal is visable
 export default function FeedbackModal() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [feedback, setFeedback] = useState("");
- 
 
-
-
-  function postFeedback(value) {
-    
-    fetch(`http://localhost:5000/feedback`, {
+  //Posts the feedback to the database
+  function postFeedback(value) {//Value is the feedback to be submitted
+    fetch(`http://localhost:5000/feedback`, { //Change this url on deployment
       method: "post",
       body: JSON.stringify({
-        videoId: value.videoId /* Take from params */,
-        feedback: value.feedback
+        videoId: value.videoId, //Taken from ref - see feedbackToSubmit below
+        feedback: value.feedback,
       }),
       headers: { "Content-Type": "application/json" },
       //Validation: ContentType
@@ -29,35 +40,40 @@ export default function FeedbackModal() {
       .then((res) => res.json()) //res.json() is an async function
       .then((data) => {
         console.log(data, "Thanks for the feedback: " + feedback);
-        setFeedback("");
+        setFeedback("");//Resets the form
 
-        setIsModalVisible(false);
-      }) //In the browser
-      .catch((error) => console.log(error, "my error")); //uncaught promise rejection. The promise throws and error and I need to catch otherwise it will be thrown into the ether
+        setIsModalVisible(false); //closes the modal
+        successMsg(); //message confirming to the user that the feedback has gone through
+      }) 
+      .catch((error) => {
+        errorMsg(); //message alerting user that there has been an error and they may need to try again
+        console.log(error, "my error");
+      }); //uncaught promise rejection. The promise throws and error and I need to catch otherwise it will be thrown into the ether
   }
 
-  function handleClick(e) {
+  //This function changes the feedback state to whatever is inserted into the feedback textbox onChange
+  function handleChange(e) {
     // e.preventDefault();
     if (e.target.id === "feedback") {
       setFeedback(e.target.value);
     }
   }
 
+  //handleSubmit takes the feedback state, and the video id (from params; see "ref" above) and posts it to postFeedback as an object
   function handleSubmit(e) {
     e.preventDefault();
     const feedbackToSubmit = {
       videoId: ref,
       feedback: feedback,
-      
     };
     postFeedback(feedbackToSubmit);
     // console.log({feedbackToSubmit});
   }
-  const showModal = () => {
+  const showModal = () => {//Sets modal visibility to true
     setIsModalVisible(true);
   };
 
-  const handleCancel = () => {
+  const handleCancel = () => {//Sets modal visibility to false, used if the user has pressed cancel
     setIsModalVisible(false);
   };
 
@@ -79,7 +95,7 @@ export default function FeedbackModal() {
                 id="feedback"
                 placeholder="Insert Feedback"
                 value={feedback}
-                onChange={handleClick}
+                onChange={handleChange}
               />
             </form>
           </div>
