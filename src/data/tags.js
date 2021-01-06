@@ -9,7 +9,7 @@ const options = [
   "jest",
   "agile",
   "material ui",
-  "srcum",
+  "scrum",
   "ant design",
   "express",
   "npm",
