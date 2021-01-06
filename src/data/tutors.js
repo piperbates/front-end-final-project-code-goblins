@@ -11,6 +11,7 @@ const options = [
   "Tim Knight",
   "Joe Trodden",
   "Kyle Semple",
+  "Mell Russon",
 ];
 
 const tutors = options.map((tutor) => <Option key={tutor}>{tutor}</Option>);
