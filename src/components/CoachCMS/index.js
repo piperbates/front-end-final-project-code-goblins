@@ -10,6 +10,7 @@ import {
   Select,
   TimePicker,
   Spin,
+  Switch,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import selectTags from "../../data/tags"; //new datasource, see data folder /******** API + DB TABLE REQUIRED ********/
@@ -45,6 +46,7 @@ const tailLayout = {
 function CoachCMS() {
   const [tags, setTags] = useState([]); //used for tags field
   const [vimeoVideoSelect, setVimeoVideoSelect] = useState([]); //used for API call to vimeo for video selector
+  const [guestLecturer, setGuestLecturer] = useState(false);
 
   //direct form control via usefor - do not use setState
   const [form] = Form.useForm();
@@ -166,12 +168,18 @@ function CoachCMS() {
         }}
         onFinish={submitForm}
       >
+        <Form.Item label="Guest Speaker">
+          <Switch onChange={setGuestLecturer(!guestLecturer)} />
+        </Form.Item>
+
         <Form.Item label="Vimeo API Video Select">
           {!!vimeoVideoSelect ? vimeoVideoSelect : <Spin />}
         </Form.Item>
+
         <Form.Item label="Video Title" name="title" rules={ruleSetRequired}>
           <Input />
         </Form.Item>
+
         <Form.Item
           label="Lecturer / Speaker Name"
           name="lecturer"
@@ -179,9 +187,11 @@ function CoachCMS() {
         >
           <Select allowClear>{tutors.map((tutor) => tutor)}</Select>
         </Form.Item>
+
         <Form.Item label="Video URL" name="video_url" rules={ruleSetRequired}>
           <Input />
         </Form.Item>
+
         <Form.Item
           label="Thumbnail URL"
           name="thumbnail_url"
@@ -189,6 +199,7 @@ function CoachCMS() {
         >
           <Input />
         </Form.Item>
+
         <Form.Item label="Tags" rules={ruleSetRequired}>
           <Select
             name="tags"
