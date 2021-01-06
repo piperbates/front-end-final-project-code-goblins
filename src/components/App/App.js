@@ -28,15 +28,24 @@ function App() {
   const { currentUser } = useContext(AuthContext);
   const adminUsers = useContext(AdminUsersContext);
   const [allVideoData, setAllVideoData] = useState([]);
+  const [searchState, setSearchState] = useState({ search: "" });
+
+  function updateSearch(search) {
+    setSearchState({ ...searchState, search: search });
+    //console.log(searchState);
+  }
+
   console.log(allVideoData);
   useEffect(() => {
     async function getAllVideoData() {
-      const response = await fetch(process.env.REACT_APP_BACKEND_URL + api);
+      const response = await fetch(
+        process.env.REACT_APP_BACKEND_URL + `/?search=${searchState.search}`
+      );
       const data = await response.json();
       setAllVideoData(data);
     }
     getAllVideoData();
-  }, []);
+  }, [searchState]);
 
   return (
     <div>
@@ -48,7 +57,7 @@ function App() {
           path="/"
           render={() => (
             <>
-      <HeaderBar />
+              <HeaderBar updateSearch={updateSearch} />
               <VideoSelectionPage allVideoData={allVideoData} />
             </>
           )}
@@ -57,8 +66,12 @@ function App() {
         <PrivateRoute
           exact
           path={"/videoviewer/:id"}
-          render={() => <><HeaderBar />
-          <LectureViewer allVideoData={allVideoData} /></>}
+          render={() => (
+            <>
+              <HeaderBar updateSearch={updateSearch} />
+              <LectureViewer allVideoData={allVideoData} />
+            </>
+          )}
         />
 
         <PrivateRoute
@@ -67,8 +80,8 @@ function App() {
           render={() =>
             adminUsers[0].find((user) => user.email === currentUser.email) ? (
               <>
-              <HeaderBar />
-              <CoachCMS />
+                <HeaderBar updateSearch={updateSearch} />
+                <CoachCMS />
               </>
             ) : (
               <Restricted />
