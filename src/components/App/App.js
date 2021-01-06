@@ -25,9 +25,10 @@ const gridStyle = {
 const api = `/`;
 
 function App() {
+  console.log("app firing");
   const { currentUser } = useContext(AuthContext);
   const adminUsers = useContext(AdminUsersContext);
-  const [allVideoData, setAllVideoData] = useState([]);
+  // const [allVideoData, setAllVideoData] = useState([]);
   const [searchState, setSearchState] = useState({ search: "" });
 
   function updateSearch(search) {
@@ -35,17 +36,17 @@ function App() {
     //console.log(searchState);
   }
 
-  console.log(allVideoData);
-  useEffect(() => {
-    async function getAllVideoData() {
-      const response = await fetch(
-        process.env.REACT_APP_BACKEND_URL + `/?search=${searchState.search}`
-      );
-      const data = await response.json();
-      setAllVideoData(data);
-    }
-    getAllVideoData();
-  }, [searchState]);
+  //console.log(allVideoData);
+  // useEffect(() => {
+  //   async function getAllVideoData() {
+  //     const response = await fetch(
+  //       process.env.REACT_APP_BACKEND_URL + `/?search=${searchState.search}`
+  //     );
+  //     const data = await response.json();
+  //     setAllVideoData(data);
+  //   }
+  //   getAllVideoData();
+  // }, [searchState]);
 
   return (
     <div>
@@ -58,7 +59,7 @@ function App() {
           render={() => (
             <>
               <HeaderBar updateSearch={updateSearch} />
-              <VideoSelectionPage allVideoData={allVideoData} />
+              <VideoSelectionPage searchState={searchState} />
             </>
           )}
         />
@@ -69,7 +70,7 @@ function App() {
           render={() => (
             <>
               <HeaderBar updateSearch={updateSearch} />
-              <LectureViewer allVideoData={allVideoData} />
+              <LectureViewer searchState={searchState} />
             </>
           )}
         />

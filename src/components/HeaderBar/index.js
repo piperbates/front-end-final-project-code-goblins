@@ -11,17 +11,16 @@ import { Button, Input } from "antd";
 // const { Header } = Layout;
 const { Search } = Input;
 
-function HeaderBar({ updateSearch }) {
+function HeaderBar({ updateSearch, searchState }) {
   const { currentUser } = useContext(AuthContext);
   const adminUsers = useContext(AdminUsersContext);
-  const [searchField, setSearchField] = useState("");
+  // const [searchField, setSearchField] = useState("");
 
   const onSearch = (value) => updateSearch(value);
-  const onChange = (e) => setSearchField(e.target.value);
-
-  useEffect(() => {
-    //updateSearch(searchField);
-  }, [searchField]);
+  // const onChange = (e) => setSearchField(e.target.value);
+  // useEffect(() => {
+  //   //updateSearch(searchField);
+  // }, [searchField]);
 
   return (
     <header>
@@ -47,8 +46,9 @@ function HeaderBar({ updateSearch }) {
         <div id="search-signout-wrapper">
           <div id="search-box">
             <Search
+              allowClear={true}
               placeholder="input search text"
-              onChange={onChange}
+              // onChange={onChange}
               onSearch={onSearch}
               style={{ width: 200 }}
             />
