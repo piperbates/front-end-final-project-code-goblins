@@ -2,8 +2,6 @@ import React, { useContext, useEffect, useState } from "react";
 import { Route, Switch } from "react-router-dom";
 import "./App.css";
 
-// import { Layout } from "antd";
-
 import { AuthContext } from "../../firebase/Auth";
 import { AdminUsersContext } from "../../contexts/adminUsersContext";
 
@@ -20,32 +18,26 @@ const gridStyle = {
   textAlign: "center",
 };
 
-// const { Footer, Content } = Layout;
-
 const api = `/`;
 
 function App() {
+  console.log("app firing");
   const { currentUser } = useContext(AuthContext);
   const adminUsers = useContext(AdminUsersContext);
   const [allVideoData, setAllVideoData] = useState([]);
-  const [searchState, setSearchState] = useState({ search: "" });
 
-  function updateSearch(search) {
-    setSearchState({ ...searchState, search: search });
-    //console.log(searchState);
-  }
-
-  console.log(allVideoData);
   useEffect(() => {
     async function getAllVideoData() {
-      const response = await fetch(
-        process.env.REACT_APP_BACKEND_URL + `/?search=${searchState.search}`
-      );
+      const response = await fetch(process.env.REACT_APP_BACKEND_URL + api);
       const data = await response.json();
       setAllVideoData(data);
     }
     getAllVideoData();
-  }, [searchState]);
+  }, []);
+
+  const renewAllVideoData = () => {
+    setAllVideoData([]);
+  };
 
   return (
     <div>
@@ -57,8 +49,10 @@ function App() {
           path="/"
           render={() => (
             <>
-              <HeaderBar updateSearch={updateSearch} />
-              <VideoSelectionPage allVideoData={allVideoData} />
+              <VideoSelectionPage
+                allVideoData={allVideoData}
+                renewAllVideoData={renewAllVideoData}
+              />
             </>
           )}
         />
@@ -68,7 +62,6 @@ function App() {
           path={"/videoviewer/:id"}
           render={() => (
             <>
-              <HeaderBar updateSearch={updateSearch} />
               <LectureViewer allVideoData={allVideoData} />
             </>
           )}
@@ -80,7 +73,6 @@ function App() {
           render={() =>
             adminUsers[0].find((user) => user.email === currentUser.email) ? (
               <>
-                <HeaderBar updateSearch={updateSearch} />
                 <CoachCMS />
               </>
             ) : (

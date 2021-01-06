@@ -14,14 +14,8 @@ const { Search } = Input;
 function HeaderBar({ updateSearch }) {
   const { currentUser } = useContext(AuthContext);
   const adminUsers = useContext(AdminUsersContext);
-  const [searchField, setSearchField] = useState("");
 
   const onSearch = (value) => updateSearch(value);
-  const onChange = (e) => setSearchField(e.target.value);
-
-  useEffect(() => {
-    //updateSearch(searchField);
-  }, [searchField]);
 
   return (
     <header>
@@ -48,7 +42,7 @@ function HeaderBar({ updateSearch }) {
           <div id="search-box">
             <Search
               placeholder="input search text"
-              onChange={onChange}
+              allowClear={true}
               onSearch={onSearch}
               style={{ width: 200 }}
             />

@@ -1,16 +1,40 @@
-import React, { useContext } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, Col, Row, Tag } from "antd";
-import placeholder from "../../images/placeholder.png";
 import { Link } from "react-router-dom";
+import HeaderBar from "../HeaderBar";
 
-export default function VideoSelectionPage({ allVideoData }) {
-  if (!allVideoData) {
+export default function VideoSelectionPage({
+  allVideoData,
+  renewAllVideoData,
+}) {
+  const [videoData, setVideoData] = useState(allVideoData);
+  const [searchState, setSearchState] = useState({ search: "" });
+
+  function updateSearch(search) {
+    setSearchState({ ...searchState, search: search });
+  }
+
+  useEffect(() => {
+    if (searchState) {
+      async function getAllVideoData() {
+        const response = await fetch(
+          process.env.REACT_APP_BACKEND_URL + `/?search=${searchState.search}`
+        );
+        const data = await response.json();
+        setVideoData(data);
+      }
+      getAllVideoData();
+    } else renewAllVideoData();
+  }, [searchState]);
+
+  if (!videoData) {
     return <p>loading...</p>;
   } else
     return (
       <>
+        <HeaderBar updateSearch={updateSearch} />
         <Row gutter={15}>
-          {allVideoData.map((data) => {
+          {videoData.map((data) => {
             return (
               <Col key={data.id}>
                 <Link to={`/videoviewer/${data.id}`}>
