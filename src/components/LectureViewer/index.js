@@ -67,39 +67,33 @@ export default function LectureViewer() {
                 );
               })}
             </div>
-
-            <Tabs size="small" style={{ width: "500px" }} defaultActiveKey="1">
-              <TabPane tab="Video Description" key="1">
-                <p>{videoData.description}</p>
-              </TabPane>
-              <TabPane tab="Resources" key="2">
-                Here are some resource links <br />
-                <a
-                  href={videoData.github_links}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Github
-                </a>
-                <br />
-                <a
-                  href={videoData.slides}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Slides
-                </a>
-                <br />
-                <a
-                  href={videoData.other_links}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Additional Reading
-                </a>
-              </TabPane>
-            </Tabs>
-          </div>
+          <Tabs size="small" style={{ width: "500px" }} defaultActiveKey="1">
+            <TabPane tab="Video Description" key="1">
+              <p>{videoData.description}</p>
+            </TabPane>
+            <TabPane tab="Resources" key="2">
+              {[
+                ...videoData.github_links,
+                ...videoData.slides,
+                ...videoData.other_links,
+              ].map((value) =>
+                value.link ? (
+                  <>
+                    <a
+                      href={value.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {value.type} - {value.desc}
+                    </a>
+                    <br />
+                  </>
+                ) : (
+                  <li>{value.type} resources not available for this content</li>
+                )
+              )}
+            </TabPane>
+          </Tabs>
         </div>
         <FeedbackForm />
       </>

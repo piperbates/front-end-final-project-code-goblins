@@ -10,6 +10,8 @@ import {
   Select,
   TimePicker,
   Spin,
+  Switch,
+  message,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import selectTags from "../../data/tags"; //new datasource, see data folder /******** API + DB TABLE REQUIRED ********/
@@ -47,8 +49,41 @@ const tailLayout = {
 function CoachCMS() {
   const [tags, setTags] = useState([]); //used for tags field
   const [vimeoVideoSelect, setVimeoVideoSelect] = useState([]); //used for API call to vimeo for video selector
+
   const { searchText } = useContext(SearchContext);
   const [previousSearch] = useState(searchText);
+
+  const [guestLecturer, setGuestLecturer] = useState(false);
+  const [tutorialVideo, setTutorialVideo] = useState(false);
+
+  useEffect(() => {
+    const additionalTags = tags.filter(
+      (tag) => tag !== "lecture" && tag !== "guest lecture"
+    );
+
+    if (additionalTags.length > 0 && !guestLecturer) {
+      setTags([...additionalTags, "lecture"]);
+    } else if (additionalTags.length > 0 && guestLecturer) {
+      setTags([...additionalTags, "guest lecture"]);
+    } else if (additionalTags.length === 0 && !guestLecturer) {
+      setTags(["lecture"]);
+    } else if (additionalTags.length === 0 && guestLecturer) {
+      setTags(["guest lecture"]);
+    }
+  }, [guestLecturer]);
+
+  useEffect(() => {
+    const additionalTags = tags.filter((tag) => tag !== "tutorial");
+
+    if (additionalTags.length > 0 && !tutorialVideo) {
+      setTags([...additionalTags]);
+    } else if (additionalTags.length > 0 && tutorialVideo) {
+      setTags([...additionalTags, "tutorial"]);
+    }
+  }, [tutorialVideo]);
+
+  //direct form control via useform - do not use setState
+
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -95,7 +130,7 @@ function CoachCMS() {
       );
     }
     getVimeoVideoList();
-  }, []);
+  }, [form]);
 
   if (searchText !== previousSearch) {
     return <Redirect exact to="/" />;
@@ -111,31 +146,42 @@ function CoachCMS() {
     return timeInSeconds;
   }
 
-  function convertArrayToString(array) {
-    return array.map((value) => JSON.stringify(value).split('"')[3]);
-  }
+  const setLinkType = (object, resource) =>
+    object
+      ? object.map((obj) => Object.assign(obj, { type: resource }))
+      : [{ type: resource }];
 
   //submit form function
   const submitForm = (values) => {
-    const timestamps = [];
-    values.timestamps.map((timeObj) => {
-      timestamps.push({
+    const timestamps = values.timestamps.map((timeObj) => {
+      return {
         timeString: String(timeObj.timestampSelect._d).split(" ")[4],
         timeSecondsValue: timeCovertToSeconds(timeObj.timestampSelect._d),
         timeDesc: timeObj.timestampDesc,
-      });
+      };
     });
-
     postResource({
       ...values,
       tags: tags,
       date: String(values.lecture_date._d).split(" ").slice(0, 4).join(" "),
       timestamps: timestamps,
-      other_links: convertArrayToString(values.other_links),
-      slides: convertArrayToString(values.slides),
-      github_links: convertArrayToString(values.git_links),
+      github_links: setLinkType(values.github_links, "github"),
+      slides: setLinkType(values.slides, "presentation slide"),
+      other_links: setLinkType(values.other_links, "additional reading"),
     });
-    onReset();
+
+    // onReset();
+  };
+
+  const submitFailed = (value) => {
+    value.errorFields.map((value) =>
+      message.error(
+        `${
+          value.name[0].slice(0, 1).toUpperCase() + value.name[0].slice(1)
+        } field ${value.errors[0].toLowerCase()} `,
+        2.5
+      )
+    );
   };
 
   //form reset button function
@@ -155,6 +201,7 @@ function CoachCMS() {
       body: JSON.stringify(resource),
       headers: { "Content-Type": "application/json" },
     });
+    await message.success("Form data submitted successfully", 1.5, onReset());
   }
 
   //api call to vimeo for video selection, also creates and populates select component input
@@ -172,23 +219,40 @@ function CoachCMS() {
           remember: false,
         }}
         onFinish={submitForm}
+        onFinishFailed={(value) => submitFailed(value)}
       >
         <Form.Item label="Vimeo API Video Select">
           {!!vimeoVideoSelect ? vimeoVideoSelect : <Spin />}
         </Form.Item>
+
         <Form.Item label="Video Title" name="title" rules={ruleSetRequired}>
           <Input />
         </Form.Item>
+
+        <Form.Item label="Guest Lecturer" name="guest_lecture_switch">
+          <Switch
+            onChange={() => {
+              setGuestLecturer(!guestLecturer);
+            }}
+          />
+        </Form.Item>
+
         <Form.Item
-          label="Lecturer / Speaker Name"
+          label={!guestLecturer ? "Lecturer Name" : "Guest Lecturer Name"}
           name="lecturer"
           rules={ruleSetRequired}
         >
-          <Select allowClear>{tutors.map((tutor) => tutor)}</Select>
+          {!guestLecturer ? (
+            <Select allowClear>{tutors.map((tutor) => tutor)}</Select>
+          ) : (
+            <Input />
+          )}
         </Form.Item>
+
         <Form.Item label="Video URL" name="video_url" rules={ruleSetRequired}>
           <Input />
         </Form.Item>
+
         <Form.Item
           label="Thumbnail URL"
           name="thumbnail_url"
@@ -196,13 +260,20 @@ function CoachCMS() {
         >
           <Input />
         </Form.Item>
+
+        <Form.Item label="tutorial" name="tutorial_switch">
+          <Switch
+            onChange={() => {
+              setTutorialVideo(!tutorialVideo);
+            }}
+          />
+        </Form.Item>
+
         <Form.Item label="Tags" rules={ruleSetRequired}>
           <Select
-            name="tags"
             mode="multiple"
+            name="tags"
             value={tags}
-            allowClear
-            style={{ width: "100%" }}
             placeholder="Select tags"
             onChange={(value) => {
               setTags(value);
@@ -213,12 +284,13 @@ function CoachCMS() {
         </Form.Item>
 
         <Form.Item
-          label="Lecture Date"
+          label={!guestLecturer ? "Lecture Date" : "Guest Speaker Date"}
           name="lecture_date"
           rules={ruleSetRequired}
         >
           <DatePicker />
         </Form.Item>
+
         <Form.Item
           label="Bootcamp Week"
           name="bootcamp_week"
@@ -226,6 +298,7 @@ function CoachCMS() {
         >
           <InputNumber min={1} />
         </Form.Item>
+
         <Form.Item
           label="Video Description"
           name="description"
@@ -248,6 +321,7 @@ function CoachCMS() {
                       {...field}
                       name={[field.name, "timestampSelect"]}
                       fieldKey={[field.fieldKey, "timestampSelect"]}
+                      style={{ width: "140px" }}
                       rules={ruleSetRequired}
                     >
                       <TimePicker />
@@ -282,7 +356,7 @@ function CoachCMS() {
         </Form.Item>
 
         <Form.Item label="Github Links">
-          <Form.List name="git_links">
+          <Form.List name="github_links">
             {(fields, { add, remove }) => (
               <>
                 {fields.map((field) => (
@@ -293,11 +367,18 @@ function CoachCMS() {
                   >
                     <Form.Item
                       {...field}
-                      name={[field.name, "gitlink"]}
-                      style={{ width: "300px" }}
-                      fieldKey={[field.fieldKey, "gitlink"]}
+                      name={[field.name, "link"]}
+                      fieldKey={[field.fieldKey, "link"]}
                     >
                       <Input placeholder="url" />
+                    </Form.Item>
+
+                    <Form.Item
+                      {...field}
+                      name={[field.name, "desc"]}
+                      fieldKey={[field.fieldKey, "desc"]}
+                    >
+                      <Input placeholder="description" />
                     </Form.Item>
                     <MinusCircleOutlined onClick={() => remove(field.name)} />
                   </Space>
@@ -329,11 +410,17 @@ function CoachCMS() {
                   >
                     <Form.Item
                       {...field}
-                      name={[field.name, "slidelink"]}
-                      style={{ width: "300px" }}
-                      fieldKey={[field.fieldKey, "slidelink"]}
+                      name={[field.name, "link"]}
+                      fieldKey={[field.fieldKey, "link"]}
                     >
                       <Input placeholder="url" />
+                    </Form.Item>
+                    <Form.Item
+                      {...field}
+                      name={[field.name, "desc"]}
+                      fieldKey={[field.fieldKey, "desc"]}
+                    >
+                      <Input placeholder="description" />
                     </Form.Item>
                     <MinusCircleOutlined onClick={() => remove(field.name)} />
                   </Space>
@@ -365,11 +452,17 @@ function CoachCMS() {
                   >
                     <Form.Item
                       {...field}
-                      name={[field.name, "otherlink"]}
-                      style={{ width: "300px" }}
-                      fieldKey={[field.fieldKey, "otherlink"]}
+                      name={[field.name, "link"]}
+                      fieldKey={[field.fieldKey, "link"]}
                     >
                       <Input placeholder="url" />
+                    </Form.Item>
+                    <Form.Item
+                      {...field}
+                      name={[field.name, "desc"]}
+                      fieldKey={[field.fieldKey, "desc"]}
+                    >
+                      <Input placeholder="description" />
                     </Form.Item>
                     <MinusCircleOutlined onClick={() => remove(field.name)} />
                   </Space>
