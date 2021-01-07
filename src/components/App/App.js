@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Route, Switch } from "react-router-dom";
 import "./App.css";
-
 import { AuthContext } from "../../firebase/Auth";
 import { AdminUsersContext } from "../../contexts/adminUsersContext";
 
@@ -35,12 +34,10 @@ function App() {
     getAllVideoData();
   }, []);
 
-  const renewAllVideoData = () => {
-    setAllVideoData([]);
-  };
-
   return (
-    <div>
+    <>
+      <PrivateRoute exact path="/" render={() => <HeaderBar />} />
+
       <Switch>
         <Route exact path="/login" component={Login} />
 
@@ -49,10 +46,7 @@ function App() {
           path="/"
           render={() => (
             <>
-              <VideoSelectionPage
-                allVideoData={allVideoData}
-                renewAllVideoData={renewAllVideoData}
-              />
+              <VideoSelectionPage allVideoData={allVideoData} />
             </>
           )}
         />
@@ -81,7 +75,7 @@ function App() {
           }
         />
       </Switch>
-    </div>
+    </>
   );
 }
 

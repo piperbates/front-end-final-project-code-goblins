@@ -3,10 +3,7 @@ import { Card, Col, Row, Tag } from "antd";
 import { Link } from "react-router-dom";
 import HeaderBar from "../HeaderBar";
 
-export default function VideoSelectionPage({
-  allVideoData,
-  renewAllVideoData,
-}) {
+export default function VideoSelectionPage({ allVideoData }) {
   const [videoData, setVideoData] = useState(allVideoData);
   const [searchState, setSearchState] = useState({ search: "" });
 
@@ -16,15 +13,15 @@ export default function VideoSelectionPage({
 
   useEffect(() => {
     if (searchState) {
-      async function getAllVideoData() {
+      async function getSearchData() {
         const response = await fetch(
           process.env.REACT_APP_BACKEND_URL + `/?search=${searchState.search}`
         );
         const data = await response.json();
         setVideoData(data);
       }
-      getAllVideoData();
-    } else renewAllVideoData();
+      getSearchData();
+    } else setVideoData(allVideoData);
   }, [searchState]);
 
   if (!videoData) {
