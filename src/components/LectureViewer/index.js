@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { useLocation, Redirect } from "react-router-dom";
+
 import ReactPlayer from "react-player";
 import "./style.css";
 import FeedbackForm from "../FeedbackForm";
@@ -7,6 +8,7 @@ import { Tabs, Spin } from "antd";
 import { SearchContext } from "../../contexts/searchContext";
 
 const { TabPane } = Tabs;
+
 
 export default function LectureViewer() {
   const id = useLocation().pathname.split("/").pop();
@@ -94,6 +96,7 @@ export default function LectureViewer() {
               )}
             </TabPane>
           </Tabs>
+        </div>
         </div>
         <FeedbackForm />
       </>

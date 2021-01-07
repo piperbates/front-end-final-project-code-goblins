@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+
 import "./style.css";
 import socLogo from "../../images/soc-logo.png";
 import app from "../../firebase/Base";
@@ -9,8 +10,7 @@ import { AdminUsersContext } from "../../contexts/adminUsersContext";
 import { Button, Input } from "antd";
 import { SearchContext } from "../../contexts/searchContext";
 
-// const { Header } = Layout;
-const { Search } = Input;
+const { Search } = Input; //imports Search from ant.d 
 
 function HeaderBar() {
   const { currentUser } = useContext(AuthContext);
@@ -21,7 +21,12 @@ function HeaderBar() {
     <header>
       <div id="header-content">
         <div id="logo-nav-wrapper">
-          <Link to="/">
+          <Link
+            to="/"
+            onClick={() => {
+              updateSearch("");
+            }}
+          >
             <img src={socLogo} alt="logo" id="soc-logo" />
           </Link>
           <nav>

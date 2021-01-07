@@ -1,0 +1,15 @@
+#video-selection-wrapper {
+    display: flex;
+    justify-content: center;
+    margin: auto;
+    width: 95%;
+}
+
+#video-selection-box {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0px;
+
+}

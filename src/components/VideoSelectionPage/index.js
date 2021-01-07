@@ -2,6 +2,8 @@ import React, { useEffect, useState, useContext } from "react";
 import { Card, Col, Row, Tag, Spin } from "antd";
 import { Link } from "react-router-dom";
 import { SearchContext } from "../../contexts/searchContext";
+import FilterBox from "../FilterBox";
+import "./style.css"
 
 export default function VideoSelectionPage({ allVideoData }) {
   const [videoData, setVideoData] = useState(allVideoData);
@@ -22,7 +24,9 @@ export default function VideoSelectionPage({ allVideoData }) {
     return <Spin />;
   } else
     return (
-      <>
+      <><div id="video-selection-wrapper">
+        <FilterBox />
+        <div id="video-selection-box">
         <Row gutter={15}>
           {videoData.map((data) => {
             return (
@@ -46,6 +50,8 @@ export default function VideoSelectionPage({ allVideoData }) {
             );
           })}
         </Row>
+        </div>
+        </div>
       </>
     );
 }
