@@ -1,16 +1,30 @@
-import React, { useContext } from "react";
-import { Card, Col, Row, Tag } from "antd";
-import placeholder from "../../images/placeholder.png";
+import React, { useEffect, useState, useContext } from "react";
+import { Card, Col, Row, Tag, Spin } from "antd";
 import { Link } from "react-router-dom";
+import { SearchContext } from "../../contexts/searchContext";
 
 export default function VideoSelectionPage({ allVideoData }) {
-  if (!allVideoData) {
-    return <p>loading...</p>;
+  const [videoData, setVideoData] = useState(allVideoData);
+  const { searchText } = useContext(SearchContext);
+
+  useEffect(() => {
+    async function getSearchData() {
+      const response = await fetch(
+        process.env.REACT_APP_BACKEND_URL + `/?search=${searchText}`
+      );
+      const data = await response.json();
+      setVideoData(data);
+    }
+    getSearchData();
+  }, [searchText]);
+
+  if (!videoData) {
+    return <Spin />;
   } else
     return (
       <>
         <Row gutter={15}>
-          {allVideoData.map((data) => {
+          {videoData.map((data) => {
             return (
               <Col key={data.id}>
                 <Link to={`/videoviewer/${data.id}`}>

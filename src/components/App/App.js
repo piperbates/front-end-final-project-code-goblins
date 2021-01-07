@@ -1,9 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Route, Switch } from "react-router-dom";
 import "./App.css";
-
-// import { Layout } from "antd";
-
 import { AuthContext } from "../../firebase/Auth";
 import { AdminUsersContext } from "../../contexts/adminUsersContext";
 
@@ -20,26 +17,24 @@ const gridStyle = {
   textAlign: "center",
 };
 
-// const { Footer, Content } = Layout;
-
 const api = `/`;
 
 function App() {
+  console.log("app firing");
   const { currentUser } = useContext(AuthContext);
   const adminUsers = useContext(AdminUsersContext);
-  const [allVideoData, setAllVideoData] = useState([]);
-  console.log(allVideoData);
-  useEffect(() => {
-    async function getAllVideoData() {
-      const response = await fetch(process.env.REACT_APP_BACKEND_URL + api);
-      const data = await response.json();
-      setAllVideoData(data);
-    }
-    getAllVideoData();
-  }, []);
 
   return (
-    <div>
+    <>
+      <PrivateRoute
+        path="/"
+        render={() => (
+          <>
+            <HeaderBar />
+          </>
+        )}
+      />
+
       <Switch>
         <Route exact path="/login" component={Login} />
 
@@ -48,8 +43,7 @@ function App() {
           path="/"
           render={() => (
             <>
-      <HeaderBar />
-              <VideoSelectionPage allVideoData={allVideoData} />
+              <VideoSelectionPage />
             </>
           )}
         />
@@ -57,8 +51,11 @@ function App() {
         <PrivateRoute
           exact
           path={"/videoviewer/:id"}
-          render={() => <><HeaderBar />
-          <LectureViewer allVideoData={allVideoData} /></>}
+          render={() => (
+            <>
+              <LectureViewer />
+            </>
+          )}
         />
 
         <PrivateRoute
@@ -67,8 +64,7 @@ function App() {
           render={() =>
             adminUsers[0].find((user) => user.email === currentUser.email) ? (
               <>
-              <HeaderBar />
-              <CoachCMS />
+                <CoachCMS />
               </>
             ) : (
               <Restricted />
@@ -76,7 +72,7 @@ function App() {
           }
         />
       </Switch>
-    </div>
+    </>
   );
 }
 
