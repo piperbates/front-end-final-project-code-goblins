@@ -241,6 +241,7 @@ function CoachCMS() {
                       {...field}
                       name={[field.name, "timestampSelect"]}
                       fieldKey={[field.fieldKey, "timestampSelect"]}
+                      style={{ width: "140px" }}
                       rules={ruleSetRequired}
                     >
                       <TimePicker />
