@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "antd/dist/antd.css";
 import {
   Form,
@@ -14,6 +14,8 @@ import {
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import selectTags from "../../data/tags"; //new datasource, see data folder /******** API + DB TABLE REQUIRED ********/
 import tutors from "../../data/tutors"; //new datasource, see data folder /******** API + DB TABLE REQUIRED ********/
+import { SearchContext } from "../../contexts/searchContext";
+import { Redirect } from "react-router-dom";
 
 const { Option } = Select;
 
@@ -45,9 +47,59 @@ const tailLayout = {
 function CoachCMS() {
   const [tags, setTags] = useState([]); //used for tags field
   const [vimeoVideoSelect, setVimeoVideoSelect] = useState([]); //used for API call to vimeo for video selector
-
-  //direct form control via usefor - do not use setState
+  const { searchText } = useContext(SearchContext);
+  const [previousSearch] = useState(searchText);
   const [form] = Form.useForm();
+
+  useEffect(() => {
+    async function getVimeoVideoList() {
+      const response = await fetch(`https://api.vimeo.com/me/videos`, {
+        method: "GET",
+        headers: {
+          Authorization: "bearer " + process.env.REACT_APP_VIMEO_TOKEN,
+          "Content-Type": "application/json",
+          Accept: "application/vnd.vimeo.*+json;version=3.4",
+        },
+      });
+      const data = await response.json();
+
+      setVimeoVideoSelect(
+        <Select
+          style={{ width: 250 }}
+          onChange={(value) => {
+            form.setFieldsValue({
+              title: value[0],
+              video_url: value[1],
+              thumbnail_url: value[2],
+            });
+          }}
+        >
+          {data.data.map((video) => (
+            <Option
+              key={video.link}
+              value={[
+                video.name,
+                video.link,
+                video.pictures.sizes[5].link,
+                video.created_time,
+              ]}
+            >
+              {`${video.name} - ${video.created_time
+                .split("T")[0]
+                .split("-")
+                .reverse()
+                .join("-")}`}
+            </Option>
+          ))}
+        </Select>
+      );
+    }
+    getVimeoVideoList();
+  }, []);
+
+  if (searchText !== previousSearch) {
+    return <Redirect exact to="/" />;
+  }
 
   //time converstion function for form submit object, returns total seconds for each instance
   function timeCovertToSeconds(timeString) {
@@ -106,51 +158,6 @@ function CoachCMS() {
   }
 
   //api call to vimeo for video selection, also creates and populates select component input
-  useEffect(() => {
-    async function getVimeoVideoList() {
-      const response = await fetch(`https://api.vimeo.com/me/videos`, {
-        method: "GET",
-        headers: {
-          Authorization: "bearer " + process.env.REACT_APP_VIMEO_TOKEN,
-          "Content-Type": "application/json",
-          Accept: "application/vnd.vimeo.*+json;version=3.4",
-        },
-      });
-      const data = await response.json();
-
-      setVimeoVideoSelect(
-        <Select
-          style={{ width: 250 }}
-          onChange={(value) => {
-            form.setFieldsValue({
-              title: value[0],
-              video_url: value[1],
-              thumbnail_url: value[2],
-            });
-          }}
-        >
-          {data.data.map((video) => (
-            <Option
-              key={video.link}
-              value={[
-                video.name,
-                video.link,
-                video.pictures.sizes[5].link,
-                video.created_time,
-              ]}
-            >
-              {`${video.name} - ${video.created_time
-                .split("T")[0]
-                .split("-")
-                .reverse()
-                .join("-")}`}
-            </Option>
-          ))}
-        </Select>
-      );
-    }
-    getVimeoVideoList();
-  }, []);
 
   //start of rendering
   return (

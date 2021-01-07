@@ -1,35 +1,28 @@
-import React, { useEffect, useState } from "react";
-import { Card, Col, Row, Tag } from "antd";
+import React, { useEffect, useState, useContext } from "react";
+import { Card, Col, Row, Tag, Spin } from "antd";
 import { Link } from "react-router-dom";
-import HeaderBar from "../HeaderBar";
+import { SearchContext } from "../../contexts/searchContext";
 
 export default function VideoSelectionPage({ allVideoData }) {
   const [videoData, setVideoData] = useState(allVideoData);
-  const [searchState, setSearchState] = useState({ search: "" });
-
-  function updateSearch(search) {
-    setSearchState({ ...searchState, search: search });
-  }
+  const { searchText } = useContext(SearchContext);
 
   useEffect(() => {
-    if (searchState) {
-      async function getSearchData() {
-        const response = await fetch(
-          process.env.REACT_APP_BACKEND_URL + `/?search=${searchState.search}`
-        );
-        const data = await response.json();
-        setVideoData(data);
-      }
-      getSearchData();
-    } else setVideoData(allVideoData);
-  }, [searchState]);
+    async function getSearchData() {
+      const response = await fetch(
+        process.env.REACT_APP_BACKEND_URL + `/?search=${searchText}`
+      );
+      const data = await response.json();
+      setVideoData(data);
+    }
+    getSearchData();
+  }, [searchText]);
 
   if (!videoData) {
-    return <p>loading...</p>;
+    return <Spin />;
   } else
     return (
       <>
-        <HeaderBar updateSearch={updateSearch} />
         <Row gutter={15}>
           {videoData.map((data) => {
             return (

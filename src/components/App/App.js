@@ -23,20 +23,17 @@ function App() {
   console.log("app firing");
   const { currentUser } = useContext(AuthContext);
   const adminUsers = useContext(AdminUsersContext);
-  const [allVideoData, setAllVideoData] = useState([]);
-
-  useEffect(() => {
-    async function getAllVideoData() {
-      const response = await fetch(process.env.REACT_APP_BACKEND_URL + api);
-      const data = await response.json();
-      setAllVideoData(data);
-    }
-    getAllVideoData();
-  }, []);
 
   return (
     <>
-      <PrivateRoute exact path="/" render={() => <HeaderBar />} />
+      <PrivateRoute
+        path="/"
+        render={() => (
+          <>
+            <HeaderBar />
+          </>
+        )}
+      />
 
       <Switch>
         <Route exact path="/login" component={Login} />
@@ -46,7 +43,7 @@ function App() {
           path="/"
           render={() => (
             <>
-              <VideoSelectionPage allVideoData={allVideoData} />
+              <VideoSelectionPage />
             </>
           )}
         />
@@ -56,7 +53,7 @@ function App() {
           path={"/videoviewer/:id"}
           render={() => (
             <>
-              <LectureViewer allVideoData={allVideoData} />
+              <LectureViewer />
             </>
           )}
         />

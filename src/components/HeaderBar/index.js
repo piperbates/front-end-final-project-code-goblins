@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import "./style.css";
 import socLogo from "../../images/soc-logo.png";
@@ -7,15 +7,15 @@ import { AuthContext } from "../../firebase/Auth";
 import ContentManagementLink from "../ContentManagementLink";
 import { AdminUsersContext } from "../../contexts/adminUsersContext";
 import { Button, Input } from "antd";
+import { SearchContext } from "../../contexts/searchContext";
 
 // const { Header } = Layout;
 const { Search } = Input;
 
-function HeaderBar({ updateSearch }) {
+function HeaderBar() {
   const { currentUser } = useContext(AuthContext);
   const adminUsers = useContext(AdminUsersContext);
-
-  const onSearch = (value) => updateSearch(value);
+  const { search } = useContext(SearchContext);
 
   return (
     <header>
@@ -43,7 +43,7 @@ function HeaderBar({ updateSearch }) {
             <Search
               placeholder="input search text"
               allowClear={true}
-              onSearch={onSearch}
+              onSearch={(value) => search(value)}
               style={{ width: 200 }}
             />
           </div>
