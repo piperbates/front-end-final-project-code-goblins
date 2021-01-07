@@ -1,6 +1,7 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, Memo } from "react";
 import { Route, Switch } from "react-router-dom";
 import "./App.css";
+import {apiURL} from "../../config"
 
 // import { Layout } from "antd";
 
@@ -30,6 +31,7 @@ function App() {
   const [allVideoData, setAllVideoData] = useState([]);
   const [searchState, setSearchState] = useState({ search: "" });
 
+
   function updateSearch(search) {
     setSearchState({ ...searchState, search: search });
     //console.log(searchState);
@@ -39,8 +41,8 @@ function App() {
   useEffect(() => {
     async function getAllVideoData() {
       const response = await fetch(
-        process.env.REACT_APP_BACKEND_URL + `/?search=${searchState.search}`
-      );
+        apiURL + `/?search=${searchState.search}`
+      );//refactir into config file
       const data = await response.json();
       setAllVideoData(data);
     }
@@ -57,7 +59,7 @@ function App() {
           path="/"
           render={() => (
             <>
-              <HeaderBar updateSearch={updateSearch} />
+              <HeaderBar updateSearch={updateSearch} search={searchState} />
               <VideoSelectionPage allVideoData={allVideoData} />
             </>
           )}
@@ -68,8 +70,8 @@ function App() {
           path={"/videoviewer/:id"}
           render={() => (
             <>
-              <HeaderBar updateSearch={updateSearch} />
-              <LectureViewer allVideoData={allVideoData} />
+              <HeaderBar updateSearch={updateSearch} search={{ search: "" }} />
+              <LectureViewer allVideoData={allVideoData} search={searchState} />
             </>
           )}
         />
@@ -80,7 +82,7 @@ function App() {
           render={() =>
             adminUsers[0].find((user) => user.email === currentUser.email) ? (
               <>
-                <HeaderBar updateSearch={updateSearch} />
+                <HeaderBar updateSearch={updateSearch} search={searchState} />
                 <CoachCMS />
               </>
             ) : (

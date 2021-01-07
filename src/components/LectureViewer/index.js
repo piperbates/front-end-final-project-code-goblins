@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import ReactPlayer from "react-player";
 import "./style.css";
 import FeedbackForm from "../FeedbackForm";
@@ -7,7 +7,7 @@ import { Tabs, Spin } from "antd";
 
 const { TabPane } = Tabs;
 
-export default function LectureViewer({ allVideoData }) {
+export default function LectureViewer({ allVideoData, search }) {
   const id = useLocation().pathname.split("/").pop();
   const player = useRef(null);
   const [videoData, setVideoData] = useState(null);
@@ -27,8 +27,20 @@ export default function LectureViewer({ allVideoData }) {
     return <Spin />;
   }
 
+  function returnToSearch() {
+    if (search.search != "") {
+      return (
+        <>
+          <Link to="/">Back to search results</Link>
+          <br />
+        </>
+      );
+    }
+  }
+
   return (
-    <>
+    <>{returnToSearch()}
+
       <h1>
         {videoData.title} - {videoData.lecturer}
       </h1>
