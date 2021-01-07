@@ -1,12 +1,10 @@
 import React, { useState } from "react";
 import "./style.css";
-import { Tag } from "antd";
 import TagFilter from "../TagFilter";
 
 
-
 function FilterBox() {
-    const tagsData = ["Front End",
+    const tags = ["Front End",
     "Back End",
     "React",
     "Array Methods",
@@ -39,12 +37,31 @@ function FilterBox() {
     "Gatsby",
     "Next.js"];
 
+const lecturers = [
+    "Ben", "Chris", "Tao"
+]
+const weeks = [
+   
+]
 
+let lengthOfBootcamp = 16;
+
+for(let i=1; i < lengthOfBootcamp + 1; i++){
+    weeks.push(`Week ${i}`)
+}
+
+function setSearchData(array){
+    //Sets the search data to the search
+    console.log(array)
+
+}
 
   return (
     <>
       <div id="filter-box">
-        <TagFilter tagsData={tagsData}/>
+        <TagFilter text="Tags" setSearchData={setSearchData} data={tags}/>
+        <TagFilter setSearchData={setSearchData} text="Weeks" data={weeks}/>
+        <TagFilter setSearchData={setSearchData} text="Lecturer" data={lecturers}/>
       </div>
     </>
   );
