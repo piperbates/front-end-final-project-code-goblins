@@ -2,7 +2,8 @@ import { Select } from "antd";
 
 const { Option } = Select;
 
-const options = ["Front End",
+const options = [
+    "Front End",
     "Back End",
     "React",
     "Array Methods",
