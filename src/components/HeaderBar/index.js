@@ -10,7 +10,7 @@ import { AdminUsersContext } from "../../contexts/adminUsersContext";
 import { Button, Input } from "antd";
 import { SearchContext } from "../../contexts/searchContext";
 
-const { Search } = Input; //imports Search from ant.d 
+const { Search } = Input; //imports Search from ant.d
 
 function HeaderBar() {
   const { currentUser } = useContext(AuthContext);
@@ -21,12 +21,7 @@ function HeaderBar() {
     <header>
       <div id="header-content">
         <div id="logo-nav-wrapper">
-          <Link
-            to="/"
-            onClick={() => {
-              updateSearch("");
-            }}
-          >
+          <Link to="/">
             <img src={socLogo} alt="logo" id="soc-logo" />
           </Link>
           <nav>
