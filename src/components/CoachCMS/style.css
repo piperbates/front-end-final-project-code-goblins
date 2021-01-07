@@ -1,0 +1,36 @@
+#cms-form-div {
+  background-color: rgba(248, 242, 242, 0.353);
+  /* width: 800px;
+  height: 1200px; */
+  margin: auto;
+  /* color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(248, 242, 242, 0.353);
+  margin-top: 100px;
+  border-radius: 10px;  */
+}
+
+#cms {
+  margin: auto;
+  width: 800px;
+  background-color: rgba(248, 242, 242, 0.353);
+  padding: 50px;
+  /* grid-template-columns: auto auto auto; */
+
+  /* flex-direction: column; */
+  /* align-items: center; */
+}
+
+/* .video-select {
+  width: 100px;
+} */
+
+.input-box {
+  width: 500px;
+}
+
+.label1 {
+  width: 100px;
+}
