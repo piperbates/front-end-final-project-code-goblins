@@ -1,0 +1,26 @@
+#filter-box {
+    max-width: 250px;
+    margin: 10px;
+}
+
+.filter-group {
+    border: 1px solid lightgray;
+    padding: 2px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 300px;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(224, 224, 224);
+}
+
+.filter-group::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  .filter-group::-webkit-scrollbar-track {
+    background: rgb(224, 224, 224);
+  }
+
+  .filter-group::-webkit-scrollbar-thumb {
+    background-color: rgb(187, 187, 187);
+  }

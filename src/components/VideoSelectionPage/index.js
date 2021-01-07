@@ -1,14 +1,18 @@
 import React, { useContext } from "react";
 import { Card, Col, Row, Tag } from "antd";
 import placeholder from "../../images/placeholder.png";
+import FilterBox from "../FilterBox";
 import { Link } from "react-router-dom";
+import "./style.css"
 
 export default function VideoSelectionPage({ allVideoData }) {
   if (!allVideoData) {
     return <p>loading...</p>;
   } else
     return (
-      <>
+      <><div id="video-selection-wrapper">
+        <FilterBox />
+        <div id="video-selection-box">
         <Row gutter={15}>
           {allVideoData.map((data) => {
             return (
@@ -32,6 +36,8 @@ export default function VideoSelectionPage({ allVideoData }) {
             );
           })}
         </Row>
+        </div>
+        </div>
       </>
     );
 }
