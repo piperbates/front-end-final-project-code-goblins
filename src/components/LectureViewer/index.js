@@ -11,14 +11,14 @@ export default function LectureViewer({ allVideoData }) {
   const id = useLocation().pathname.split("/").pop();
   const player = useRef(null);
   const [videoData, setVideoData] = useState(null);
-
+  console.log(videoData);
   useEffect(() => {
     if (videoData === null) {
       const data = allVideoData.filter((obj) => obj.id === Number(id));
       setVideoData(data[0]);
     }
   }, [videoData]);
-  console.log(videoData);
+
   function seekToTimestamp(seconds) {
     return player.current.seekTo(seconds);
   }
@@ -59,30 +59,26 @@ export default function LectureViewer({ allVideoData }) {
               <p>{videoData.description}</p>
             </TabPane>
             <TabPane tab="Resources" key="2">
-              Here are some resource links <br />
-              <a
-                href={videoData.github_links}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Github
-              </a>
-              <br />
-              <a
-                href={videoData.slides}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Slides
-              </a>
-              <br />
-              <a
-                href={videoData.other_links}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Additional Reading
-              </a>
+              {[
+                ...videoData.github_links,
+                ...videoData.slides,
+                ...videoData.other_links,
+              ].map((value) =>
+                value.link ? (
+                  <>
+                    <a
+                      href={value.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {value.type} - {value.desc}
+                    </a>
+                    <br />
+                  </>
+                ) : (
+                  <li>{value.type} resources not available for this content</li>
+                )
+              )}
             </TabPane>
           </Tabs>
         </div>
