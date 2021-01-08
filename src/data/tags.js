@@ -14,7 +14,7 @@ export const tags = [
   "docker",
   "servers",
   "react",
-  "userducer",
+  "usereducer",
   "functions",
   "javascript",
   "node",
