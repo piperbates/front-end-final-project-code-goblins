@@ -4,18 +4,18 @@ import "./index.css";
 import App from "./components/App/App";
 import reportWebVitals from "./reportWebVitals";
 
-import { BrowserRouter } from "react-router-dom";
-import { AuthProvider } from "./firebase/Auth";
-import { AdminUsersProvider } from "./contexts/adminUsersContext";
+// import { BrowserRouter } from "react-router-dom";
+// import { AuthProvider } from "./firebase/Auth";
+// import { AdminUsersProvider } from "./contexts/adminUsersContext";
 
 ReactDOM.render(
-  <AuthProvider>
-    <BrowserRouter>
-      <AdminUsersProvider>
-        <App />
-      </AdminUsersProvider>
-    </BrowserRouter>
-  </AuthProvider>,
+  // <AuthProvider>
+  //   <BrowserRouter>
+  //     <AdminUsersProvider>
+  <App />,
+  //     </AdminUsersProvider>
+  //   </BrowserRouter>
+  // </AuthProvider>,
   document.getElementById("root")
 );
 

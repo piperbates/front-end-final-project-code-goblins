@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Route, Switch } from "react-router-dom";
+import { Button } from "antd";
 import "./App.less";
 
 // import { Layout } from "antd";
@@ -22,25 +23,26 @@ const gridStyle = {
 
 // const { Footer, Content } = Layout;
 
-const api = `/`;
+// const api = `/`;
 
 function App() {
-  const { currentUser } = useContext(AuthContext);
-  const adminUsers = useContext(AdminUsersContext);
-  const [allVideoData, setAllVideoData] = useState([]);
-  console.log(allVideoData);
-  useEffect(() => {
-    async function getAllVideoData() {
-      const response = await fetch(process.env.REACT_APP_BACKEND_URL + api);
-      const data = await response.json();
-      setAllVideoData(data);
-    }
-    getAllVideoData();
-  }, []);
+  // const { currentUser } = useContext(AuthContext);
+  // const adminUsers = useContext(AdminUsersContext);
+  // const [allVideoData, setAllVideoData] = useState([]);
+  // console.log(allVideoData);
+  // useEffect(() => {
+  //   async function getAllVideoData() {
+  //     const response = await fetch(process.env.REACT_APP_BACKEND_URL + api);
+  //     const data = await response.json();
+  //     setAllVideoData(data);
+  //   }
+  //   getAllVideoData();
+  // }, []);
 
   return (
     <div>
-      <Switch>
+      <Button type="primary">Blah</Button>
+      {/* <Switch>
         <Route exact path="/login" component={Login} />
 
         <PrivateRoute
@@ -79,7 +81,7 @@ function App() {
             )
           }
         />
-      </Switch>
+      </Switch> */}
     </div>
   );
 }
