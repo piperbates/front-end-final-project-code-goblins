@@ -1,26 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import { Select } from "antd";
-import weeks from "../../data/weeks"
 
-const { Option } = Select;
-
+//function attached to selection component
 function handleChange(value) {
-  console.log(`selected ${value}`);
+  console.log(`${value}`);
 }
 
-function TagDropdown() {
-  return (
-    (
-      <>
-        <Select
-          style={{ width: 120 }}
-          onChange={handleChange}
-        >
-          {weeks.map((week) => week)}
-        </Select>
-      </>
-    ),
-    document.getElementById("container")
-  );
+//start of component render
+function TagDropdown({ data }) {
+  const [dataOptions, setDataOptions] = useState(data);
+
+  if (!dataOptions) {
+    return <Select loading></Select>;
+  } else
+    return (
+      <Select
+        defaultValue={dataOptions[0].key}
+        style={{ width: 120 }}
+        onChange={handleChange}
+      >
+        {dataOptions}
+      </Select>
+    );
 }
 export default TagDropdown;

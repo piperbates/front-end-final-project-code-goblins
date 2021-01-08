@@ -3,6 +3,7 @@ import { Select } from "antd";
 const { Option } = Select;
 
 const options = [
+  "All Lecturers",
   "Chris Meah",
   "Ben Lee",
   "Tao Sharma",

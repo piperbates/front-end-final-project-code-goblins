@@ -1,12 +1,26 @@
 import { Select } from "antd";
 const { Option } = Select;
 
-const weeks = [];
+const weekData = [
+  "All Weeks",
+  "Week 1",
+  "Week 2",
+  "Week 3",
+  "Week 4",
+  "Week 5",
+  "Week 6",
+  "Week 7",
+  "Week 8",
+  "Week 9",
+  "Week 10",
+  "Week 11",
+  "Week 12",
+  "Week 13",
+  "Week 14",
+  "Week 15",
+  "Week 16",
+];
 
-let lengthOfBootcamp = 16;
-
-for (let i = 1; i < lengthOfBootcamp + 1; i++) {
-  weeks.push(<Option key={i}>{`Week ${i}`}</Option>);
-}
+const weeks = weekData.map((week) => <Option key={week}>{week}</Option>);
 
 export default weeks;
