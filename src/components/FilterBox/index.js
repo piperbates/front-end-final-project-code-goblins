@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "./style.css";
 import TagFilter from "../TagFilter";
-
+import TagDropdown from "../TagDropdown";
 
 function FilterBox() {
     const tags = ["Front End",
@@ -40,27 +40,31 @@ function FilterBox() {
 const lecturers = [
     "Ben", "Chris", "Tao"
 ]
-const weeks = [
+// const weeks = [
    
-]
+// ]
 
-let lengthOfBootcamp = 16;
+// let lengthOfBootcamp = 16;
 
-for(let i=1; i < lengthOfBootcamp + 1; i++){
-    weeks.push(`Week ${i}`)
-}
+// for(let i=1; i < lengthOfBootcamp + 1; i++){
+//     weeks.push(`Week ${i}`)
+// }
 
+const [searchObj, setSearchObj] = useState({})
 function setSearchData(array){
     //Sets the search data to the search
     console.log(array)
-
+    
 }
 
   return (
     <>
       <div id="filter-box">
         <TagFilter text="Tags" setSearchData={setSearchData} data={tags}/>
-        <TagFilter setSearchData={setSearchData} text="Weeks" data={weeks}/>
+        {/* <TagFilter setSearchData={setSearchData} text="Weeks" data={weeks}/> */}
+        
+        <TagDropdown />
+        
         <TagFilter setSearchData={setSearchData} text="Lecturer" data={lecturers}/>
       </div>
     </>

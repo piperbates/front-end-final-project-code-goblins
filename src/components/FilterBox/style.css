@@ -1,6 +1,7 @@
 #filter-box {
     max-width: 250px;
     margin: 10px;
+    background-color: white;
 }
 
 #tags {
