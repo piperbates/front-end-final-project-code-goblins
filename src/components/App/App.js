@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Route, Switch } from "react-router-dom";
-import "./App.css";
+import "./App.less";
 
 // import { Layout } from "antd";
 
@@ -48,7 +48,7 @@ function App() {
           path="/"
           render={() => (
             <>
-      <HeaderBar />
+              <HeaderBar />
               <VideoSelectionPage allVideoData={allVideoData} />
             </>
           )}
@@ -57,8 +57,12 @@ function App() {
         <PrivateRoute
           exact
           path={"/videoviewer/:id"}
-          render={() => <><HeaderBar />
-          <LectureViewer allVideoData={allVideoData} /></>}
+          render={() => (
+            <>
+              <HeaderBar />
+              <LectureViewer allVideoData={allVideoData} />
+            </>
+          )}
         />
 
         <PrivateRoute
@@ -67,8 +71,8 @@ function App() {
           render={() =>
             adminUsers[0].find((user) => user.email === currentUser.email) ? (
               <>
-              <HeaderBar />
-              <CoachCMS />
+                <HeaderBar />
+                <CoachCMS />
               </>
             ) : (
               <Restricted />
