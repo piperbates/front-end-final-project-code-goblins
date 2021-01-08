@@ -214,7 +214,7 @@ function CoachCMS() {
           </p>
         </div>
 
-        <div id="cms-div">
+        <div id="cms-form-div">
           <Form
             {...layout}
             style={{
@@ -272,7 +272,7 @@ function CoachCMS() {
               <Input />
             </Form.Item>
 
-            <Form.Item label="tutorial" name="tutorial_switch">
+            <Form.Item label="Tutorial" name="tutorial_switch">
               <Switch
                 onChange={() => {
                   setTutorialVideo(!tutorialVideo);
