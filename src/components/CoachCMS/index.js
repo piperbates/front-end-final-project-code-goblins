@@ -14,7 +14,7 @@ import {
   message,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import selectTags from "../../data/tags"; //new datasource, see data folder /******** API + DB TABLE REQUIRED ********/
+import { selectTags } from "../../data/tags"; //new datasource, see data folder /******** API + DB TABLE REQUIRED ********/
 import tutors from "../../data/tutors"; //new datasource, see data folder /******** API + DB TABLE REQUIRED ********/
 import { SearchContext } from "../../contexts/searchContext";
 import { Redirect } from "react-router-dom";

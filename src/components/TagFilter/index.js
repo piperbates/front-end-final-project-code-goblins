@@ -1,35 +1,23 @@
 import React, { useState } from "react";
 import { Tag } from "antd";
+
 const { CheckableTag } = Tag;
 
-function TagFilter({ text, data, setSearchData }) {
+//start of component render
+function TagFilter({ text, data, searchTags }) {
   const [state, setState] = useState({
     selectedTags: [],
   });
 
-  // function clearAll(){
-  //   //Clears all tags
-  // }
   function handleChange(tag, checked) {
     const { selectedTags } = state;
-    var nextSelectedTags;
+    let nextSelectedTags = checked
+      ? [...selectedTags, tag]
+      : selectedTags.filter((t) => t !== tag);
 
-    if (text === "Tags") { 
-      nextSelectedTags = checked
-        ? [...selectedTags, tag]
-        : selectedTags.filter((t) => t !== tag);
-    } else {
-      nextSelectedTags = checked
-        ? [tag]
-        : selectedTags.filter((t) => t !== tag);
-    }
     setState({ selectedTags: nextSelectedTags });
-    setSearchData(nextSelectedTags);
+    searchTags(nextSelectedTags);
   }
-
-  /* 
-    
-  */
 
   return (
     <>
