@@ -3,8 +3,34 @@ import { Select } from "antd";
 const { Option } = Select;
 
 export const tags = [
+  "wondr",
+  "guest lecture",
+  "agile",
+  "teams",
+  "startups",
+  "serverless",
+  "aws",
+  "cloud",
+  "docker",
+  "servers",
+  "react",
+  "userducer",
+  "functions",
+  "javascript",
+  "node",
+  "authentication",
+  "jwt",
+  "tokens",
+  "lecture",
+  "tutorial",
+];
+
+export const selectTags = tags.map((tag) => <Option key={tag}>{tag}</Option>);
+
+/*
   "Front End",
   "Back End",
+  "Agile",
   "React",
   "Array Methods",
   "Loops",
@@ -35,6 +61,4 @@ export const tags = [
   "Promises",
   "Gatsby",
   "Next.js",
-];
-
-export const selectTags = tags.map((tag) => <Option key={tag}>{tag}</Option>);
+*/

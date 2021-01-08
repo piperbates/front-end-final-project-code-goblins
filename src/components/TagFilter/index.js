@@ -9,10 +9,6 @@ function TagFilter({ text, data, searchTags }) {
     selectedTags: [],
   });
 
-  //   cons
-  // function clearTags() {ole.log("clearing");
-  // }
-
   function handleChange(tag, checked) {
     const { selectedTags } = state;
     let nextSelectedTags = checked

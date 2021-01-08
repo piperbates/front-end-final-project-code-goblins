@@ -10,7 +10,9 @@ import { SearchContext } from "../../contexts/searchContext";
 
 function FilterBox() {
   const [searchObj, setSearchObj] = useState({});
-  const { getSearchTags } = useContext(SearchContext);
+  const { getSearchTags, getSearchWeek, getSearchLecturer } = useContext(
+    SearchContext
+  );
   // function setSearchData(array) {
   //   Sets the search data to the search
   //   console.log(array);
@@ -19,8 +21,8 @@ function FilterBox() {
   return (
     <div id="filter-box">
       <TagFilter data={tags} text="Tags" searchTags={getSearchTags} />
-      <TagDropdown data={weeks} />
-      <TagDropdown data={tutors} />
+      <TagDropdown data={weeks} searchFunction={getSearchWeek} />
+      <TagDropdown data={tutors} searchFunction={getSearchLecturer} />
     </div>
   );
 }

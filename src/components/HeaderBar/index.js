@@ -15,7 +15,7 @@ const { Search } = Input; //imports Search from ant.d
 function HeaderBar() {
   const { currentUser } = useContext(AuthContext);
   const adminUsers = useContext(AdminUsersContext);
-  const { search } = useContext(SearchContext);
+  const { getSearchText } = useContext(SearchContext);
 
   return (
     <header>
@@ -43,7 +43,7 @@ function HeaderBar() {
             <Search
               placeholder="input search text"
               allowClear={true}
-              onSearch={(value) => search(value)}
+              onSearch={(value) => getSearchText(value)}
               style={{ width: 200 }}
             />
           </div>
