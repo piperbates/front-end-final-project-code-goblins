@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { SearchContext } from "../../contexts/searchContext";
 import FilterBox from "../FilterBox";
 import "./style.css";
+import config from "../../config";
 
 export default function VideoSelectionPage({ allVideoData }) {
   const [videoData, setVideoData] = useState(allVideoData);
@@ -11,9 +12,7 @@ export default function VideoSelectionPage({ allVideoData }) {
 
   useEffect(() => {
     async function getSearchData() {
-      const response = await fetch(
-        process.env.REACT_APP_BACKEND_URL + `/?${searchUrl}`
-      );
+      const response = await fetch(config.BACKEND_URL_SEARCH + searchUrl);
       const data = await response.json();
       setVideoData(data);
     }

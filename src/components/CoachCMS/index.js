@@ -18,6 +18,7 @@ import tutors from "../../data/tutors"; //new datasource, see data folder /*****
 import { SearchContext } from "../../contexts/searchContext";
 import { Redirect } from "react-router-dom";
 import TimestampSelector from "../CoachCMSTimestampSelector";
+import config from "../../config";
 
 const { Option } = Select;
 
@@ -87,14 +88,10 @@ function CoachCMS() {
   //api call to vimeo for video selection, also creates and populates select component input
   useEffect(() => {
     async function getVimeoVideoList() {
-      const response = await fetch(`https://api.vimeo.com/me/videos`, {
-        method: "GET",
-        headers: {
-          Authorization: "bearer " + process.env.REACT_APP_VIMEO_TOKEN,
-          "Content-Type": "application/json",
-          Accept: "application/vnd.vimeo.*+json;version=3.4",
-        },
-      });
+      const response = await fetch(
+        config.BACKEND_URL_VIMEO_GET_ALL_DATA +
+          `?pagePosition=1&perPageCount=20`
+      );
       const data = await response.json();
 
       setVimeoVideoSelect(
@@ -177,8 +174,7 @@ function CoachCMS() {
 
   //Post request async function
   async function postResource(resource) {
-    const api = "/";
-    await fetch(process.env.REACT_APP_BACKEND_URL + api, {
+    await fetch(config.BACKEND_URL_ADD_CONTENT, {
       method: "POST",
       body: JSON.stringify(resource),
       headers: { "Content-Type": "application/json" },

@@ -1,11 +1,11 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { useLocation, Redirect } from "react-router-dom";
-
 import ReactPlayer from "react-player";
 import "./style.css";
 import FeedbackForm from "../FeedbackForm";
 import { Tabs, Spin } from "antd";
 import { SearchContext } from "../../contexts/searchContext";
+import config from "../../config";
 
 const { TabPane } = Tabs;
 
@@ -18,9 +18,7 @@ export default function LectureViewer() {
 
   useEffect(() => {
     async function getVideoData() {
-      const response = await fetch(
-        process.env.REACT_APP_BACKEND_URL + `/${id}`
-      );
+      const response = await fetch(config.BACKEND_URL_SEARCH_BY_ID + id);
       const data = await response.json();
       setVideoData(data[0]);
     }
