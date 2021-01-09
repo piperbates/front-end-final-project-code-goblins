@@ -44,8 +44,8 @@ export default function VideoSelectionPage({ allVideoData }) {
                         }
                       >
                         <p>Lecturer: {data.lecturer}</p>
-                        {data.tags.map((tag) => (
-                          <Tag>{tag}</Tag>
+                        {data.tags.map((tag, index) => (
+                          <Tag key={tag}>{tag}</Tag>
                         ))}
                       </Card>
                     </Link>

@@ -3,7 +3,7 @@ import { Select } from "antd";
 
 //start of component render
 function TagDropdown({ data, searchFunction }) {
-  const [dataOptions, setDataOptions] = useState(data);
+  const [dataOptions] = useState(data);
 
   if (!dataOptions) {
     return <Select loading></Select>;

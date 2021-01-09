@@ -9,7 +9,6 @@ import { SearchContext } from "../../contexts/searchContext";
 
 const { TabPane } = Tabs;
 
-
 export default function LectureViewer() {
   const id = useLocation().pathname.split("/").pop();
   const player = useRef(null);
@@ -26,7 +25,7 @@ export default function LectureViewer() {
       setVideoData(data[0]);
     }
     getVideoData();
-  }, []);
+  }, [id]);
 
   if (searchText !== previousSearch) {
     return <Redirect exact to="/" />;
@@ -69,34 +68,36 @@ export default function LectureViewer() {
                 );
               })}
             </div>
-          <Tabs size="small" style={{ width: "500px" }} defaultActiveKey="1">
-            <TabPane tab="Video Description" key="1">
-              <p>{videoData.description}</p>
-            </TabPane>
-            <TabPane tab="Resources" key="2">
-              {[
-                ...videoData.github_links,
-                ...videoData.slides,
-                ...videoData.other_links,
-              ].map((value) =>
-                value.link ? (
-                  <>
-                    <a
-                      href={value.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {value.type} - {value.desc}
-                    </a>
-                    <br />
-                  </>
-                ) : (
-                  <li>{value.type} resources not available for this content</li>
-                )
-              )}
-            </TabPane>
-          </Tabs>
-        </div>
+            <Tabs size="small" style={{ width: "500px" }} defaultActiveKey="1">
+              <TabPane tab="Video Description" key="1">
+                <p>{videoData.description}</p>
+              </TabPane>
+              <TabPane tab="Resources" key="2">
+                {[
+                  ...videoData.github_links,
+                  ...videoData.slides,
+                  ...videoData.other_links,
+                ].map((value) =>
+                  value.link ? (
+                    <>
+                      <a
+                        href={value.link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {value.type} - {value.desc}
+                      </a>
+                      <br />
+                    </>
+                  ) : (
+                    <li>
+                      {value.type} resources not available for this content
+                    </li>
+                  )
+                )}
+              </TabPane>
+            </Tabs>
+          </div>
         </div>
         <FeedbackForm />
       </>

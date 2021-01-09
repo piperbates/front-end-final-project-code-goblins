@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import weeks from "../data/weeks";
 
 export const SearchContext = React.createContext();
 

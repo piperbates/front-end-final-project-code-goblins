@@ -8,7 +8,6 @@ import {
   InputNumber,
   Space,
   Select,
-  TimePicker,
   Spin,
   Switch,
   message,
@@ -18,6 +17,7 @@ import { selectTags } from "../../data/tags"; //new datasource, see data folder 
 import tutors from "../../data/tutors"; //new datasource, see data folder /******** API + DB TABLE REQUIRED ********/
 import { SearchContext } from "../../contexts/searchContext";
 import { Redirect } from "react-router-dom";
+import TimestampSelector from "../CoachCMSTimestampSelector";
 
 const { Option } = Select;
 
@@ -49,12 +49,14 @@ const tailLayout = {
 function CoachCMS() {
   const [tags, setTags] = useState([]); //used for tags field
   const [vimeoVideoSelect, setVimeoVideoSelect] = useState([]); //used for API call to vimeo for video selector
-
   const { searchText } = useContext(SearchContext);
   const [previousSearch] = useState(searchText);
-
   const [guestLecturer, setGuestLecturer] = useState(false);
   const [tutorialVideo, setTutorialVideo] = useState(false);
+  const [timestampsVisible, setTimestampsVisible] = useState(false);
+  const [timestampVideoUrl, setTimestampVideoUrl] = useState(false);
+  const [timestampData, setTimestampData] = useState("");
+  const [form] = Form.useForm();
 
   useEffect(() => {
     const additionalTags = tags.filter(
@@ -82,10 +84,7 @@ function CoachCMS() {
     }
   }, [tutorialVideo]);
 
-  //direct form control via useform - do not use setState
-
-  const [form] = Form.useForm();
-
+  //api call to vimeo for video selection, also creates and populates select component input
   useEffect(() => {
     async function getVimeoVideoList() {
       const response = await fetch(`https://api.vimeo.com/me/videos`, {
@@ -102,6 +101,7 @@ function CoachCMS() {
         <Select
           style={{ width: 250 }}
           onChange={(value) => {
+            // setTimestampVideoUrl(value[1]);
             form.setFieldsValue({
               title: value[0],
               video_url: value[1],
@@ -136,16 +136,7 @@ function CoachCMS() {
     return <Redirect exact to="/" />;
   }
 
-  //time converstion function for form submit object, returns total seconds for each instance
-  function timeCovertToSeconds(timeString) {
-    const timeSplit = String(timeString).split(" ")[4].split(":");
-    const hoursToSeconds = Number(timeSplit[0]) * 60 * 60;
-    const minutesToSeconds = Number(timeSplit[1]) * 60;
-    const timeInSeconds =
-      hoursToSeconds + minutesToSeconds + Number(timeSplit[2]);
-    return timeInSeconds;
-  }
-
+  //link formatter for form submission object
   const setLinkType = (object, resource) =>
     object
       ? object.map((obj) => Object.assign(obj, { type: resource }))
@@ -153,24 +144,15 @@ function CoachCMS() {
 
   //submit form function
   const submitForm = (values) => {
-    const timestamps = values.timestamps.map((timeObj) => {
-      return {
-        timeString: String(timeObj.timestampSelect._d).split(" ")[4],
-        timeSecondsValue: timeCovertToSeconds(timeObj.timestampSelect._d),
-        timeDesc: timeObj.timestampDesc,
-      };
-    });
     postResource({
       ...values,
       tags: tags,
       date: String(values.lecture_date._d).split(" ").slice(0, 4).join(" "),
-      timestamps: timestamps,
+      timestamps: timestampData,
       github_links: setLinkType(values.github_links, "github"),
       slides: setLinkType(values.slides, "presentation slide"),
       other_links: setLinkType(values.other_links, "additional reading"),
     });
-
-    // onReset();
   };
 
   const submitFailed = (value) => {
@@ -204,12 +186,34 @@ function CoachCMS() {
     await message.success("Form data submitted successfully", 1.5, onReset());
   }
 
-  //api call to vimeo for video selection, also creates and populates select component input
+  //show modal
+  const modalDisplay = () => {
+    const videoUrlInputValue = form.getFieldValue("video_url");
+    setTimestampVideoUrl(videoUrlInputValue);
+    setTimestampsVisible(!timestampsVisible);
+  };
+
+  const modalHide = () => {
+    setTimestampsVisible(false);
+  };
+
+  const getTimeStampData = (obj) => {
+    setTimestampData(obj.timestamps);
+  };
 
   //start of rendering
   return (
     <>
       <h1>Coach CMS Form</h1>
+      <TimestampSelector
+        timestampsVisible={timestampsVisible}
+        modalDisplay={modalDisplay}
+        timestampVideoUrl={timestampVideoUrl}
+        ruleSetRequired={ruleSetRequired}
+        submitFailed={submitFailed}
+        modalHide={modalHide}
+        getTimeStampData={getTimeStampData}
+      />
 
       <Form
         {...layout}
@@ -307,52 +311,8 @@ function CoachCMS() {
           <Input.TextArea autoSize={{ minRows: 8 }} />
         </Form.Item>
 
-        <Form.Item label="Timestamps" required>
-          <Form.List name="timestamps" rules={ruleSetRequired}>
-            {(fields, { add, remove }) => (
-              <>
-                {fields.map((field) => (
-                  <Space
-                    key={field.key}
-                    style={{ display: "flex", marginBottom: 0 }}
-                    align="baseline"
-                  >
-                    <Form.Item
-                      {...field}
-                      name={[field.name, "timestampSelect"]}
-                      fieldKey={[field.fieldKey, "timestampSelect"]}
-                      style={{ width: "140px" }}
-                      rules={ruleSetRequired}
-                    >
-                      <TimePicker />
-                    </Form.Item>
-
-                    <Form.Item
-                      {...field}
-                      name={[field.name, "timestampDesc"]}
-                      label="Description"
-                      style={{ width: "350px" }}
-                      fieldKey={[field.fieldKey, "timestampDesc"]}
-                      rules={ruleSetRequired}
-                    >
-                      <Input />
-                    </Form.Item>
-                    <MinusCircleOutlined onClick={() => remove(field.name)} />
-                  </Space>
-                ))}
-                <Form.Item>
-                  <Button
-                    type="dashed"
-                    onClick={() => add()}
-                    block
-                    icon={<PlusOutlined />}
-                  >
-                    Add Timestamp
-                  </Button>
-                </Form.Item>
-              </>
-            )}
-          </Form.List>
+        <Form.Item label={"Timestamps"}>
+          <Button onClick={modalDisplay}>Open Timestamp Editor</Button>
         </Form.Item>
 
         <Form.Item label="Github Links">
@@ -485,9 +445,6 @@ function CoachCMS() {
         <Form.Item {...tailLayout}>
           <Button type="primary" htmlType="submit">
             Submit
-          </Button>
-          <Button htmlType="button" onClick={onReset}>
-            Reset
           </Button>
         </Form.Item>
       </Form>
