@@ -101,7 +101,7 @@ function CoachCMS() {
         <Select
           style={{ width: 250 }}
           onChange={(value) => {
-            // setTimestampVideoUrl(value[1]);
+            setTimestampVideoUrl(value[1]);
             form.setFieldsValue({
               title: value[0],
               video_url: value[1],
@@ -200,7 +200,7 @@ function CoachCMS() {
   const getTimeStampData = (obj) => {
     setTimestampData(obj.timestamps);
   };
-
+  console.log(timestampVideoUrl);
   //start of rendering
   return (
     <>
@@ -254,7 +254,7 @@ function CoachCMS() {
         </Form.Item>
 
         <Form.Item label="Video URL" name="video_url" rules={ruleSetRequired}>
-          <Input />
+          <Input onChange={(e) => setTimestampVideoUrl(e.target.value)} />
         </Form.Item>
 
         <Form.Item
@@ -312,7 +312,19 @@ function CoachCMS() {
         </Form.Item>
 
         <Form.Item label={"Timestamps"}>
-          <Button onClick={modalDisplay}>Open Timestamp Editor</Button>
+          <Button
+            onClick={() =>
+              timestampVideoUrl &&
+              timestampVideoUrl.slice(0, 18) === "https://vimeo.com/" &&
+              typeof Number(timestampVideoUrl.slice(0, 18)) === "number"
+                ? modalDisplay()
+                : message.warn(
+                    "Please select a video or update the video url field"
+                  )
+            }
+          >
+            Open Timestamp Editor
+          </Button>
         </Form.Item>
 
         <Form.Item label="Github Links">
