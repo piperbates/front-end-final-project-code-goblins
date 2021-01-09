@@ -29,10 +29,6 @@ const TimestampSelector = ({
     [getTimeStampData, modalHide]
   );
 
-  const resetForm = () => {
-    form.resetFields();
-  };
-
   return (
     <Modal
       title="Timestamp Selector"
@@ -59,12 +55,6 @@ const TimestampSelector = ({
         form={form}
         initialValues={{
           remember: false,
-          //   timestamps: [
-          //     {
-          //       timeMoment: moment("00:00:00", "HH:mm:ss"),
-          //       timeDesc: "start",
-          //     },
-          //   ],
         }}
         onFinish={submitForm}
         onFinishFailed={(value) => submitFailed(value)}
@@ -157,11 +147,6 @@ const TimestampSelector = ({
               </>
             )}
           </Form.List>
-        </Form.Item>
-        <Form.Item>
-          <Button htmlType="button" onClick={resetForm}>
-            Reset
-          </Button>
         </Form.Item>
       </Form>
     </Modal>
