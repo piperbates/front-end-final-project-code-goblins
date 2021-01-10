@@ -3,6 +3,7 @@ import { Modal, Button, Input, Form, Space, TimePicker, message } from "antd";
 import ReactPlayer from "react-player";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import moment from "moment";
+import { v4 as uuidv4 } from "uuid";
 
 const TimestampSelector = ({
   timestampsVisible,
@@ -63,7 +64,7 @@ const TimestampSelector = ({
           <Form.List name="timestamps" rules={ruleSetRequired}>
             {(fields, { add, remove }) => (
               <>
-                {fields.map((field) => (
+                {fields.map((field, index) => (
                   <Space
                     key={field.key}
                     style={{ display: "flex", marginBottom: 0 }}
@@ -113,9 +114,10 @@ const TimestampSelector = ({
 
                     <Form.Item
                       {...field}
-                      name={[field.name, "id"]}
-                      fieldKey={[field.fieldKey, "id"]}
+                      name={[field.name, "uuid"]}
+                      fieldKey={[field.fieldKey, "uuid"]}
                       hidden
+                      initialValue={uuidv4()}
                     >
                       <Input />
                     </Form.Item>

@@ -21,6 +21,7 @@ import { Redirect } from "react-router-dom";
 import TimestampSelector from "../CoachCMSTimestampSelector";
 import config from "../../config";
 import CmsVideoSelector from "../CoachCMSVideoSelector";
+import { v4 as uuidv4 } from "uuid";
 
 //global required field rules object, default false
 const ruleSetRequired = [
@@ -221,13 +222,7 @@ function CoachCMS() {
               rules={ruleSetRequired}
             >
               {!guestLecturer ? (
-                <Select>
-                  {tutors.map((tutor, index) => {
-                    if (index > 0) {
-                      return tutor;
-                    }
-                  })}
-                </Select>
+                <Select>{tutors.filter((tutor, index) => index > 0)}</Select>
               ) : (
                 <Input />
               )}
@@ -340,6 +335,15 @@ function CoachCMS() {
                         >
                           <Input placeholder="description" />
                         </Form.Item>
+
+                        <Form.Item
+                          {...field}
+                          name={[field.name, "uuid"]}
+                          fieldKey={[field.fieldKey, "uuid"]}
+                          hidden
+                          initialValue={uuidv4()}
+                        ></Form.Item>
+
                         <MinusCircleOutlined
                           onClick={() => remove(field.name)}
                         />
@@ -376,6 +380,7 @@ function CoachCMS() {
                         >
                           <Input placeholder="url" />
                         </Form.Item>
+
                         <Form.Item
                           {...field}
                           name={[field.name, "desc"]}
@@ -383,6 +388,15 @@ function CoachCMS() {
                         >
                           <Input placeholder="description" />
                         </Form.Item>
+
+                        <Form.Item
+                          {...field}
+                          name={[field.name, "uuid"]}
+                          fieldKey={[field.fieldKey, "uuid"]}
+                          hidden
+                          initialValue={uuidv4()}
+                        ></Form.Item>
+
                         <MinusCircleOutlined
                           onClick={() => remove(field.name)}
                         />
@@ -426,6 +440,15 @@ function CoachCMS() {
                         >
                           <Input placeholder="description" />
                         </Form.Item>
+
+                        <Form.Item
+                          {...field}
+                          name={[field.name, "uuid"]}
+                          fieldKey={[field.fieldKey, "uuid"]}
+                          hidden
+                          initialValue={uuidv4()}
+                        ></Form.Item>
+
                         <MinusCircleOutlined
                           onClick={() => remove(field.name)}
                         />

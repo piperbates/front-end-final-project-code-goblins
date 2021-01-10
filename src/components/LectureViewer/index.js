@@ -12,7 +12,7 @@ const { TabPane } = Tabs;
 export default function LectureViewer() {
   const id = useLocation().pathname.split("/").pop();
   const player = useRef(null);
-  const [videoData, setVideoData] = useState();
+  const [videoData, setVideoData] = useState(false);
   const { searchText } = useContext(SearchContext);
   const [previousSearch] = useState(searchText);
 
@@ -32,8 +32,9 @@ export default function LectureViewer() {
   function seekToTimestamp(seconds) {
     return player.current.seekTo(seconds);
   }
+  console.log(videoData);
 
-  if (videoData === null || videoData === undefined) {
+  if (!videoData) {
     return (
       <>
         <Spin />
@@ -55,7 +56,7 @@ export default function LectureViewer() {
               <h3>Timestamps</h3>
               {videoData.timestamps.map((value) => {
                 return (
-                  <div>
+                  <div key={value.uuid}>
                     <button
                       onClick={() => seekToTimestamp(value.timeSecondsValue)}
                     >
@@ -77,7 +78,7 @@ export default function LectureViewer() {
                   ...videoData.other_links,
                 ].map((value) =>
                   value.link ? (
-                    <>
+                    <div key={value.uuid}>
                       <a
                         href={value.link}
                         target="_blank"
@@ -86,7 +87,7 @@ export default function LectureViewer() {
                         {value.type} - {value.desc}
                       </a>
                       <br />
-                    </>
+                    </div>
                   ) : (
                     <li>
                       {value.type} resources not available for this content

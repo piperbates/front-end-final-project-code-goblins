@@ -67,7 +67,7 @@ const CmsVideoSelector = ({ setFormVideoData }) => {
 
       <Space direction={"vertical"} size={"middle"}>
         <Row justify={"start"}>
-          <h3>Vimeo API Video Select</h3>
+          <h3>Vimeo API Video Selector</h3>
         </Row>
         <Row justify={"start"}>
           <Pagination
@@ -80,7 +80,7 @@ const CmsVideoSelector = ({ setFormVideoData }) => {
             defaultCurrent={1}
             defaultPageSize={30}
             responsive={true}
-            pageSizeOptions={[30, 40]}
+            pageSizeOptions={[30, 40, 50]}
           />
         </Row>
         <Row style={{ maxHeight: window.innerHeight - 225, overflow: "auto" }}>
@@ -102,6 +102,11 @@ const CmsVideoSelector = ({ setFormVideoData }) => {
                         setViewerData(vItem);
                       }}
                     />,
+                    <Popover
+                      content={<DescriptionBox width={350} data={vItem} />}
+                    >
+                      <QuestionCircleOutlined key="info" />
+                    </Popover>,
                     <CheckCircleOutlined
                       key="select"
                       onClick={() =>
@@ -112,12 +117,6 @@ const CmsVideoSelector = ({ setFormVideoData }) => {
                         })
                       }
                     />,
-
-                    <Popover
-                      content={<DescriptionBox width={350} data={vItem} />}
-                    >
-                      <QuestionCircleOutlined key="info" />
-                    </Popover>,
                   ]}
                 >
                   <Meta
