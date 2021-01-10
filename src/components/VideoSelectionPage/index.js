@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Card, Col, Row, Tag, Spin } from "antd";
+import { Card, Col, Row, Tag, Spin, Space } from "antd";
 import { Link } from "react-router-dom";
 import { SearchContext } from "../../contexts/searchContext";
 import FilterBox from "../FilterBox";
@@ -27,30 +27,32 @@ export default function VideoSelectionPage({ allVideoData }) {
         <div id="video-selection-wrapper">
           <FilterBox />
           <div id="video-selection-box">
-            <Row gutter={15}>
-              {videoData.map((data) => {
-                return (
-                  <Col key={data.id}>
-                    <Link to={`/videoviewer/${data.id}`}>
-                      <Card
-                        hoverable
-                        style={{ width: 200, height: 320 }}
-                        bordered={true}
-                        className="video-card"
-                        title={data.title}
-                        cover={
-                          <img alt="placeholder" src={data.thumbnail_url} />
-                        }
-                      >
-                        <p>Lecturer: {data.lecturer}</p>
-                        {data.tags.map((tag, index) => (
-                          <Tag key={tag}>{tag}</Tag>
-                        ))}
-                      </Card>
-                    </Link>
-                  </Col>
-                );
-              })}
+            <Row>
+              <Space wrap size="middle">
+                {videoData.map((data) => {
+                  return (
+                    <Col key={data.id}>
+                      <Link to={`/videoviewer/${data.id}`}>
+                        <Card
+                          hoverable
+                          style={{ width: 200, height: 320 }}
+                          bordered={true}
+                          className="video-card"
+                          title={data.title}
+                          cover={
+                            <img alt="placeholder" src={data.thumbnail_url} />
+                          }
+                        >
+                          <p>Lecturer: {data.lecturer}</p>
+                          {data.tags.map((tag, index) => (
+                            <Tag key={tag}>{tag}</Tag>
+                          ))}
+                        </Card>
+                      </Link>
+                    </Col>
+                  );
+                })}
+              </Space>
             </Row>
           </div>
         </div>
