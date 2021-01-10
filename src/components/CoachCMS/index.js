@@ -102,9 +102,7 @@ function CoachCMS() {
 
   //link formatter for form submission object
   const setLinkType = (object, resource) =>
-    object
-      ? object.map((obj) => Object.assign(obj, { type: resource }))
-      : [{ type: resource }];
+    object ? object.map((obj) => Object.assign(obj, { type: resource })) : [];
 
   //submit form function
   const submitForm = (values) => {
@@ -206,7 +204,7 @@ function CoachCMS() {
 
             <Form.Item
               label="Guest Lecturer"
-              name="guest_lecture_switch"
+              // name="guest_lecture_switch"
               valuePropName="checked"
             >
               <Switch
@@ -246,7 +244,7 @@ function CoachCMS() {
 
             <Form.Item
               label="Tutorial"
-              name="tutorial_switch"
+              // name="tutorial_switch"
               valuePropName="checked"
             >
               <Switch

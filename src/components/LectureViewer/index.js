@@ -32,7 +32,6 @@ export default function LectureViewer() {
   function seekToTimestamp(seconds) {
     return player.current.seekTo(seconds);
   }
-  console.log(videoData);
 
   if (!videoData) {
     return (
@@ -76,24 +75,22 @@ export default function LectureViewer() {
                   ...videoData.github_links,
                   ...videoData.slides,
                   ...videoData.other_links,
-                ].map((value) =>
-                  value.link ? (
-                    <div key={value.uuid}>
-                      <a
-                        href={value.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {value.type} - {value.desc}
-                      </a>
-                      <br />
-                    </div>
-                  ) : (
-                    <li>
-                      {value.type} resources not available for this content
-                    </li>
-                  )
-                )}
+                ].map((value) => {
+                  if (value) {
+                    return (
+                      <div key={value.uuid}>
+                        <a
+                          href={value.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          {value.type} - {value.desc}
+                        </a>
+                        <br />
+                      </div>
+                    );
+                  }
+                })}
               </TabPane>
             </Tabs>
           </div>
