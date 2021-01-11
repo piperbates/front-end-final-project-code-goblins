@@ -1,7 +1,9 @@
 import React, { useContext } from "react";
-import { Link, Redirect } from "react-router-dom";
-
+import { Link } from "react-router-dom";
+import {
+  HomeOutlined } from "@ant-design/icons";
 import "./style.css";
+
 import socLogo from "../../images/soc-logo.png";
 import app from "../../firebase/Base";
 import { AuthContext } from "../../firebase/Auth";
@@ -29,7 +31,7 @@ function HeaderBar() {
               size={"large"}
               style={{ marginLeft: "16px", fontSize: "16px" }}
             >
-              <Link to="/">Home</Link>
+              <Link to="/"><HomeOutlined/> Home</Link>
 
               {adminUsers[0].find(
                 (user) => user.email === currentUser.email
@@ -38,12 +40,7 @@ function HeaderBar() {
               ) : (
                 <li style={{ display: "none" }}></li>
               )}
-              <Button onClick={() => app.auth().signOut()}>Sign Out</Button>
-            </Space>
-          </nav>
-        </div>
-        <div id="search-signout-wrapper">
-          <div id="search-box">
+              <div id="search-box">
             <Search
               placeholder="input search text"
               allowClear={true}
@@ -51,6 +48,12 @@ function HeaderBar() {
               style={{ width: 200 }}
             />
           </div>
+            </Space>
+          </nav>
+        </div>
+        <div id="search-signout-wrapper">
+          
+        <Button id="sign-out-button" onClick={() => app.auth().signOut()}>Sign Out</Button>
         </div>
       </div>
     </header>

@@ -33,7 +33,7 @@ export default function LectureViewer() {
     return player.current.seekTo(seconds);
   }
   console.log(videoData);
-  if (!videoData) {
+  if (!videoData.video_url) {
     return (
       <>
         <Spin />
@@ -49,7 +49,15 @@ export default function LectureViewer() {
           <strong>video id:</strong> {videoData.id}
         </p>
         <div id="display">
-          <ReactPlayer ref={player} url={videoData.video_url} controls={true} />
+          <div id="viewer-video-player">
+            <ReactPlayer
+              id="video-player-self"
+              ref={player}
+              url={videoData.video_url}
+              controls={true}
+            />
+          </div>
+
           <div id="video-sidebar">
             <div id="video-timestamps">
               <h3>Timestamps</h3>
@@ -66,11 +74,13 @@ export default function LectureViewer() {
                 );
               })}
             </div>
-            <Tabs size="small" style={{ width: "500px" }} defaultActiveKey="1">
-              <TabPane tab="Video Description" key="1">
+
+            <Tabs size="small" defaultActiveKey="1"
+            >
+              <TabPane className="video-tab" tab="Video Description" key="1">
                 <p>{videoData.description}</p>
               </TabPane>
-              <TabPane tab="Resources" key="2">
+              <TabPane className="video-tab" tab="Resources" key="2">
                 {[
                   ...videoData.github_links,
                   ...videoData.slides,
@@ -89,9 +99,10 @@ export default function LectureViewer() {
                 ))}
               </TabPane>
             </Tabs>
+
+            <FeedbackForm />
           </div>
         </div>
-        <FeedbackForm />
       </>
     );
 }

@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { Route, Switch } from "react-router-dom";
 import "./App.css";
-
+import "antd/dist/antd.css";
 import { AuthContext } from "../../firebase/Auth";
 import { AdminUsersContext } from "../../contexts/adminUsersContext";
 
@@ -18,7 +18,7 @@ function App() {
   const adminUsers = useContext(AdminUsersContext);
 
   return (
-    <>
+    <div id="page-wrapper">
       <PrivateRoute
         path="/"
         render={() => (
@@ -27,7 +27,7 @@ function App() {
           </>
         )}
       />
-
+    <main>
       <Switch>
         <Route exact path="/login" component={Login} />
 
@@ -65,7 +65,22 @@ function App() {
           }
         />
       </Switch>
-    </>
+      </main>
+      <PrivateRoute
+        path="/"
+        render={() => (
+          <>
+            <footer>
+            <div id="footer-content">
+              <p>&copy; Copyright 2021 School of Code. All Rights Reserved - Privacy Policy - Terms of Use
+
+School of Code Ltd is registered in England, Company No. 09793790
+School of Code, Custard Factory, Gibb Street, Birmingham, B9 4AA</p></div>
+            </footer>
+          </>
+        )}
+      />
+    </div>
   );
 }
 

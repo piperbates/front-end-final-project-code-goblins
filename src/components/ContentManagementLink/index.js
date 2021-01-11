@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { PlusCircleOutlined } from "@ant-design/icons"
 
 export default function ContentManagementButton() {
-  return <Link to="/cms">CMS</Link>;
+  return <Link to="/cms"> <PlusCircleOutlined /> Add Video</Link>;
 }

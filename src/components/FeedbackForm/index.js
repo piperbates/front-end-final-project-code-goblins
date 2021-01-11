@@ -33,18 +33,18 @@ export default function FeedbackModal() {
   function postFeedback(value) {
     //Value is the feedback to be submitted
     fetch(`${config.BACKEND_URL_FEEDBACK_UPDATE}`, {
-      //Change this url on deployment
       method: "post",
       body: JSON.stringify({
         videoId: value.videoId, //Taken from ref - see feedbackToSubmit below
         feedback: value.feedback,
       }),
+
       headers: { "Content-Type": "application/json" },
       //Validation: ContentType
     })
       .then((res) => res.json()) //res.json() is an async function
       .then((data) => {
-        console.log(data, "Thanks for the feedback: " + feedback);
+        console.log(data, `Thanks for the feedback "${feedback}" on video id ${value.videoId}`);
         setFeedback(""); //Resets the form
 
         setIsModalVisible(false); //closes the modal

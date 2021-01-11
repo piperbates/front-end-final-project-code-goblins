@@ -1,10 +1,8 @@
 main {
-  padding: 20px; margin: 20px;
-
+  padding: 20px;
+  margin: 20px;
 }
-
-
-
+/*
 
 .video-card {
   border-radius: 50%;
@@ -12,28 +10,34 @@ main {
 
 .video-thumbnail {
   width: 100px;
-}
-nav li:hover {
-  text-decoration: underline;
+} */
+
+#page-wrapper {
+  height: 100vh;
+  /* height: 100%;
+  background: url("../../images/moon.png");
+  background-repeat: no-repeat;
+  background-position-y: bottom;
+  background-size: 100% 100px;
+  background-attachment: fixed; */
 }
 
-/* header {
+footer {
+  margin: 0px;
+  background: url("../../images/moon.png");
+  background-repeat: no-repeat;
+  background-position-y: bottom;
+  background-size: 100% 100px;
   height: 100px;
-} */
+  width: 100%;
+  z-index: -1;
+}
 
-/* #header {
-  color: white;
-  display: flex;
-  height: 100%;
-} */
-
-/* #header input, #header button {
-  color: black;
-} */
-
-#search-box {
-  margin: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+#footer-content {
+  width: 50%;
+  margin: auto;
+  padding-top: 45px;
+  color: grey;
+  text-align: center;
+  font-size: smaller;
 }

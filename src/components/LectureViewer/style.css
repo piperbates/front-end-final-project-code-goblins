@@ -1,15 +1,41 @@
 #display {
-    display: flex;
-
+  width: 90%;
+  padding: 0px;
+  display: flex;
+  justify-content: center;
+  margin: auto;
 }
 
-h1, h2 {
-    display: inline;
+
+
+#video-sidebar {
+  width: 300px;
+  padding: 0px 10px;
 }
 
-h2 {
-    color: rgb(128, 128, 128);
-    font-size: small;
-    margin-left: 20px;
+#video-timestamps button {
+  background-color: rgb(155, 155, 155);
+  border-radius: 10px;
+}
 
+#video-timestamps button:hover {
+  background-color: rgb(196, 196, 196);
+}
+
+.video-tab {
+  height: 100px;
+}
+#viewer-video-player {
+}
+
+#display h1,
+#display h2 {
+  display: inline;
+  margin: 0px;
+  padding: 0px;
+}
+
+#display h2 {
+  color: rgb(128, 128, 128);
+  font-size: small;
 }
