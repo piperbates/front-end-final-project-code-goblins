@@ -86,11 +86,13 @@ const CmsTagEditor = ({ tagEditorVisible, toggleTagDisplay }) => {
       <Form name="tagform" onFinish={submitTag} form={form}>
         <Space>
           <Form.Item label="Tag Name" name="name" rules={[{ required: true }]}>
-            <Input placeholder="Enter tag name" style={{ width: "200px" }} />
+            <Space>
+              <Input placeholder="Enter tag name" style={{ width: "200px" }} />
+              <Button type="primary" htmlType="submit">
+                Submit
+              </Button>
+            </Space>
           </Form.Item>
-          <Button type="primary" htmlType="submit">
-            Submit
-          </Button>
         </Space>
       </Form>
 

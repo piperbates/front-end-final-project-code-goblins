@@ -67,7 +67,7 @@ function CoachCMS() {
     const getTagData = async () => {
       const res = await fetch(config.BACKEND_URL_TAGS_GET_ALL_DATA);
       const data = await res.json();
-      setTagData(data);
+      setTagData(data.sort((a, b) => a.tag - b.tag));
       let tempTagData = data.sort((a, b) => a.key - b.key);
       setLastTagId(tempTagData[tempTagData.length - 1].key);
     };
