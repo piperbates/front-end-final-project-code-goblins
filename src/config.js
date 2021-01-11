@@ -1,4 +1,4 @@
-const url = 'https://code-goblins-final-project.herokuapp.com/'
+const url = 'https://code-goblins-final-project.herokuapp.com'
 
 const config = {
   BACKEND_URL_SEARCH: `${url}/search/?`,
