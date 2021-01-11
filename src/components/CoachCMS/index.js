@@ -14,7 +14,6 @@ import {
   Col,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import { selectTags } from "../../data/tags"; //new datasource, see data folder /******** API + DB TABLE REQUIRED ********/
 import tutors from "../../data/tutors"; //new datasource, see data folder /******** API + DB TABLE REQUIRED ********/
 import { SearchContext } from "../../contexts/searchContext";
 import { Redirect } from "react-router-dom";
@@ -22,6 +21,8 @@ import TimestampSelector from "../CoachCMSTimestampSelector";
 import config from "../../config";
 import CmsVideoSelector from "../CoachCMSVideoSelector";
 import { v4 as uuidv4 } from "uuid";
+import CmsDropdown from "../CoachCMSDropdown";
+import CmsTagEditor from "../CoachCMSTagEditor";
 
 //global required field rules object, default false
 const ruleSetRequired = [
@@ -34,10 +35,10 @@ const ruleSetRequired = [
 //simple layout configuation objects
 const formLayout = {
   labelCol: {
-    span: 4,
+    span: 24,
   },
   wrapperCol: {
-    span: 19,
+    span: 24,
   },
 };
 const tailLayout = {
@@ -58,6 +59,20 @@ function CoachCMS() {
   const [timestampVideoUrl, setTimestampVideoUrl] = useState(false);
   const [timestampData, setTimestampData] = useState("");
   const [form] = Form.useForm();
+  const [tagEditorVisible, setTagEditorVisible] = useState(false);
+  const [tagData, setTagData] = useState(false);
+  const [lastTagId, setLastTagId] = useState(null);
+
+  useEffect(() => {
+    const getTagData = async () => {
+      const res = await fetch(config.BACKEND_URL_TAGS_GET_ALL_DATA);
+      const data = await res.json();
+      setTagData(data);
+      let tempTagData = data.sort((a, b) => a.key - b.key);
+      setLastTagId(tempTagData[tempTagData.length - 1].key);
+    };
+    getTagData();
+  }, [tagEditorVisible]);
 
   useEffect(() => {
     const additionalTags = tags.filter(
@@ -88,6 +103,8 @@ function CoachCMS() {
   if (searchText !== previousSearch) {
     return <Redirect exact to="/" />;
   }
+
+  const { Option } = Select;
 
   //set form data from api video selector
   const setFormVideoData = (selectData) => {
@@ -162,318 +179,341 @@ function CoachCMS() {
     setTimestampData(obj.timestamps);
   };
 
+  const toggleTagDisplay = () => {
+    setTagEditorVisible(!tagEditorVisible);
+  };
+
   //start of rendering
   return (
     <div>
-      <Row>
-        <Col span={24}>
-          <h1>CMS</h1>
-          <TimestampSelector
-            timestampsVisible={timestampsVisible}
-            modalDisplay={modalDisplay}
-            timestampVideoUrl={timestampVideoUrl}
-            ruleSetRequired={ruleSetRequired}
-            submitFailed={submitFailed}
-            modalHide={modalHide}
-            getTimeStampData={getTimeStampData}
-          />
-        </Col>
-      </Row>
+      <TimestampSelector
+        timestampsVisible={timestampsVisible}
+        modalDisplay={modalDisplay}
+        timestampVideoUrl={timestampVideoUrl}
+        ruleSetRequired={ruleSetRequired}
+        submitFailed={submitFailed}
+        modalHide={modalHide}
+        getTimeStampData={getTimeStampData}
+      />
+      <CmsTagEditor
+        tagEditorVisible={tagEditorVisible}
+        toggleTagDisplay={toggleTagDisplay}
+      />
 
-      <Row justify={"center"}>
-        <Col span={10}>
-          <CmsVideoSelector setFormVideoData={setFormVideoData} />
-        </Col>
+      <Space direction="vertical">
+        <Row justify="end">
+          <Space>
+            <h1>Lecture Management</h1>
+          </Space>
+        </Row>
 
-        <Col span={14}>
-          <h3 style={{ marginBottom: "1em" }}>Form Data</h3>
-          <Form
-            style={{ padding: "1em" }}
-            {...formLayout}
-            name="cms"
-            form={form}
-            initialValues={{
-              remember: false,
-            }}
-            onFinish={submitForm}
-            onFinishFailed={(value) => submitFailed(value)}
-          >
-            <Form.Item label="Video Title" name="title" rules={ruleSetRequired}>
-              <Input />
-            </Form.Item>
+        <Row justify="start">
+          <CmsDropdown toggleTagDisplay={toggleTagDisplay} />
+        </Row>
 
-            <Form.Item
-              label="Guest Lecturer"
-              // name="guest_lecture_switch"
-              valuePropName="checked"
+        <Row justify={"center"}>
+          <Col span={10}>
+            <CmsVideoSelector setFormVideoData={setFormVideoData} />
+          </Col>
+
+          <Col span={13}>
+            <h3 style={{ marginBottom: "1em" }}>Form Data</h3>
+            <Form
+              style={{ padding: "1em" }}
+              {...formLayout}
+              name="cms"
+              form={form}
+              initialValues={{
+                remember: false,
+              }}
+              onFinish={submitForm}
+              onFinishFailed={(value) => submitFailed(value)}
             >
-              <Switch
-                onChange={() => {
-                  setGuestLecturer(!guestLecturer);
-                }}
-              />
-            </Form.Item>
-
-            <Form.Item
-              label={!guestLecturer ? "Lecturer Name" : "Guest Lecturer Name"}
-              name="lecturer"
-              rules={ruleSetRequired}
-            >
-              {!guestLecturer ? (
-                <Select>{tutors.filter((tutor, index) => index > 0)}</Select>
-              ) : (
+              <Form.Item
+                label="Video Title"
+                name="title"
+                rules={ruleSetRequired}
+              >
                 <Input />
-              )}
-            </Form.Item>
+              </Form.Item>
 
-            <Form.Item
-              label="Video URL"
-              name="video_url"
-              rules={ruleSetRequired}
-            >
-              <Input onChange={(e) => setTimestampVideoUrl(e.target.value)} />
-            </Form.Item>
-
-            <Form.Item
-              label="Thumbnail URL"
-              name="thumbnail_url"
-              rules={ruleSetRequired}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label="Tutorial"
-              // name="tutorial_switch"
-              valuePropName="checked"
-            >
-              <Switch
-                onChange={() => {
-                  setTutorialVideo(!tutorialVideo);
-                }}
-              />
-            </Form.Item>
-
-            <Form.Item label="Tags" rules={ruleSetRequired}>
-              <Select
-                mode="multiple"
-                name="tags"
-                value={tags}
-                placeholder="Select tags"
-                onChange={(value) => {
-                  setTags(value);
-                }}
+              <Form.Item
+                label="Guest Lecturer"
+                // name="guest_lecture_switch"
+                valuePropName="checked"
               >
-                {selectTags}
-              </Select>
-            </Form.Item>
+                <Switch
+                  onChange={() => {
+                    setGuestLecturer(!guestLecturer);
+                  }}
+                />
+              </Form.Item>
 
-            <Form.Item
-              label={!guestLecturer ? "Lecture Date" : "Guest Speaker Date"}
-              name="lecture_date"
-              rules={ruleSetRequired}
-            >
-              <DatePicker />
-            </Form.Item>
-
-            <Form.Item
-              label="Bootcamp Week"
-              name="bootcamp_week"
-              rules={ruleSetRequired}
-            >
-              <InputNumber min={1} />
-            </Form.Item>
-
-            <Form.Item
-              label="Video Description"
-              name="description"
-              rules={ruleSetRequired}
-            >
-              <Input.TextArea autoSize={{ minRows: 8 }} />
-            </Form.Item>
-
-            <Form.Item label={"Timestamps"}>
-              <Button
-                onClick={() =>
-                  timestampVideoUrl &&
-                  timestampVideoUrl.slice(0, 18) === "https://vimeo.com/" &&
-                  typeof Number(timestampVideoUrl.slice(0, 18)) === "number"
-                    ? modalDisplay()
-                    : message.warn(
-                        "Please select a video or update the video url field"
-                      )
-                }
+              <Form.Item
+                label={!guestLecturer ? "Lecturer Name" : "Guest Lecturer Name"}
+                name="lecturer"
+                rules={ruleSetRequired}
               >
-                Open Timestamp Editor
-              </Button>
-            </Form.Item>
-
-            <Form.Item label="Github Links">
-              <Form.List name="github_links">
-                {(fields, { add, remove }) => (
-                  <>
-                    {fields.map((field) => (
-                      <Space
-                        key={field.key}
-                        style={{ display: "flex", marginBottom: 0 }}
-                        align="baseline"
-                      >
-                        <Form.Item
-                          {...field}
-                          name={[field.name, "link"]}
-                          fieldKey={[field.fieldKey, "link"]}
-                        >
-                          <Input placeholder="url" />
-                        </Form.Item>
-
-                        <Form.Item
-                          {...field}
-                          name={[field.name, "desc"]}
-                          fieldKey={[field.fieldKey, "desc"]}
-                        >
-                          <Input placeholder="description" />
-                        </Form.Item>
-
-                        <Form.Item
-                          {...field}
-                          name={[field.name, "uuid"]}
-                          fieldKey={[field.fieldKey, "uuid"]}
-                          hidden
-                          initialValue={uuidv4()}
-                        ></Form.Item>
-
-                        <MinusCircleOutlined
-                          onClick={() => remove(field.name)}
-                        />
-                      </Space>
-                    ))}
-                    <Form.Item>
-                      <Button
-                        type="dashed"
-                        onClick={() => add()}
-                        icon={<PlusOutlined />}
-                      >
-                        Add Github Link
-                      </Button>
-                    </Form.Item>
-                  </>
+                {!guestLecturer ? (
+                  <Select>{tutors.filter((tutor, index) => index > 0)}</Select>
+                ) : (
+                  <Input />
                 )}
-              </Form.List>
-            </Form.Item>
+              </Form.Item>
 
-            <Form.Item label="Slide Links">
-              <Form.List name="slides">
-                {(fields, { add, remove }) => (
-                  <>
-                    {fields.map((field) => (
-                      <Space
-                        key={field.key}
-                        style={{ display: "flex", marginBottom: 0 }}
-                        align="baseline"
-                      >
-                        <Form.Item
-                          {...field}
-                          name={[field.name, "link"]}
-                          fieldKey={[field.fieldKey, "link"]}
+              <Form.Item
+                label="Video URL"
+                name="video_url"
+                rules={ruleSetRequired}
+              >
+                <Input onChange={(e) => setTimestampVideoUrl(e.target.value)} />
+              </Form.Item>
+
+              <Form.Item
+                label="Thumbnail URL"
+                name="thumbnail_url"
+                rules={ruleSetRequired}
+              >
+                <Input />
+              </Form.Item>
+
+              <Form.Item
+                label="Tutorial"
+                // name="tutorial_switch"
+                valuePropName="checked"
+              >
+                <Switch
+                  onChange={() => {
+                    setTutorialVideo(!tutorialVideo);
+                  }}
+                />
+              </Form.Item>
+
+              <Form.Item label="Tags" rules={ruleSetRequired}>
+                <Select
+                  mode="multiple"
+                  name="tags"
+                  value={tags}
+                  placeholder="Select tags"
+                  onChange={(value) => {
+                    setTags(value);
+                  }}
+                >
+                  {tagData
+                    ? tagData.map((value) => (
+                        <Option key={value.tag}>{value.tag}</Option>
+                      ))
+                    : ""}
+                </Select>
+              </Form.Item>
+
+              <Form.Item
+                label={!guestLecturer ? "Lecture Date" : "Guest Speaker Date"}
+                name="lecture_date"
+                rules={ruleSetRequired}
+              >
+                <DatePicker />
+              </Form.Item>
+
+              <Form.Item
+                label="Bootcamp Week"
+                name="bootcamp_week"
+                rules={ruleSetRequired}
+              >
+                <InputNumber min={1} />
+              </Form.Item>
+
+              <Form.Item
+                label="Video Description"
+                name="description"
+                rules={ruleSetRequired}
+              >
+                <Input.TextArea autoSize={{ minRows: 8 }} />
+              </Form.Item>
+
+              <Form.Item label={"Timestamps"}>
+                <Button
+                  onClick={() =>
+                    timestampVideoUrl &&
+                    timestampVideoUrl.slice(0, 18) === "https://vimeo.com/" &&
+                    typeof Number(timestampVideoUrl.slice(0, 18)) === "number"
+                      ? modalDisplay()
+                      : message.warn(
+                          "Please select a video or update the video url field"
+                        )
+                  }
+                >
+                  Open Timestamp Editor
+                </Button>
+              </Form.Item>
+
+              <Form.Item label="Github Links">
+                <Form.List name="github_links">
+                  {(fields, { add, remove }) => (
+                    <>
+                      {fields.map((field) => (
+                        <Space
+                          key={field.key}
+                          style={{ display: "flex", marginBottom: 0 }}
+                          align="baseline"
                         >
-                          <Input placeholder="url" />
-                        </Form.Item>
+                          <Form.Item
+                            {...field}
+                            name={[field.name, "link"]}
+                            fieldKey={[field.fieldKey, "link"]}
+                          >
+                            <Input placeholder="url" />
+                          </Form.Item>
 
-                        <Form.Item
-                          {...field}
-                          name={[field.name, "desc"]}
-                          fieldKey={[field.fieldKey, "desc"]}
+                          <Form.Item
+                            {...field}
+                            name={[field.name, "desc"]}
+                            fieldKey={[field.fieldKey, "desc"]}
+                          >
+                            <Input placeholder="description" />
+                          </Form.Item>
+
+                          <Form.Item
+                            {...field}
+                            name={[field.name, "uuid"]}
+                            fieldKey={[field.fieldKey, "uuid"]}
+                            hidden
+                            initialValue={uuidv4()}
+                          ></Form.Item>
+
+                          <MinusCircleOutlined
+                            onClick={() => remove(field.name)}
+                          />
+                        </Space>
+                      ))}
+                      <Form.Item>
+                        <Button
+                          type="dashed"
+                          onClick={() => add()}
+                          icon={<PlusOutlined />}
                         >
-                          <Input placeholder="description" />
-                        </Form.Item>
+                          Add Github Link
+                        </Button>
+                      </Form.Item>
+                    </>
+                  )}
+                </Form.List>
+              </Form.Item>
 
-                        <Form.Item
-                          {...field}
-                          name={[field.name, "uuid"]}
-                          fieldKey={[field.fieldKey, "uuid"]}
-                          hidden
-                          initialValue={uuidv4()}
-                        ></Form.Item>
-
-                        <MinusCircleOutlined
-                          onClick={() => remove(field.name)}
-                        />
-                      </Space>
-                    ))}
-                    <Form.Item>
-                      <Button
-                        type="dashed"
-                        onClick={() => add()}
-                        icon={<PlusOutlined />}
-                      >
-                        Add Slide Link
-                      </Button>
-                    </Form.Item>
-                  </>
-                )}
-              </Form.List>
-            </Form.Item>
-
-            <Form.Item label="Other Links">
-              <Form.List name="other_links">
-                {(fields, { add, remove }) => (
-                  <>
-                    {fields.map((field) => (
-                      <Space
-                        key={field.key}
-                        style={{ display: "flex", marginBottom: 0 }}
-                        align="baseline"
-                      >
-                        <Form.Item
-                          {...field}
-                          name={[field.name, "link"]}
-                          fieldKey={[field.fieldKey, "link"]}
+              <Form.Item label="Slide Links">
+                <Form.List name="slides">
+                  {(fields, { add, remove }) => (
+                    <>
+                      {fields.map((field) => (
+                        <Space
+                          key={field.key}
+                          style={{ display: "flex", marginBottom: 0 }}
+                          align="baseline"
                         >
-                          <Input placeholder="url" />
-                        </Form.Item>
-                        <Form.Item
-                          {...field}
-                          name={[field.name, "desc"]}
-                          fieldKey={[field.fieldKey, "desc"]}
+                          <Form.Item
+                            {...field}
+                            name={[field.name, "link"]}
+                            fieldKey={[field.fieldKey, "link"]}
+                          >
+                            <Input placeholder="url" />
+                          </Form.Item>
+
+                          <Form.Item
+                            {...field}
+                            name={[field.name, "desc"]}
+                            fieldKey={[field.fieldKey, "desc"]}
+                          >
+                            <Input placeholder="description" />
+                          </Form.Item>
+
+                          <Form.Item
+                            {...field}
+                            name={[field.name, "uuid"]}
+                            fieldKey={[field.fieldKey, "uuid"]}
+                            hidden
+                            initialValue={uuidv4()}
+                          ></Form.Item>
+
+                          <MinusCircleOutlined
+                            onClick={() => remove(field.name)}
+                          />
+                        </Space>
+                      ))}
+                      <Form.Item>
+                        <Button
+                          type="dashed"
+                          onClick={() => add()}
+                          icon={<PlusOutlined />}
                         >
-                          <Input placeholder="description" />
-                        </Form.Item>
+                          Add Slide Link
+                        </Button>
+                      </Form.Item>
+                    </>
+                  )}
+                </Form.List>
+              </Form.Item>
 
-                        <Form.Item
-                          {...field}
-                          name={[field.name, "uuid"]}
-                          fieldKey={[field.fieldKey, "uuid"]}
-                          hidden
-                          initialValue={uuidv4()}
-                        ></Form.Item>
+              <Form.Item label="Other Links">
+                <Form.List name="other_links">
+                  {(fields, { add, remove }) => (
+                    <>
+                      {fields.map((field) => (
+                        <Space
+                          key={field.key}
+                          style={{ display: "flex", marginBottom: 0 }}
+                          align="baseline"
+                        >
+                          <Form.Item
+                            {...field}
+                            name={[field.name, "link"]}
+                            fieldKey={[field.fieldKey, "link"]}
+                          >
+                            <Input placeholder="url" />
+                          </Form.Item>
+                          <Form.Item
+                            {...field}
+                            name={[field.name, "desc"]}
+                            fieldKey={[field.fieldKey, "desc"]}
+                          >
+                            <Input placeholder="description" />
+                          </Form.Item>
 
-                        <MinusCircleOutlined
-                          onClick={() => remove(field.name)}
-                        />
-                      </Space>
-                    ))}
-                    <Form.Item>
-                      <Button
-                        type="dashed"
-                        onClick={() => add()}
-                        icon={<PlusOutlined />}
-                      >
-                        Add Other Link
-                      </Button>
-                    </Form.Item>
-                  </>
-                )}
-              </Form.List>
-            </Form.Item>
+                          <Form.Item
+                            {...field}
+                            name={[field.name, "uuid"]}
+                            fieldKey={[field.fieldKey, "uuid"]}
+                            hidden
+                            initialValue={uuidv4()}
+                          ></Form.Item>
 
-            <Form.Item {...tailLayout}>
-              <Button type="primary" htmlType="submit">
-                Submit
-              </Button>
-            </Form.Item>
-          </Form>
-        </Col>
-      </Row>
+                          <MinusCircleOutlined
+                            onClick={() => remove(field.name)}
+                          />
+                        </Space>
+                      ))}
+                      <Form.Item>
+                        <Button
+                          type="dashed"
+                          onClick={() => add()}
+                          icon={<PlusOutlined />}
+                        >
+                          Add Other Link
+                        </Button>
+                      </Form.Item>
+                    </>
+                  )}
+                </Form.List>
+              </Form.Item>
+
+              <Form.Item {...tailLayout}>
+                <Button type="primary" htmlType="submit">
+                  Submit
+                </Button>
+              </Form.Item>
+            </Form>
+          </Col>
+        </Row>
+      </Space>
     </div>
   );
 }
