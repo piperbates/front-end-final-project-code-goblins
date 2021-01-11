@@ -38,6 +38,7 @@ const TimestampSelector = ({
       onCancel={modalDisplay}
       width="fit-content"
       destroyOnClose
+      okText={"Finish"}
     >
       <>
         {timestampVideoUrl ? (

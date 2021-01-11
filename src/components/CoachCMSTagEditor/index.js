@@ -1,6 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { Modal, Button, Table, Form, Input, message, Space } from "antd";
+import {
+  Modal,
+  Button,
+  Table,
+  Form,
+  Input,
+  message,
+  Space,
+  Popconfirm,
+} from "antd";
 import config from "../../config";
+import {
+  CloseCircleOutlined,
+  EditOutlined,
+  SaveOutlined,
+} from "@ant-design/icons";
 
 const CmsTagEditor = ({ tagEditorVisible, toggleTagDisplay }) => {
   const [tagData, setTagData] = useState(false);
@@ -8,14 +22,19 @@ const CmsTagEditor = ({ tagEditorVisible, toggleTagDisplay }) => {
   const [tagDelete, setTagDelete] = useState(null);
   const [tagAdd, setTagAdd] = useState(null);
   const [form] = Form.useForm();
+  const [inputDisabled, setInputDisabled] = useState(true);
+  const [tagInput, setTagInput] = useState(null);
+  const [tagUpdate, setTagUpdate] = useState(null);
 
   useEffect(() => {
     const getTagData = async () => {
       const res = await fetch(config.BACKEND_URL_TAGS_GET_ALL_DATA);
       const data = await res.json();
       setTagData(data);
-      let tempTagData = data.sort((a, b) => a.key - b.key);
-      setLastTagId(tempTagData[tempTagData.length - 1].key);
+      if (data.length > 0) {
+        let tempTagData = data.sort((a, b) => a.key - b.key);
+        setLastTagId(tempTagData[tempTagData.length - 1].key);
+      }
     };
     getTagData();
   }, [tagEditorVisible]);
@@ -52,7 +71,24 @@ const CmsTagEditor = ({ tagEditorVisible, toggleTagDisplay }) => {
       addTag();
     }
   }, [tagAdd]);
-  console.log("tag modal rerender");
+
+  useEffect(() => {
+    const updateTag = async () => {
+      await fetch(config.BACKEND_URL_TAGS_UPDATE, {
+        method: "PATCH",
+        body: JSON.stringify(tagUpdate),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    };
+    if (tagUpdate) {
+      updateTag();
+      message.success(`Tag updated`);
+      setTagUpdate(null);
+    }
+  }, [tagUpdate]);
+
   const { Column } = Table;
 
   const submitTag = (submittedTag) => {
@@ -83,6 +119,7 @@ const CmsTagEditor = ({ tagEditorVisible, toggleTagDisplay }) => {
       closable
       destroyOnClose
     >
+      <h3>Tag Editor</h3>
       <Form name="tagform" onFinish={submitTag} form={form}>
         <Space>
           <Form.Item label="Tag Name" name="name" rules={[{ required: true }]}>
@@ -103,15 +140,58 @@ const CmsTagEditor = ({ tagEditorVisible, toggleTagDisplay }) => {
         scroll={{ y: 500 }}
       >
         <Column title="ID" dataIndex="key" key="key" />
-        <Column title="Tag" dataIndex="tag" key="tag" />
+        <Column
+          title="Tag"
+          key="tag"
+          render={(record) => (
+            <Input
+              defaultValue={record.tag}
+              bordered={false}
+              disabled={inputDisabled}
+              onChange={(e) =>
+                setTagInput({
+                  updateRecord: record.key,
+                  updateValue: e.target.value,
+                })
+              }
+            />
+          )}
+        />
+
         <Column
           title="Delete"
           key="delete"
           render={(record) => (
-            <Button onClick={() => setTagDelete(record)}>x</Button>
+            <Popconfirm
+              title={`Are you sure you want to delete '${record.tag}'`}
+              okText={`delete`}
+              cancelText={`cancel`}
+              onConfirm={() => setTagDelete(record)}
+            >
+              <CloseCircleOutlined />
+            </Popconfirm>
           )}
         />
       </Table>
+      {inputDisabled ? (
+        <p style={{ color: "green" }}>Viewing Mode</p>
+      ) : (
+        <p style={{ color: "red" }}>Editing Mode</p>
+      )}
+      <Space>
+        <Button onClick={() => setInputDisabled(!inputDisabled)}>
+          Edit <EditOutlined />
+        </Button>
+        <Button
+          onClick={() => {
+            setTagUpdate(tagInput);
+            setTagInput(null);
+          }}
+          disabled={(inputDisabled && !tagInput) || !tagInput ? true : false}
+        >
+          Save <SaveOutlined />
+        </Button>
+      </Space>
     </Modal>
   );
 };

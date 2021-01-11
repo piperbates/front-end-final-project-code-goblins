@@ -20,7 +20,12 @@ export default function VideoSelectionPage({ allVideoData }) {
   }, [searchUrl]);
 
   if (!videoData) {
-    return <Spin />;
+    return (
+      <>
+        <p>no video data</p>
+        <Spin />
+      </>
+    );
   } else
     return (
       <>
