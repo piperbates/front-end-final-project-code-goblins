@@ -3,6 +3,7 @@ import "antd/dist/antd.css";
 import "./style.css";
 import { Modal, Button, Input } from "antd";
 import { message } from "antd";
+import config from "../../config";
 
 const { TextArea } = Input;
 
@@ -31,7 +32,7 @@ export default function FeedbackModal() {
   //Posts the feedback to the database
   function postFeedback(value) {
     //Value is the feedback to be submitted
-    fetch(`http://localhost:5000/feedback`, {
+    fetch(`config.BACKEND_URL_FEEDBACK_UPDATE`, {
       //Change this url on deployment
       method: "post",
       body: JSON.stringify({

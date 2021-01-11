@@ -1,12 +1,15 @@
+const url = 'https://code-goblins-final-project.herokuapp.com/'
+
 const config = {
-  BACKEND_URL_SEARCH: `https://code-goblins-final-project.herokuapp.com/search/?`,
-  BACKEND_URL_SEARCH_BY_ID: `https://code-goblins-final-project.herokuapp.com/searchbyid/`,
-  BACKEND_URL_ADD_CONTENT: `https://code-goblins-final-project.herokuapp.com/addcontent/`,
-  BACKEND_URL_VIMEO_GET_ALL_DATA: `https://code-goblins-final-project.herokuapp.com/vimeo/allData/`,
-  BACKEND_URL_TAGS_GET_ALL_DATA: `https://code-goblins-final-project.herokuapp.com/tags/`,
-  BACKEND_URL_TAGS_DELETE: `https://code-goblins-final-project.herokuapp.com/tags/`,
-  BACKEND_URL_TAGS_ADD: `https://code-goblins-final-project.herokuapp.com/tags/`,
-  BACKEND_URL_TAGS_UPDATE: `https://code-goblins-final-project.herokuapp.com/tags/`,
+  BACKEND_URL_SEARCH: `${url}/search/?`,
+  BACKEND_URL_SEARCH_BY_ID: `${url}/searchbyid/`,
+  BACKEND_URL_ADD_CONTENT: `${url}/addcontent/`,
+  BACKEND_URL_VIMEO_GET_ALL_DATA: `${url}/vimeo/allData/`,
+  BACKEND_URL_TAGS_GET_ALL_DATA: `${url}/tags/`,
+  BACKEND_URL_TAGS_DELETE: `${url}/tags/`,
+  BACKEND_URL_TAGS_ADD: `${url}/tags/`,
+  BACKEND_URL_TAGS_UPDATE: `${url}/tags/`,
+  BACKEND_URL_FEEDBACK_UPDATE: `${url}/feedback/`,
 };
 
 export default config;
