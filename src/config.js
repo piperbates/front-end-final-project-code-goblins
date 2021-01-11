@@ -6,6 +6,7 @@ const config = {
   BACKEND_URL_TAGS_GET_ALL_DATA: `http://localhost:5000/tags/`,
   BACKEND_URL_TAGS_DELETE: `http://localhost:5000/tags/`,
   BACKEND_URL_TAGS_ADD: `http://localhost:5000/tags/`,
+  BACKEND_URL_TAGS_UPDATE: `http://localhost:5000/tags/`,
 };
 
 export default config;

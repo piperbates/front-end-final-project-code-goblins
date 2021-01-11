@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from "react";
-import { Pagination, Spin, Card, Row, Space, Modal, Popover } from "antd";
+import {
+  Pagination,
+  Spin,
+  Card,
+  Row,
+  Space,
+  Modal,
+  Popover,
+  Tooltip,
+} from "antd";
 import config from "../../config";
 import {
   CheckCircleOutlined,
@@ -91,35 +100,50 @@ const CmsVideoSelector = ({ setFormVideoData }) => {
                   hoverable
                   style={{ width: "200px" }}
                   cover={
-                    <img src={vItem.pictures.sizes[4].link} alt={vItem.name} />
-                  }
-                  key={vItem.link}
-                  actions={[
-                    <PlayCircleOutlined
-                      key="play"
+                    <img
+                      src={vItem.pictures.sizes[4].link}
+                      alt={vItem.name}
                       onClick={() => {
                         viewerDisplay();
                         setViewerData(vItem);
                       }}
-                    />,
+                    />
+                  }
+                  key={vItem.link}
+                  actions={[
+                    <Tooltip title={"Play"}>
+                      <PlayCircleOutlined
+                        key="play"
+                        onClick={() => {
+                          viewerDisplay();
+                          setViewerData(vItem);
+                        }}
+                      />
+                    </Tooltip>,
                     <Popover
                       content={<DescriptionBox width={350} data={vItem} />}
                     >
                       <QuestionCircleOutlined key="info" />
                     </Popover>,
-                    <CheckCircleOutlined
-                      key="select"
-                      onClick={() =>
-                        setFormVideoData({
-                          title: vItem.name,
-                          url: vItem.link,
-                          thumbnail: vItem.pictures.sizes[4].link,
-                        })
-                      }
-                    />,
+                    <Tooltip title={"Select"}>
+                      <CheckCircleOutlined
+                        key="select"
+                        onClick={() =>
+                          setFormVideoData({
+                            title: vItem.name,
+                            url: vItem.link,
+                            thumbnail: vItem.pictures.sizes[4].link,
+                          })
+                        }
+                      />
+                    </Tooltip>,
                   ]}
                 >
                   <Meta
+                    onClick={() => {
+                      viewerDisplay();
+                      setViewerData(vItem);
+                    }}
                     title={vItem.name}
                     description={moment(vItem.created_time).format(
                       "DD MMM YYYY"

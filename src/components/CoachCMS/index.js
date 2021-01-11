@@ -68,8 +68,10 @@ function CoachCMS() {
       const res = await fetch(config.BACKEND_URL_TAGS_GET_ALL_DATA);
       const data = await res.json();
       setTagData(data.sort((a, b) => a.tag - b.tag));
-      let tempTagData = data.sort((a, b) => a.key - b.key);
-      setLastTagId(tempTagData[tempTagData.length - 1].key);
+      if (data.length > 0) {
+        let tempTagData = data.sort((a, b) => a.key - b.key);
+        setLastTagId(tempTagData[tempTagData.length - 1].key);
+      }
     };
     getTagData();
   }, [tagEditorVisible]);
@@ -299,11 +301,13 @@ function CoachCMS() {
                     setTags(value);
                   }}
                 >
-                  {tagData
-                    ? tagData.map((value) => (
-                        <Option key={value.tag}>{value.tag}</Option>
-                      ))
-                    : ""}
+                  {tagData ? (
+                    tagData.map((value) => (
+                      <Option key={value.tag}>{value.tag}</Option>
+                    ))
+                  ) : (
+                    <Option key={"no data"}>{"no data"}</Option>
+                  )}
                 </Select>
               </Form.Item>
 
@@ -320,6 +324,10 @@ function CoachCMS() {
                 name="bootcamp_week"
                 rules={ruleSetRequired}
               >
+                <InputNumber min={1} />
+              </Form.Item>
+
+              <Form.Item label="Cohort" name="cohort" rules={ruleSetRequired}>
                 <InputNumber min={1} />
               </Form.Item>
 
