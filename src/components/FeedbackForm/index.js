@@ -32,7 +32,7 @@ export default function FeedbackModal() {
   //Posts the feedback to the database
   function postFeedback(value) {
     //Value is the feedback to be submitted
-    fetch(`config.BACKEND_URL_FEEDBACK_UPDATE`, {
+    fetch(`${config.BACKEND_URL_FEEDBACK_UPDATE}`, {
       //Change this url on deployment
       method: "post",
       body: JSON.stringify({
