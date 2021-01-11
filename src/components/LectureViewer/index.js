@@ -1,32 +1,29 @@
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { useLocation, Redirect } from "react-router-dom";
-
 import ReactPlayer from "react-player";
 import "./style.css";
 import FeedbackForm from "../FeedbackForm";
 import { Tabs, Spin } from "antd";
 import { SearchContext } from "../../contexts/searchContext";
+import config from "../../config";
 
 const { TabPane } = Tabs;
-
 
 export default function LectureViewer() {
   const id = useLocation().pathname.split("/").pop();
   const player = useRef(null);
-  const [videoData, setVideoData] = useState();
+  const [videoData, setVideoData] = useState(false);
   const { searchText } = useContext(SearchContext);
   const [previousSearch] = useState(searchText);
 
   useEffect(() => {
     async function getVideoData() {
-      const response = await fetch(
-        process.env.REACT_APP_BACKEND_URL + `/${id}`
-      );
+      const response = await fetch(config.BACKEND_URL_SEARCH_BY_ID + id);
       const data = await response.json();
       setVideoData(data[0]);
     }
     getVideoData();
-  }, []);
+  }, [id]);
 
   if (searchText !== previousSearch) {
     return <Redirect exact to="/" />;
@@ -35,8 +32,8 @@ export default function LectureViewer() {
   function seekToTimestamp(seconds) {
     return player.current.seekTo(seconds);
   }
-
-  if (videoData === null || videoData === undefined) {
+  console.log(videoData);
+  if (!videoData) {
     return (
       <>
         <Spin />
@@ -58,7 +55,7 @@ export default function LectureViewer() {
               <h3>Timestamps</h3>
               {videoData.timestamps.map((value) => {
                 return (
-                  <div>
+                  <div key={value.uuid}>
                     <button
                       onClick={() => seekToTimestamp(value.timeSecondsValue)}
                     >
@@ -69,18 +66,17 @@ export default function LectureViewer() {
                 );
               })}
             </div>
-          <Tabs size="small" style={{ width: "500px" }} defaultActiveKey="1">
-            <TabPane tab="Video Description" key="1">
-              <p>{videoData.description}</p>
-            </TabPane>
-            <TabPane tab="Resources" key="2">
-              {[
-                ...videoData.github_links,
-                ...videoData.slides,
-                ...videoData.other_links,
-              ].map((value) =>
-                value.link ? (
-                  <>
+            <Tabs size="small" style={{ width: "500px" }} defaultActiveKey="1">
+              <TabPane tab="Video Description" key="1">
+                <p>{videoData.description}</p>
+              </TabPane>
+              <TabPane tab="Resources" key="2">
+                {[
+                  ...videoData.github_links,
+                  ...videoData.slides,
+                  ...videoData.other_links,
+                ].map((value) => (
+                  <div key={value.uuid}>
                     <a
                       href={value.link}
                       target="_blank"
@@ -89,14 +85,11 @@ export default function LectureViewer() {
                       {value.type} - {value.desc}
                     </a>
                     <br />
-                  </>
-                ) : (
-                  <li>{value.type} resources not available for this content</li>
-                )
-              )}
-            </TabPane>
-          </Tabs>
-        </div>
+                  </div>
+                ))}
+              </TabPane>
+            </Tabs>
+          </div>
         </div>
         <FeedbackForm />
       </>

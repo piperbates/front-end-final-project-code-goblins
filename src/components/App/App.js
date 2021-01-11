@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, Memo } from "react";
+import React, { useContext } from "react";
 import { Route, Switch } from "react-router-dom";
 import "./App.css";
 
@@ -13,15 +13,7 @@ import Login from "../Login";
 import PrivateRoute from "../PrivateRoute";
 import Restricted from "../Restricted";
 
-const gridStyle = {
-  width: "25%",
-  textAlign: "center",
-};
-
-const api = `/`;
-
 function App() {
-  console.log("app firing");
   const { currentUser } = useContext(AuthContext);
   const adminUsers = useContext(AdminUsersContext);
 

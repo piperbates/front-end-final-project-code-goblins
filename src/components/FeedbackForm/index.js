@@ -2,17 +2,19 @@ import React, { useState } from "react";
 import "antd/dist/antd.css";
 import "./style.css";
 import { Modal, Button, Input } from "antd";
-import { message, Space } from "antd";
+import { message } from "antd";
 
 const { TextArea } = Input;
 
 //Feedback success messages. Edit these to display different messages depending the success of the feedback form submit.
 
-function successMsg() { //Displays on feedback success
+function successMsg() {
+  //Displays on feedback success
   message.success("Thanks for your feedback!");
 }
 
-function errorMsg() {//Displays on feedback error
+function errorMsg() {
+  //Displays on feedback error
   message.error("An error occured. Please try again.");
 }
 
@@ -27,8 +29,10 @@ export default function FeedbackModal() {
   const [feedback, setFeedback] = useState("");
 
   //Posts the feedback to the database
-  function postFeedback(value) {//Value is the feedback to be submitted
-    fetch(`http://localhost:5000/feedback`, { //Change this url on deployment
+  function postFeedback(value) {
+    //Value is the feedback to be submitted
+    fetch(`http://localhost:5000/feedback`, {
+      //Change this url on deployment
       method: "post",
       body: JSON.stringify({
         videoId: value.videoId, //Taken from ref - see feedbackToSubmit below
@@ -40,11 +44,11 @@ export default function FeedbackModal() {
       .then((res) => res.json()) //res.json() is an async function
       .then((data) => {
         console.log(data, "Thanks for the feedback: " + feedback);
-        setFeedback("");//Resets the form
+        setFeedback(""); //Resets the form
 
         setIsModalVisible(false); //closes the modal
         successMsg(); //message confirming to the user that the feedback has gone through
-      }) 
+      })
       .catch((error) => {
         errorMsg(); //message alerting user that there has been an error and they may need to try again
         console.log(error, "my error");
@@ -69,11 +73,13 @@ export default function FeedbackModal() {
     postFeedback(feedbackToSubmit);
     // console.log({feedbackToSubmit});
   }
-  const showModal = () => {//Sets modal visibility to true
+  const showModal = () => {
+    //Sets modal visibility to true
     setIsModalVisible(true);
   };
 
-  const handleCancel = () => {//Sets modal visibility to false, used if the user has pressed cancel
+  const handleCancel = () => {
+    //Sets modal visibility to false, used if the user has pressed cancel
     setIsModalVisible(false);
   };
 
