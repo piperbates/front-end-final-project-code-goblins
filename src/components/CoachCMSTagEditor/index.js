@@ -14,11 +14,17 @@ import {
   CloseCircleOutlined,
   EditOutlined,
   SaveOutlined,
+  StopOutlined,
 } from "@ant-design/icons";
 
-const CmsTagEditor = ({ tagEditorVisible, toggleTagDisplay }) => {
-  const [tagData, setTagData] = useState(false);
-  const [lastTagId, setLastTagId] = useState(null);
+const CmsTagEditor = ({
+  tagEditorVisible,
+  toggleTagDisplay,
+  tagData,
+  updateTagData,
+  lastTagId,
+  updateLastTagData,
+}) => {
   const [tagDelete, setTagDelete] = useState(null);
   const [tagAdd, setTagAdd] = useState(null);
   const [form] = Form.useForm();
@@ -27,24 +33,11 @@ const CmsTagEditor = ({ tagEditorVisible, toggleTagDisplay }) => {
   const [tagUpdate, setTagUpdate] = useState(null);
 
   useEffect(() => {
-    const getTagData = async () => {
-      const res = await fetch(config.BACKEND_URL_TAGS_GET_ALL_DATA);
-      const data = await res.json();
-      setTagData(data);
-      if (data.length > 0) {
-        let tempTagData = data.sort((a, b) => a.key - b.key);
-        setLastTagId(tempTagData[tempTagData.length - 1].key);
-      }
-    };
-    getTagData();
-  }, [tagEditorVisible]);
-
-  useEffect(() => {
     const deleteTag = async () => {
       await fetch(config.BACKEND_URL_TAGS_DELETE + `${tagDelete.key}`, {
         method: "DELETE",
       });
-      setTagData(tagData.filter((tag) => tag.key !== tagDelete.key));
+      updateTagData(tagData.filter((tag) => tag.key !== tagDelete.key));
       message.success(`'${tagDelete.tag}' tag has been deleted`);
       setTagDelete(null);
     };
@@ -63,7 +56,7 @@ const CmsTagEditor = ({ tagEditorVisible, toggleTagDisplay }) => {
         },
       });
 
-      setTagData([...tagData, { key: lastTagId, tag: tagAdd }]);
+      updateTagData([...tagData, { key: lastTagId, tag: tagAdd }]);
       message.success(`'${tagAdd}' tag has been added`);
       setTagAdd(null);
     };
@@ -95,17 +88,19 @@ const CmsTagEditor = ({ tagEditorVisible, toggleTagDisplay }) => {
     let tagCheck = null;
 
     if (tagData) {
-      tagCheck = tagData.some((value) => value.tag === submittedTag.name);
+      tagCheck = tagData.some(
+        (value) => value.tag.toLowerCase() === submittedTag.name.toLowerCase()
+      );
       if (tagCheck) {
         message.error(`Tag already exists`);
         form.resetFields();
       } else {
-        setLastTagId(lastTagId + 1);
+        updateLastTagData(lastTagId + 1);
         setTagAdd(submittedTag.name);
         form.resetFields();
       }
     } else {
-      setLastTagId(lastTagId + 1);
+      updateLastTagData(lastTagId + 1);
       setTagAdd(submittedTag.name);
       form.resetFields();
     }
@@ -114,7 +109,10 @@ const CmsTagEditor = ({ tagEditorVisible, toggleTagDisplay }) => {
   return (
     <Modal
       visible={tagEditorVisible}
-      onCancel={toggleTagDisplay}
+      onCancel={() => {
+        toggleTagDisplay();
+        setInputDisabled(!inputDisabled);
+      }}
       footer={null}
       closable
       destroyOnClose
@@ -124,8 +122,12 @@ const CmsTagEditor = ({ tagEditorVisible, toggleTagDisplay }) => {
         <Space>
           <Form.Item label="Tag Name" name="name" rules={[{ required: true }]}>
             <Space>
-              <Input placeholder="Enter tag name" style={{ width: "200px" }} />
-              <Button type="primary" htmlType="submit">
+              <Input
+                placeholder="Enter tag name"
+                style={{ width: "200px" }}
+                disabled={inputDisabled}
+              />
+              <Button type="primary" htmlType="submit" disabled={inputDisabled}>
                 Submit
               </Button>
             </Space>
@@ -167,8 +169,13 @@ const CmsTagEditor = ({ tagEditorVisible, toggleTagDisplay }) => {
               okText={`delete`}
               cancelText={`cancel`}
               onConfirm={() => setTagDelete(record)}
+              disabled={inputDisabled}
             >
-              <CloseCircleOutlined />
+              {inputDisabled ? (
+                <StopOutlined style={{ color: "#ccc" }} />
+              ) : (
+                <CloseCircleOutlined style={{ color: "red" }} />
+              )}
             </Popconfirm>
           )}
         />
@@ -179,9 +186,14 @@ const CmsTagEditor = ({ tagEditorVisible, toggleTagDisplay }) => {
         <p style={{ color: "red" }}>Editing Mode</p>
       )}
       <Space>
-        <Button onClick={() => setInputDisabled(!inputDisabled)}>
+        <Button
+          onClick={() => {
+            setInputDisabled(!inputDisabled);
+          }}
+        >
           Edit <EditOutlined />
         </Button>
+
         <Button
           onClick={() => {
             setTagUpdate(tagInput);
