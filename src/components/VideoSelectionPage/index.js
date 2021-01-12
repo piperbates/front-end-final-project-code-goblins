@@ -24,10 +24,11 @@ export default function VideoSelectionPage({ allVideoData }) {
   } else
     return (
       <>
-        <div id="video-selection-wrapper">
-          <FilterBox />
-          <div id="video-selection-box">
-            <Row>
+        <Row>
+          <div id="video-selection-wrapper">
+            <FilterBox />
+
+            <div id="video-selection-box">
               <Space wrap size="middle">
                 {videoData.map((data) => {
                   return (
@@ -53,9 +54,9 @@ export default function VideoSelectionPage({ allVideoData }) {
                   );
                 })}
               </Space>
-            </Row>
+            </div>
           </div>
-        </div>
+        </Row>
       </>
     );
 }

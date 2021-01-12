@@ -3,45 +3,38 @@ header {
   width: 100%;
   padding: 0px;
   margin: 0px;
-  background: white;
+  background: rgb(255, 255, 255);
   color: black;
-  border-bottom: 1px solid rgb(214, 214, 214)
+  border-bottom: 1px solid rgb(190, 190, 190);
+  background-color: #f2f2f2;
 }
-
-#soc-logo {
-    width: 50px;
-    height: 50px;
-  }
-  
-  nav ul {
-    list-style-type: none;
-  }
-  
-  nav li {
-    display: inline;
-    padding: 10px;
-    text-transform: uppercase;
-  
-  }
-
 #header-content {
   display: flex;
   padding: 5px;
-  margin: auto;
   justify-content: space-between;
-  align-items: center; /* vertical-align: bottom; */
   height: 100%;
 }
-
-
-#search-signout-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-}
-
 #logo-nav-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
+  display: flex;
+  align-items: center;
+}
+#soc-logo {
+  width: 50px;
+  height: 50px;
+}
+#search-signout-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#search-box {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+#sign-out-button {
+  border-radius: 10px;
+}
+header a {
+  color: black;
 }

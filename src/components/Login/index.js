@@ -47,7 +47,7 @@ const Login = ({ history }) => {
   return (
     <div id="login">
       <img alt="logo" src={logo} id="logo"></img>
-      <h1>Lecture Resources Hub</h1>
+      <h1>Lecture Resource Hub</h1>
       <Form
         // {...layout}
         // name="login"

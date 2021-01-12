@@ -5,6 +5,7 @@ import TagDropdown from "../TagDropdown";
 import weeks from "../../data/weeks";
 import tutors from "../../data/tutors";
 import { tags } from "../../data/tags";
+import { Col, Row, Space } from "antd";
 
 import { SearchContext } from "../../contexts/searchContext";
 
@@ -16,7 +17,9 @@ function FilterBox() {
   return (
     <div id="filter-box">
       <TagFilter data={tags} text="Tags" searchTags={getSearchTags} />
+
       <TagDropdown data={weeks} searchFunction={getSearchWeek} />
+
       <TagDropdown data={tutors} searchFunction={getSearchLecturer} />
     </div>
   );

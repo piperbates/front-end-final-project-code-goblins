@@ -27,44 +27,62 @@ function App() {
           </>
         )}
       />
+      <main>
+        <Switch>
+          <Route exact path="/login" component={Login} />
 
-      <Switch>
-        <Route exact path="/login" component={Login} />
-
-        <PrivateRoute
-          exact
-          path="/"
-          render={() => (
-            <>
-              <VideoSelectionPage />
-            </>
-          )}
-        />
-
-        <PrivateRoute
-          exact
-          path={"/videoviewer/:id"}
-          render={() => (
-            <>
-              <LectureViewer />
-            </>
-          )}
-        />
-
-        <PrivateRoute
-          exact
-          path={"/cms"}
-          render={() =>
-            adminUsers[0].find((user) => user.email === currentUser.email) ? (
+          <PrivateRoute
+            exact
+            path="/"
+            render={() => (
               <>
-                <CoachCMS />
+                <VideoSelectionPage />
               </>
-            ) : (
-              <Restricted />
-            )
-          }
-        />
-      </Switch>
+            )}
+          />
+
+          <PrivateRoute
+            exact
+            path={"/videoviewer/:id"}
+            render={() => (
+              <>
+                <LectureViewer />
+              </>
+            )}
+          />
+
+          <PrivateRoute
+            exact
+            path={"/cms"}
+            render={() =>
+              adminUsers[0].find((user) => user.email === currentUser.email) ? (
+                <>
+                  <CoachCMS />
+                </>
+              ) : (
+                <Restricted />
+              )
+            }
+          />
+        </Switch>
+      </main>
+      {/* <PrivateRoute
+        path="/"
+        render={() => (
+          <>
+            <footer>
+              <div id="footer-content">
+                <p>
+                  &copy; Copyright 2021 School of Code. All Rights Reserved -
+                  Privacy Policy - Terms of Use School of Code Ltd is registered
+                  in England, Company No. 09793790 School of Code, Custard
+                  Factory, Gibb Street, Birmingham, B9 4AA
+                </p>
+              </div>
+            </footer>
+          </>
+        )}
+      /> */}
     </>
   );
 }

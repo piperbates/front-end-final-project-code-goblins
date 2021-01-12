@@ -2,12 +2,11 @@ import React, { useEffect, useRef, useState, useContext } from "react";
 import { useLocation, Redirect } from "react-router-dom";
 import ReactPlayer from "react-player";
 import "./style.css";
-import FeedbackForm from "../FeedbackForm";
-import { Tabs, Spin } from "antd";
 import { SearchContext } from "../../contexts/searchContext";
 import config from "../../config";
-
-const { TabPane } = Tabs;
+import FeedbackForm from "../FeedbackForm";
+import { Spin, Row, Col, Space, Descriptions, Typography, Divider } from "antd";
+const { Title, Paragraph, Text, Link } = Typography;
 
 export default function LectureViewer() {
   const id = useLocation().pathname.split("/").pop();
@@ -41,22 +40,67 @@ export default function LectureViewer() {
     );
   } else
     return (
-      <>
-        <h1>
-          {videoData.title} - {videoData.lecturer}
-        </h1>
-        <p>
-          <strong>video id:</strong> {videoData.id}
-        </p>
-        <div id="display">
-          <ReactPlayer ref={player} url={videoData.video_url} controls={true} />
-          <div id="video-sidebar">
-            <div id="video-timestamps">
-              <h3>Timestamps</h3>
+      <Row justify={"center"}>
+        ​<Col span={24}></Col>
+        <Col span={16}>
+          <div className="player-wrapper">
+            <ReactPlayer
+              ref={player}
+              url={videoData.video_url}
+              controls={true}
+              className="react-player"
+              width="95%"
+              height="95%"
+            />
+          </div>
+          <Col span={21}>
+            <h1 style={{ padding: "0px" }}>{videoData.title}</h1>
+            <h2 style={{ padding: "0px" }}>{videoData.lecturer}</h2>
+            Video ID: {videoData.id}
+          </Col>
+          <Col span={23}>
+            <Descriptions
+              colon={false}
+              title="Description"
+              style={{
+                marginTop: "16px",
+                border: "1px solid #ddd",
+                padding: "10px",
+              }}
+            >
+              <Descriptions.Item>{videoData.description} </Descriptions.Item>
+            </Descriptions>
+          </Col>
+        </Col>
+        <Col span={5}>
+          <Space direction="vertical" size="small">
+            <FeedbackForm />
+            <h3>Resources</h3>​
+            <Paragraph>
+              {[
+                ...videoData.github_links,
+                ...videoData.slides,
+                ...videoData.other_links,
+              ].map((value) => (
+                <div key={value.uuid}>
+                  <a
+                    href={value.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {value.type} - {value.desc}
+                  </a>
+                  <br />
+                </div>
+              ))}
+            </Paragraph>
+            <Space direction="vertical">
+              ​<h3>Timestamps</h3>
               {videoData.timestamps.map((value) => {
                 return (
-                  <div key={value.uuid}>
+                  <div>
                     <button
+                      key={value.uuid}
                       onClick={() => seekToTimestamp(value.timeSecondsValue)}
                     >
                       {`${value.timeString} - ${value.timeDesc}`}
@@ -65,33 +109,9 @@ export default function LectureViewer() {
                   </div>
                 );
               })}
-            </div>
-            <Tabs size="small" style={{ width: "500px" }} defaultActiveKey="1">
-              <TabPane tab="Video Description" key="1">
-                <p>{videoData.description}</p>
-              </TabPane>
-              <TabPane tab="Resources" key="2">
-                {[
-                  ...videoData.github_links,
-                  ...videoData.slides,
-                  ...videoData.other_links,
-                ].map((value) => (
-                  <div key={value.uuid}>
-                    <a
-                      href={value.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      {value.type} - {value.desc}
-                    </a>
-                    <br />
-                  </div>
-                ))}
-              </TabPane>
-            </Tabs>
-          </div>
-        </div>
-        <FeedbackForm />
-      </>
+            </Space>
+          </Space>
+        </Col>
+      </Row>
     );
 }

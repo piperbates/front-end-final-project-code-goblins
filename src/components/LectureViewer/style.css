@@ -1,15 +1,10 @@
-#display {
-    display: flex;
-
+.player-wrapper {
+  position: relative;
+  padding-top: 56.25%; /* Player ratio: 100 / (1280 / 720) */
 }
 
-h1, h2 {
-    display: inline;
-}
-
-h2 {
-    color: rgb(128, 128, 128);
-    font-size: small;
-    margin-left: 20px;
-
+.react-player {
+  position: absolute;
+  left: 0;
+  top: 0;
 }
