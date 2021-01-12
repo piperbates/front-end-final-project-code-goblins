@@ -1,18 +1,21 @@
+const url = process.env.REACT_APP_BACKEND_URL;
+
 const config = {
-  BACKEND_URL_SEARCH: `http://localhost:5000/search/?`,
-  BACKEND_URL_SEARCH_BY_ID: `http://localhost:5000/searchbyid/`,
-  BACKEND_URL_ADD_CONTENT: `http://localhost:5000/addcontent/`,
-  BACKEND_URL_VIMEO_GET_ALL_DATA: `http://localhost:5000/vimeo/allData/`,
-  BACKEND_URL_TAGS_GET_ALL_DATA: `http://localhost:5000/tags/`,
-  BACKEND_URL_TAGS_DELETE: `http://localhost:5000/tags/`,
-  BACKEND_URL_TAGS_ADD: `http://localhost:5000/tags/`,
-  BACKEND_URL_TAGS_UPDATE: `http://localhost:5000/tags/`,
-  BACKEND_URL_TAGS_LASTKEY: `http://localhost:5000/tags/lastkey`,
-  BACKEND_URL_LECTURERS_GET_ALL_DATA: `http://localhost:5000/lecturers/`,
-  BACKEND_URL_LECTURERS_DELETE: `http://localhost:5000/lecturers/`,
-  BACKEND_URL_LECTURERS_ADD: `http://localhost:5000/lecturers/`,
-  BACKEND_URL_LECTURERS_UPDATE: `http://localhost:5000/lecturers/`,
-  BACKEND_URL_LECTURERS_LASTKEY: `http://localhost:5000/lecturers/lastkey`,
+  BACKEND_URL_SEARCH: `${url}/search/?`,
+  BACKEND_URL_SEARCH_BY_ID: `${url}/searchbyid/`,
+  BACKEND_URL_ADD_CONTENT: `${url}/addcontent/`,
+  BACKEND_URL_VIMEO_GET_ALL_DATA: `${url}/vimeo/allData/`,
+  BACKEND_URL_FEEDBACK_UPDATE: `${url}/feedback/`,
+  BACKEND_URL_TAGS_GET_ALL_DATA: `${url}/tags/`,
+  BACKEND_URL_TAGS_DELETE: `${url}/tags/`,
+  BACKEND_URL_TAGS_ADD: `${url}/tags/`,
+  BACKEND_URL_TAGS_UPDATE: `${url}/tags/`,
+  BACKEND_URL_TAGS_LASTKEY: `${url}/tags/lastkey`,
+  BACKEND_URL_LECTURERS_GET_ALL_DATA: `${url}/lecturers/`,
+  BACKEND_URL_LECTURERS_DELETE: `${url}/lecturers/`,
+  BACKEND_URL_LECTURERS_ADD: `${url}/lecturers/`,
+  BACKEND_URL_LECTURERS_UPDATE: `${url}/lecturers/`,
+  BACKEND_URL_LECTURERS_LASTKEY: `${url}/lecturers/lastkey`,
 };
 
 export default config;
