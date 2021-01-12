@@ -7,6 +7,12 @@ const config = {
   BACKEND_URL_TAGS_DELETE: `http://localhost:5000/tags/`,
   BACKEND_URL_TAGS_ADD: `http://localhost:5000/tags/`,
   BACKEND_URL_TAGS_UPDATE: `http://localhost:5000/tags/`,
+  BACKEND_URL_TAGS_LASTKEY: `http://localhost:5000/tags/lastkey`,
+  BACKEND_URL_LECTURERS_GET_ALL_DATA: `http://localhost:5000/lecturers/`,
+  BACKEND_URL_LECTURERS_DELETE: `http://localhost:5000/lecturers/`,
+  BACKEND_URL_LECTURERS_ADD: `http://localhost:5000/lecturers/`,
+  BACKEND_URL_LECTURERS_UPDATE: `http://localhost:5000/lecturers/`,
+  BACKEND_URL_LECTURERS_LASTKEY: `http://localhost:5000/lecturers/lastkey`,
 };
 
 export default config;
