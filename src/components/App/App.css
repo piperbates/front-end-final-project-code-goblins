@@ -1,18 +1,16 @@
 main {
-  padding: 20px; margin: 20px;
-
+  padding: 20px;
+  margin: 20px;
 }
 
-
-
-
-.video-card {
-  border-radius: 50%;
-}
+/* .video-card {
+  border-radius: 100%;
+} */
 
 .video-thumbnail {
   width: 100px;
 }
+
 nav li:hover {
   text-decoration: underline;
 }
