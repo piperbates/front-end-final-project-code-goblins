@@ -72,7 +72,7 @@ export default function VideoSelectionPage({ allVideoData }) {
   if (!videoData) {
     return (
       <>
-        <p>no video data</p>
+        <p>Loading...</p>
         <Spin />
       </>
     );
