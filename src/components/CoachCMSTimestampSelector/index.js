@@ -1,7 +1,11 @@
 import React, { useRef, useState, useCallback } from "react";
 import { Modal, Button, Input, Form, Space, TimePicker, message } from "antd";
 import ReactPlayer from "react-player";
-import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  MinusCircleOutlined,
+  PlaySquareFilled,
+  PlusOutlined,
+} from "@ant-design/icons";
 import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 
@@ -21,6 +25,7 @@ const TimestampSelector = ({
   );
   const [seekTimeSeconds, setSeekTimeSeconds] = useState(0);
   const [seekTimeString, setSeekTimeString] = useState("00:00:00");
+  const [playerBuffering, setPlayerBuffering] = useState(false);
 
   const submitForm = useCallback(
     (timestamps) => {
@@ -47,6 +52,8 @@ const TimestampSelector = ({
             url={timestampVideoUrl}
             controls={true}
             style={{ marginBottom: "20px" }}
+            onBuffer={() => setPlayerBuffering(true)}
+            onBufferEnd={() => setPlayerBuffering(false)}
           />
         ) : (
           <p>select a video file or add url</p>
@@ -128,6 +135,8 @@ const TimestampSelector = ({
                 ))}
                 <Form.Item>
                   <Button
+                    disabled={playerBuffering}
+                    te
                     type="dashed"
                     onClick={() => {
                       const timeString = new Date(
@@ -144,7 +153,7 @@ const TimestampSelector = ({
                     }}
                     icon={<PlusOutlined />}
                   >
-                    Add Timestamp
+                    {playerBuffering ? "Loading Timestamp" : "Add Timestamp"}
                   </Button>
                 </Form.Item>
               </>
