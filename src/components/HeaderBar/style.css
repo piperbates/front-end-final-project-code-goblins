@@ -19,9 +19,10 @@ header {
   align-items: center;
 } */
 #soc-logo {
-  width: 80px;
-  height: 80px;
-  margin-top: 5px;
+  width: 70px;
+  height: 70px;
+  margin-top: 10px;
+  margin-left: 10px;
 }
 /* #search-signout-wrapper {
   display: flex;

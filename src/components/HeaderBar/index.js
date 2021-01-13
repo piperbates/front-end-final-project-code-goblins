@@ -41,10 +41,7 @@ function HeaderBar() {
               size={"large"}
               style={{ marginLeft: "16px", fontSize: "16px" }}
             >
-
-              <Link to="/">
-                <HomeOutlined /> Home
-              </Link>
+              <Link to="/">Home</Link>
 
               {adminUsers[0].find(
                 (user) => user.email === currentUser.email
@@ -54,7 +51,7 @@ function HeaderBar() {
                 <li style={{ display: "none" }}></li>
               )}
               <Link id="sign-out-button" onClick={() => app.auth().signOut()}>
-                <LogoutOutlined /> Log Out
+                Log Out
               </Link>
             </Space>
           </nav>
