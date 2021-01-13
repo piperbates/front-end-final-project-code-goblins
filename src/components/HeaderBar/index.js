@@ -7,7 +7,9 @@ import app from "../../firebase/Base";
 import { AuthContext } from "../../firebase/Auth";
 import ContentManagementLink from "../ContentManagementLink";
 import { AdminUsersContext } from "../../contexts/adminUsersContext";
+
 import { Button, Input, Space, Row, Col } from "antd";
+
 import { SearchContext } from "../../contexts/searchContext";
 const { Search } = Input; //imports Search from ant.d
 function HeaderBar() {
@@ -39,9 +41,11 @@ function HeaderBar() {
               size={"large"}
               style={{ marginLeft: "16px", fontSize: "16px" }}
             >
+
               <Link to="/">
                 <HomeOutlined /> Home
               </Link>
+
               {adminUsers[0].find(
                 (user) => user.email === currentUser.email
               ) ? (

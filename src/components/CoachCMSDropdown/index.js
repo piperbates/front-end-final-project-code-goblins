@@ -3,7 +3,7 @@ import { Button, Dropdown } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import CmsMenu from "../CoachCMSMenu";
 
-const CmsDropdown = ({ toggleTagDisplay }) => {
+const CmsDropdown = ({ toggleTagDisplay, toggleLecturerDisplay }) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const toggleVisible = () => {
@@ -15,6 +15,7 @@ const CmsDropdown = ({ toggleTagDisplay }) => {
       overlay={
         <CmsMenu
           toggleTagDisplay={toggleTagDisplay}
+          toggleLecturerDisplay={toggleLecturerDisplay}
           toggleVisible={toggleVisible}
         />
       }

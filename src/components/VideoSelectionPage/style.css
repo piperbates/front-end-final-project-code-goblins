@@ -1,6 +1,6 @@
 #video-selection-wrapper {
   display: flex;
-  justify-content: center;
+  justify-content: start;
   margin: auto;
   width: 95%;
 }
@@ -9,10 +9,7 @@
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
-  margin: 5px;
-}
+  justify-content: start;
+  margin: 0px;
 
-.video-thumbnail {
-  width: 100px;
 }

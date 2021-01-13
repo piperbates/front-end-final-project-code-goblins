@@ -14,7 +14,6 @@ import {
   Col,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
-import tutors from "../../data/tutors"; //new datasource, see data folder /******** API + DB TABLE REQUIRED ********/
 import { SearchContext } from "../../contexts/searchContext";
 import { Redirect } from "react-router-dom";
 import TimestampSelector from "../CoachCMSTimestampSelector";
@@ -23,6 +22,7 @@ import CmsVideoSelector from "../CoachCMSVideoSelector";
 import { v4 as uuidv4 } from "uuid";
 import CmsDropdown from "../CoachCMSDropdown";
 import CmsTagEditor from "../CoachCMSTagEditor";
+import CmsLecturerEditor from "../CoachCMSLectureEditor";
 
 //global required field rules object, default false
 const ruleSetRequired = [
@@ -59,20 +59,52 @@ function CoachCMS() {
   const [timestampVideoUrl, setTimestampVideoUrl] = useState(false);
   const [timestampData, setTimestampData] = useState("");
   const [form] = Form.useForm();
+
   const [tagEditorVisible, setTagEditorVisible] = useState(false);
   const [tagData, setTagData] = useState(false);
   const [lastTagId, setLastTagId] = useState(null);
 
+  const [lecturerEditorVisible, setLecturerEditorVisible] = useState(false);
+  const [lecturerData, setLecturerData] = useState(false);
+  const [lastLecturerId, setLastLecturerId] = useState(null);
+
+  //tag data and last tag ID from db
   useEffect(() => {
     const getTagData = async () => {
-      const res = await fetch(config.BACKEND_URL_TAGS_GET_ALL_DATA);
-      const data = await res.json();
+      const resTagData = await fetch(config.BACKEND_URL_TAGS_GET_ALL_DATA);
+      const data = await resTagData.json();
+
       setTagData(data.sort((a, b) => a.tag - b.tag));
-      let tempTagData = data.sort((a, b) => a.key - b.key);
-      setLastTagId(tempTagData[tempTagData.length - 1].key);
+
+      const resLastKey = await fetch(config.BACKEND_URL_TAGS_LASTKEY);
+      const keydata = await resLastKey.json();
+
+      setLastTagId(Number(keydata[0].last_value));
     };
     getTagData();
   }, [tagEditorVisible]);
+
+  //lecturer data and last tag ID from db
+  useEffect(() => {
+    const getLecturerData = async () => {
+      const resLecturerData = await fetch(
+        config.BACKEND_URL_LECTURERS_GET_ALL_DATA
+      );
+      const data = await resLecturerData.json();
+      setLecturerData(data.sort((a, b) => a.lecturer - b.lecturer));
+
+      const resLastKey = await fetch(config.BACKEND_URL_LECTURERS_LASTKEY);
+      const keydata = await resLastKey.json();
+
+      setLastLecturerId(Number(keydata[0].last_value));
+
+      if (data.length > 0) {
+        let tempTagData = data.sort((a, b) => a.key - b.key);
+        setLastLecturerId(tempTagData[tempTagData.length - 1].key);
+      }
+    };
+    getLecturerData();
+  }, [lecturerEditorVisible]);
 
   useEffect(() => {
     const additionalTags = tags.filter(
@@ -183,6 +215,26 @@ function CoachCMS() {
     setTagEditorVisible(!tagEditorVisible);
   };
 
+  const toggleLecturerDisplay = () => {
+    setLecturerEditorVisible(!lecturerEditorVisible);
+  };
+
+  const updateTagData = (value) => {
+    setTagData(value);
+  };
+
+  const updateLastTagData = (value) => {
+    setLastTagId(value);
+  };
+
+  const updateLecturerData = (value) => {
+    setLecturerData(value);
+  };
+
+  const updateLastLecturerId = (value) => {
+    setLastLecturerId(value);
+  };
+
   //start of rendering
   return (
     <div>
@@ -195,9 +247,23 @@ function CoachCMS() {
         modalHide={modalHide}
         getTimeStampData={getTimeStampData}
       />
+
       <CmsTagEditor
+        tagData={tagData}
+        updateTagData={updateTagData}
         tagEditorVisible={tagEditorVisible}
         toggleTagDisplay={toggleTagDisplay}
+        lastTagId={lastTagId}
+        updateLastTagData={updateLastTagData}
+      />
+
+      <CmsLecturerEditor
+        lecturerData={lecturerData}
+        updateLecturerData={updateLecturerData}
+        lecturerEditorVisible={lecturerEditorVisible}
+        toggleLecturerDisplay={toggleLecturerDisplay}
+        lastLecturerId={lastLecturerId}
+        updateLastLecturerId={updateLastLecturerId}
       />
 
       <Space direction="vertical">
@@ -208,7 +274,10 @@ function CoachCMS() {
         </Row>
 
         <Row justify="start">
-          <CmsDropdown toggleTagDisplay={toggleTagDisplay} />
+          <CmsDropdown
+            toggleTagDisplay={toggleTagDisplay}
+            toggleLecturerDisplay={toggleLecturerDisplay}
+          />
         </Row>
 
         <Row justify={"center"}>
@@ -255,7 +324,15 @@ function CoachCMS() {
                 rules={ruleSetRequired}
               >
                 {!guestLecturer ? (
-                  <Select>{tutors.filter((tutor, index) => index > 0)}</Select>
+                  <Select>
+                    {lecturerData ? (
+                      lecturerData.map((value) => (
+                        <Option key={value.lecturer}>{value.lecturer}</Option>
+                      ))
+                    ) : (
+                      <Option key={"no data"}>{"no data"}</Option>
+                    )}
+                  </Select>
                 ) : (
                   <Input />
                 )}
@@ -299,11 +376,13 @@ function CoachCMS() {
                     setTags(value);
                   }}
                 >
-                  {tagData
-                    ? tagData.map((value) => (
-                        <Option key={value.tag}>{value.tag}</Option>
-                      ))
-                    : ""}
+                  {tagData ? (
+                    tagData.map((value) => (
+                      <Option key={value.tag}>{value.tag}</Option>
+                    ))
+                  ) : (
+                    <Option key={"no data"}>{"no data"}</Option>
+                  )}
                 </Select>
               </Form.Item>
 
@@ -320,6 +399,10 @@ function CoachCMS() {
                 name="bootcamp_week"
                 rules={ruleSetRequired}
               >
+                <InputNumber min={1} />
+              </Form.Item>
+
+              <Form.Item label="Cohort" name="cohort" rules={ruleSetRequired}>
                 <InputNumber min={1} />
               </Form.Item>
 

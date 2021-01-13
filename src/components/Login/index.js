@@ -4,7 +4,10 @@ import app from "../../firebase/Base";
 import { AuthContext } from "../../firebase/Auth";
 import { Form, Input, Button, Row, Col } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import logo from "../../images/soc-logo-transparent.png";
+
+import background from "../../images/waveBackground.svg";
+import logo from "../../images/soc-logo.png";
+
 
 const Login = ({ history }) => {
   const { currentUser } = useContext(AuthContext);
@@ -31,10 +34,11 @@ const Login = ({ history }) => {
     <Row
       justify="end"
       style={{
-        backgroundImage: `url(${logo})`,
+
+        backgroundImage: `url(${background})`,
         backgroundRepeat: "no-repeat",
-        backgroundSize: "100vh",
-        backgroundPositionX: "-300px",
+        backgroundSize: "100%",
+        backgroundPositionX: "center",
         backgroundPositionY: "center",
       }}
     >
@@ -52,16 +56,17 @@ const Login = ({ history }) => {
         <Form
           onFinish={handleLogin}
           style={{
-            border: "1px solid #ccc",
+            border: "1px solid #ddd",
             width: "30vw",
-            backgroundColor: "#f2f2f2",
+            minWidth: "350px",
+            maxWidth: "500px",
+            backgroundColor: "rgba(253,253,253,0.7)",
+
             padding: "2rem",
             borderRadius: "10px",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            opacity: 0.95,
-            boxShadow: "4px 4px 4px 0px rgba(237,237,237,1)",
           }}
         >
           <Form.Item
@@ -79,7 +84,6 @@ const Login = ({ history }) => {
               style={{ borderRadius: "5px" }}
             />
           </Form.Item>
-          ​
           <Form.Item
             name="password"
             rules={[
@@ -96,7 +100,6 @@ const Login = ({ history }) => {
               style={{ borderRadius: "5px" }}
             />
           </Form.Item>
-          ​
           <Form.Item
             style={{
               margin: "0px",
@@ -119,6 +122,11 @@ const Login = ({ history }) => {
           }}
         >
           Lecture Resources Hub
+          <img
+            src={logo}
+            alt="school of code logo"
+            style={{ width: "100px", marginLeft: "1rem" }}
+          />
         </h1>
       </Col>
     </Row>

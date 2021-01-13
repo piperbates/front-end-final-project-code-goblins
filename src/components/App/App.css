@@ -1,31 +1,5 @@
 main {
   padding: 20px;
   margin: 20px;
-  height: 100%;
-  /* background: url("../../images/background6.png");
-  background-repeat: no-repeat;
-  background-size: cover; */
 }
-#page-wrapper {
-  height: 100vh;
-}
-footer {
-  margin: 0px;
-  background: url("../../images/moon.png");
-  background-repeat: no-repeat;
-  background-position-y: bottom;
-  background-size: 100% 100px;
-  height: 100px;
-  width: 100%;
-  z-index: -1;
-}
-#footer-content {
-  width: 50%;
-  margin: auto;
-  padding-top: 45px;
-  color: grey;
-  text-align: center;
-  font-size: smaller;
-  position: relative;
-  bottom: 0px;
-}
+

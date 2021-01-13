@@ -11,6 +11,7 @@ function TagFilter({ text, data, searchTags }) {
 
   function handleChange(tag, checked) {
     const { selectedTags } = state;
+
     let nextSelectedTags = checked
       ? [...selectedTags, tag]
       : selectedTags.filter((t) => t !== tag);
@@ -21,13 +22,14 @@ function TagFilter({ text, data, searchTags }) {
 
   return (
     <>
-      <div id={data} className="filter-group">
-        <p style={{ marginRight: 8 }}>{text}:</p>
+      <div className="filter-group">
         {data.map((tag) => (
           <CheckableTag
             key={tag}
             checked={state.selectedTags.indexOf(tag) > -1}
-            onChange={(checked) => handleChange(tag, checked)}
+            onChange={(checked) => {
+              handleChange(tag, checked);
+            }}
             style={{
               border: "1px solid #1890ff",
               padding: "5px",
