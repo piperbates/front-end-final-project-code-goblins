@@ -32,8 +32,34 @@ function FilterBox({ lecturerData, weekData, tagData }) {
 
   return (
     <div id="filter-box">
+    
+ {weekData ? (
+        <Select
+          value={searchWeek}
+          defaultValue={searchWeek}
+          style={{ width: 120, margin: "5px" }}
+          onChange={(value) => getSearchWeek(value)}
+        >
+          {weekData}
+        </Select>
+      ) : (
+        <Select loading></Select>
+      )}
 
-      <div className="filter-group">
+      {lecturerData ? (
+        <Select
+          value={searchLecturer}
+          defaultValue={searchLecturer}
+          style={{ width: 120 }}
+          onChange={(value) => getSearchLecturer(value)}
+        >
+          {lecturerData}
+        </Select>
+      ) : (
+        <Select loading></Select>
+      )}
+      <p>Search by Tags:</p>
+      <div className="filter-group" style={{margin: "3px"}}>
         {tagData ? (
           tagData.map((tag) => (
             <CheckableTag
@@ -45,7 +71,7 @@ function FilterBox({ lecturerData, weekData, tagData }) {
               style={{
                 border: "1px solid #1890ff",
                 padding: "3px",
-                margin: "3px",
+                margin: "5px 3px",
                 fontSize: ".9em",
               }}
             >
@@ -68,31 +94,7 @@ function FilterBox({ lecturerData, weekData, tagData }) {
         Clear Tags
       </Button>
 
-      {weekData ? (
-        <Select
-          value={searchWeek}
-          defaultValue={searchWeek}
-          style={{ width: 120 }}
-          onChange={(value) => getSearchWeek(value)}
-        >
-          {weekData}
-        </Select>
-      ) : (
-        <Select loading></Select>
-      )}
-
-      {lecturerData ? (
-        <Select
-          value={searchLecturer}
-          defaultValue={searchLecturer}
-          style={{ width: 120 }}
-          onChange={(value) => getSearchLecturer(value)}
-        >
-          {lecturerData}
-        </Select>
-      ) : (
-        <Select loading></Select>
-      )}
+     
     </div>
   );
 }

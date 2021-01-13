@@ -92,7 +92,7 @@ const CmsVideoSelector = ({ setFormVideoData }) => {
             pageSizeOptions={[30, 40, 50]}
           />
         </Row>
-        <Row style={{ maxHeight: window.innerHeight - 225, overflow: "auto" }}>
+        <Row style={{ maxHeight: "200vh", overflow: "scroll", overflowX: "hidden"}}>
           <Space wrap size={"middle"} style={{ justifyContent: "center" }}>
             {pageOutput ? (
               pageOutput.map((vItem) => (
