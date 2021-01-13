@@ -16,6 +16,10 @@ const config = {
   BACKEND_URL_LECTURERS_ADD: `${url}/lecturers/`,
   BACKEND_URL_LECTURERS_UPDATE: `${url}/lecturers/`,
   BACKEND_URL_LECTURERS_LASTKEY: `${url}/lecturers/lastkey`,
+  BACKEND_URL_FILTERS_GET_TAGS: `${url}/filter/tags`,
+  BACKEND_URL_FILTERS_GET_WEEK: `${url}/filter/week`,
+  BACKEND_URL_FILTERS_GET_LECTURER: `${url}/filter/lecturer`,
+  BACKEND_URL_FILTERS_GET_GUEST: `${url}/filter/guest`,
 };
 
 export default config;

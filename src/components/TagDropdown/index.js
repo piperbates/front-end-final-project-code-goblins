@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Select } from "antd";
 
 //start of component render
-function TagDropdown({ data, searchFunction }) {
+function TagDropdown({ data, searchFunction, searchWeek }) {
   const [dataOptions] = useState(data);
 
   if (!dataOptions) {
@@ -10,6 +10,7 @@ function TagDropdown({ data, searchFunction }) {
   } else
     return (
       <Select
+        value={searchWeek}
         defaultValue={dataOptions[0].key}
         style={{ width: 120 }}
         onChange={(value) => searchFunction(value)}

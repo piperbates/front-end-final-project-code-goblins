@@ -6,8 +6,11 @@ export function SearchProvider({ children }) {
   const [searchText, setSearchText] = useState("");
   const [searchTags, setSearchTags] = useState([]);
   const [searchUrl, setSearchUrl] = useState("");
-  const [searchWeek, setSearchWeek] = useState("0");
+  const [searchWeek, setSearchWeek] = useState("All Weeks");
   const [searchLecturer, setSearchLecturer] = useState("All Lecturers");
+  const [tagState, setTagState] = useState({
+    selectedTags: [],
+  });
 
   useEffect(() => {
     let searchArray = [];
@@ -18,7 +21,7 @@ export function SearchProvider({ children }) {
     }
 
     //week
-    if (searchWeek !== "0") {
+    if (searchWeek !== "All Weeks") {
       searchArray.push(["week", searchWeek]);
     }
 
@@ -62,6 +65,10 @@ export function SearchProvider({ children }) {
         searchUrl,
         getSearchWeek,
         getSearchLecturer,
+        searchLecturer,
+        searchWeek,
+        setTagState,
+        tagState,
       }}
     >
       {children}

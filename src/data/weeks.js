@@ -1,8 +1,18 @@
 import { Select } from "antd";
 const { Option } = Select;
 
-const weekData = [
-  ["All Weeks", 0],
+const weekData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
+
+const weeks = weekData.map((week) => (
+  <Option key={week}>{`Week ${week}`}</Option>
+));
+
+weeks.unshift(<Option key={"All Weeks"}>{"All Weeks"}</Option>);
+
+export default weeks;
+
+/*
+["All Weeks", 0],
   ["Week 1", 1],
   ["Week 2", 2],
   ["Week 3", 3],
@@ -19,8 +29,4 @@ const weekData = [
   ["Week 14", 14],
   ["Week 15", 15],
   ["Week 16", 16],
-];
-
-const weeks = weekData.map((week) => <Option key={week[1]}>{week[0]}</Option>);
-
-export default weeks;
+*/
