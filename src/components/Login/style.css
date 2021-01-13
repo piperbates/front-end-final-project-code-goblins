@@ -1,13 +1,9 @@
 #login {
-  width: 400px;
-  height: 600px;
   margin: auto;
-  /* color: white; */
   display: flex;
   flex-direction: column;
-  align-items: center;
-  background-color: rgba(248, 242, 242, 0.353);
-  margin-top: 100px;
+
+  margin-top: 20px;
   border-radius: 10px;
 }
 
@@ -34,7 +30,7 @@ h1 {
 
 .email-input,
 .password-input {
-  width: 300px;
+  width: 500px;
   border-radius: 10px;
 }
 

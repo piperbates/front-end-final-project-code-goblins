@@ -4,8 +4,10 @@ import app from "../../firebase/Base";
 import { AuthContext } from "../../firebase/Auth";
 import { Form, Input, Button, Row, Col } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
+
 import background from "../../images/waveBackground.svg";
 import logo from "../../images/soc-logo.png";
+
 
 const Login = ({ history }) => {
   const { currentUser } = useContext(AuthContext);
@@ -32,6 +34,7 @@ const Login = ({ history }) => {
     <Row
       justify="end"
       style={{
+
         backgroundImage: `url(${background})`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "100%",
@@ -58,6 +61,7 @@ const Login = ({ history }) => {
             minWidth: "350px",
             maxWidth: "500px",
             backgroundColor: "rgba(253,253,253,0.7)",
+
             padding: "2rem",
             borderRadius: "10px",
             display: "flex",
@@ -80,7 +84,6 @@ const Login = ({ history }) => {
               style={{ borderRadius: "5px" }}
             />
           </Form.Item>
-
           <Form.Item
             name="password"
             rules={[
@@ -97,7 +100,6 @@ const Login = ({ history }) => {
               style={{ borderRadius: "5px" }}
             />
           </Form.Item>
-
           <Form.Item
             style={{
               margin: "0px",
@@ -108,7 +110,6 @@ const Login = ({ history }) => {
             </Button>
           </Form.Item>
         </Form>
-
         <h1
           style={{
             position: "fixed",

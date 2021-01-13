@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
 import "./style.css";
+
 import { Button, Select, Tag, Spin } from "antd";
+
 
 import { SearchContext } from "../../contexts/searchContext";
 
@@ -30,6 +32,7 @@ function FilterBox({ lecturerData, weekData, tagData }) {
 
   return (
     <div id="filter-box">
+
       <div className="filter-group">
         {tagData ? (
           tagData.map((tag) => (

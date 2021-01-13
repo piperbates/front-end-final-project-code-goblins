@@ -112,9 +112,9 @@ export default function VideoSelectionPage({ allVideoData }) {
                   );
                 })}
               </Space>
-            </Row>
+            </div>
           </div>
-        </div>
+        </Row>
       </>
     );
 }

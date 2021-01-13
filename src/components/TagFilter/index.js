@@ -32,9 +32,10 @@ function TagFilter({ text, data, searchTags }) {
             }}
             style={{
               border: "1px solid #1890ff",
-              padding: "3px",
+              padding: "5px",
               margin: "3px",
               fontSize: ".9em",
+              borderRadius: "10px",
             }}
           >
             {tag}
