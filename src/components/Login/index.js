@@ -2,26 +2,9 @@ import React, { useCallback, useContext } from "react";
 import { withRouter, Redirect } from "react-router";
 import app from "../../firebase/Base";
 import { AuthContext } from "../../firebase/Auth";
-import { Form, Input, Button } from "antd";
+import { Form, Input, Button, Row, Col } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import logo from "../../images/soc-logo.png";
-
-import "./style.css";
-
-// const layout = {
-//   labelCol: {
-//     span: 8,
-//   },
-//   wrapperCol: {
-//     span: 8,
-//   },
-// };
-// const tailLayout = {
-//   wrapperCol: {
-//     offset: 8,
-//     span: 8,
-//   },
-// };
+import logo from "../../images/soc-logo-transparent.png";
 
 const Login = ({ history }) => {
   const { currentUser } = useContext(AuthContext);
@@ -45,57 +28,100 @@ const Login = ({ history }) => {
   }
 
   return (
-    <div id="login">
-      <img alt="logo" src={logo} id="logo"></img>
-      <h1>Lecture Resource Hub</h1>
-      <Form
-        // {...layout}
-        // name="login"
-        onFinish={handleLogin}
-        className="login-form"
+    <Row
+      justify="end"
+      style={{
+        backgroundImage: `url(${logo})`,
+        backgroundRepeat: "no-repeat",
+        backgroundSize: "100vh",
+        backgroundPositionX: "-300px",
+        backgroundPositionY: "center",
+      }}
+    >
+      <Col
+        span={24}
+        style={{
+          height: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "transparent",
+        }}
       >
-        <Form.Item
-          // label="Email"
-          name="email"
-          rules={[
-            {
-              required: true,
-              message: "Email address required",
-            },
-          ]}
+        <Form
+          onFinish={handleLogin}
+          style={{
+            border: "1px solid #ccc",
+            width: "30vw",
+            backgroundColor: "#f2f2f2",
+            padding: "2rem",
+            borderRadius: "10px",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            opacity: 0.95,
+            boxShadow: "4px 4px 4px 0px rgba(237,237,237,1)",
+          }}
         >
-          <Input
-            className="email-input"
-            prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder="Email"
-          />
-        </Form.Item>
-
-        <Form.Item
-          // label="Password"
-          name="password"
-          rules={[
-            {
-              required: true,
-              message: "Password required",
-            },
-          ]}
+          <Form.Item
+            name="email"
+            rules={[
+              {
+                required: true,
+                message: "Email address required",
+              },
+            ]}
+          >
+            <Input
+              prefix={<UserOutlined />}
+              placeholder="Email"
+              style={{ borderRadius: "5px" }}
+            />
+          </Form.Item>
+          ​
+          <Form.Item
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: "Password required",
+              },
+            ]}
+          >
+            <Input.Password
+              prefix={<LockOutlined />}
+              type="password"
+              placeholder="Password"
+              style={{ borderRadius: "5px" }}
+            />
+          </Form.Item>
+          ​
+          <Form.Item
+            style={{
+              margin: "0px",
+            }}
+          >
+            <Button type="primary" htmlType="submit" block>
+              Log In
+            </Button>
+          </Form.Item>
+        </Form>
+        <h1
+          style={{
+            position: "fixed",
+            bottom: "0px",
+            right: "0px",
+            margin: "1em",
+            fontSize: "3rem",
+            userSelect: "none",
+            color: "#aaa",
+          }}
         >
-          <Input.Password
-            className="password-input"
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password"
-            placeholder="Password"
-          />
-        </Form.Item>
-
-        <Form.Item /* {...tailLayout} */>
-          <Button type="primary" htmlType="submit" className="login-button">
-            Log In
-          </Button>
-        </Form.Item>
-      </Form>
-    </div>
+          Lecture Resources Hub
+        </h1>
+      </Col>
+    </Row>
   );
 };
 

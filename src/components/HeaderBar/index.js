@@ -7,7 +7,7 @@ import app from "../../firebase/Base";
 import { AuthContext } from "../../firebase/Auth";
 import ContentManagementLink from "../ContentManagementLink";
 import { AdminUsersContext } from "../../contexts/adminUsersContext";
-import { Button, Input, Space } from "antd";
+import { Button, Input, Space, Row, Col } from "antd";
 import { SearchContext } from "../../contexts/searchContext";
 const { Search } = Input; //imports Search from ant.d
 function HeaderBar() {
@@ -16,19 +16,24 @@ function HeaderBar() {
   const { getSearchText } = useContext(SearchContext);
   return (
     <header>
-      <div id="header-content">
-        <div id="logo-nav-wrapper">
+      <Row style={{ height: "30px" }}>
+        <Col span={24}>
           <Link to="/">
             <img src={socLogo} alt="logo" id="soc-logo" />
           </Link>
-          <div id="search-box">
-            <Search
-              placeholder="input search text"
-              allowClear={true}
-              onSearch={(value) => getSearchText(value)}
-              style={{ width: 200 }}
-            />
-          </div>
+        </Col>
+      </Row>
+      <Row>
+        <Col span={2}></Col>
+        <Col span={16}>
+          <Search
+            placeholder="input search text"
+            allowClear={true}
+            onSearch={(value) => getSearchText(value)}
+            style={{ width: 200 }}
+          />
+        </Col>
+        <Col span={6}>
           <nav>
             <Space
               size={"large"}
@@ -49,8 +54,8 @@ function HeaderBar() {
               </Link>
             </Space>
           </nav>
-        </div>
-      </div>
+        </Col>
+      </Row>
     </header>
   );
 }

@@ -1,5 +1,5 @@
 header {
-  height: 100px;
+  height: 90px;
   width: 100%;
   padding: 0px;
   margin: 0px;
@@ -8,7 +8,7 @@ header {
   border-bottom: 1px solid rgb(190, 190, 190);
   background-color: #f2f2f2;
 }
-#header-content {
+/* #header-content {
   display: flex;
   padding: 5px;
   justify-content: space-between;
@@ -17,24 +17,30 @@ header {
 #logo-nav-wrapper {
   display: flex;
   align-items: center;
-}
+} */
 #soc-logo {
-  width: 50px;
-  height: 50px;
+  width: 80px;
+  height: 80px;
+  margin-top: 5px;
 }
-#search-signout-wrapper {
+/* #search-signout-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-#search-box {
+} */
+/* #search-box {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-}
+} */
 #sign-out-button {
   border-radius: 10px;
 }
 header a {
   color: black;
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
 }
