@@ -6,9 +6,16 @@ import { SearchContext } from "../../contexts/searchContext";
 import config from "../../config";
 import FeedbackForm from "../FeedbackForm";
 import { Spin, Row, Col, Space, Descriptions, Typography, Divider } from "antd";
+import FeedbackViewer from "../FeedbackViewer";
+import { AuthContext } from "../../firebase/Auth";
+import { AdminUsersContext } from "../../contexts/adminUsersContext";
 const { Title, Paragraph, Text, Link } = Typography;
 
+
 export default function LectureViewer() {
+  const { currentUser } = useContext(AuthContext);
+  const adminUsers = useContext(AdminUsersContext);
+
   const id = useLocation().pathname.split("/").pop();
   const player = useRef(null);
   const [videoData, setVideoData] = useState(false);
@@ -70,6 +77,9 @@ export default function LectureViewer() {
             >
               <Descriptions.Item>{videoData.description} </Descriptions.Item>
             </Descriptions>
+            {adminUsers[0].find((user) => user.email === currentUser.email) ? <FeedbackViewer /> : <></>}
+            
+
           </Col>
         </Col>
         <Col span={5}>
