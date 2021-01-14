@@ -8,7 +8,7 @@ import {
   Modal,
   Popover,
   Tooltip,
-  Button,
+  Skeleton,
 } from "antd";
 import config from "../../config";
 import {
@@ -70,7 +70,7 @@ const CmsVideoSelector = ({
 
   console.log(pageOutput);
   if (!pageOutput || pageOutput === undefined) {
-    return <Spin />;
+    return <Skeleton rows="20" />;
   } else
     return (
       <>
