@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import "antd/dist/antd.css";
 import "./style.css";
-import { Modal, Button, Input } from "antd";
-import { message } from "antd";
+import { Modal, Button, Input, message } from "antd";
 import config from "../../config";
 
 const { TextArea } = Input;
@@ -27,6 +26,7 @@ export default function FeedbackModal() {
   let split = url.split("/"); //splits the url into an array by /
   let ref = split[split.length - 1]; //Collects the last part of the array, which in this case will be the video id that is displaying on this page
   const [isModalVisible, setIsModalVisible] = useState(false);
+
   const [feedback, setFeedback] = useState("");
   //Posts the feedback to the database
   function postFeedback(value) {

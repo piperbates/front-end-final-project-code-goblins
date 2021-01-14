@@ -5,11 +5,14 @@ import "./style.css";
 import { SearchContext } from "../../contexts/searchContext";
 import config from "../../config";
 import FeedbackForm from "../FeedbackForm";
-import { Spin, Row, Col, Space, Button, Divider, Anchor } from "antd";
-
-const { Link } = Anchor;
+import FeedbackViewer from "../FeedbackViewer";
+import { AuthContext } from "../../firebase/Auth";
+import { AdminUsersContext } from "../../contexts/adminUsersContext";
+import { Spin, Row, Col, Space, Button, Divider } from "antd";
 
 export default function LectureViewer() {
+  const { currentUser } = useContext(AuthContext);
+  const adminUsers = useContext(AdminUsersContext);
   const id = useLocation().pathname.split("/").pop();
   const player = useRef(null);
   const [videoData, setVideoData] = useState(false);
@@ -61,6 +64,9 @@ export default function LectureViewer() {
               <h2 style={{ padding: "0px" }}>{videoData.lecturer}</h2>
               <Divider style={{ width: "300px" }} />
               {videoData.description}
+                {adminUsers[0].find((user) => user.email === currentUser.email) ? 
+                  <FeedbackViewer /> : 
+                    <></>}
             </Col>
           </Col>
           <Col span={5}>
