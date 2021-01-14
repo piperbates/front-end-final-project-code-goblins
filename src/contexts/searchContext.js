@@ -56,6 +56,17 @@ export function SearchProvider({ children }) {
     setSearchLecturer(lecturer);
   }
 
+  function handleTagChange(tag, checked) {
+    const { selectedTags } = tagState;
+
+    let nextSelectedTags = checked
+      ? [...selectedTags, tag]
+      : selectedTags.filter((t) => t !== tag);
+
+    setTagState({ selectedTags: nextSelectedTags });
+    getSearchTags(nextSelectedTags);
+  }
+
   return (
     <SearchContext.Provider
       value={{
@@ -69,6 +80,7 @@ export function SearchProvider({ children }) {
         searchWeek,
         setTagState,
         tagState,
+        handleTagChange,
       }}
     >
       {children}
