@@ -1,7 +1,9 @@
 import React from "react";
 import { Descriptions } from "antd";
+import moment from "moment";
 
-const DescriptionBox = ({ width, data }) => {
+const DescriptionBox = ({ width, data, modeSelector }) => {
+  console.log(data);
   return (
     <Descriptions
       title="Video Info"
@@ -9,10 +11,17 @@ const DescriptionBox = ({ width, data }) => {
       column={1}
       style={{ width: width }}
     >
-      <Descriptions.Item label="Title">{data.name}</Descriptions.Item>
-      <Descriptions.Item label="Created">{data.created_time}</Descriptions.Item>
-      <Descriptions.Item label="URL">{data.link}</Descriptions.Item>
-      <Descriptions.Item label="Created">{data.created_time}</Descriptions.Item>
+      <Descriptions.Item label="Title">
+        {modeSelector ? data.name : data.title}
+      </Descriptions.Item>
+      <Descriptions.Item label="Created">
+        {moment(modeSelector ? data.created_time : data.lecture_date).format(
+          "DD MMM YYYY"
+        )}
+      </Descriptions.Item>
+      <Descriptions.Item label="URL">
+        {modeSelector ? data.link : data.video_url}
+      </Descriptions.Item>
     </Descriptions>
   );
 };

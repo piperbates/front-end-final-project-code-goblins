@@ -88,7 +88,7 @@ export default function LectureViewer() {
                 return (
                   <Button
                     key={value.uuid}
-                    style={{ width: "200px", textAlign: "left" }}
+                    style={{ width: "305px", textAlign: "left" }}
                     onClick={() => seekToTimestamp(value.timeSecondsValue)}
                   >
                     {`${value.timeString} - ${value.timeDesc}`}

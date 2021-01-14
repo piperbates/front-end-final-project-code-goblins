@@ -67,6 +67,8 @@ function CoachCMS() {
   const [lecturerEditorVisible, setLecturerEditorVisible] = useState(false);
   const [lecturerData, setLecturerData] = useState(false);
   const [lastLecturerId, setLastLecturerId] = useState(null);
+  const [modeSelector, setModeSelector] = useState(true);
+  const [pageOutput, setPageOutput] = useState(false);
 
   //tag data and last tag ID from db
   useEffect(() => {
@@ -235,9 +237,17 @@ function CoachCMS() {
     setLastLecturerId(value);
   };
 
+  const switchVideoMode = () => {
+    setModeSelector(!modeSelector);
+  };
+
+  const updateVideoSelectPageOutput = (value) => {
+    setPageOutput(value);
+  };
+
   //start of rendering
   return (
-    <div>
+    <>
       <TimestampSelector
         timestampsVisible={timestampsVisible}
         modalDisplay={modalDisplay}
@@ -277,12 +287,20 @@ function CoachCMS() {
           <CmsDropdown
             toggleTagDisplay={toggleTagDisplay}
             toggleLecturerDisplay={toggleLecturerDisplay}
+            switchVideoMode={switchVideoMode}
+            modeSelector={modeSelector}
+            updateVideoSelectPageOutput={updateVideoSelectPageOutput}
           />
         </Row>
 
         <Row justify={"center"}>
           <Col span={10}>
-            <CmsVideoSelector setFormVideoData={setFormVideoData} />
+            <CmsVideoSelector
+              modeSelector={modeSelector}
+              setFormVideoData={setFormVideoData}
+              pageOutput={pageOutput}
+              updateVideoSelectPageOutput={updateVideoSelectPageOutput}
+            />
           </Col>
 
           <Col span={13}>
@@ -597,7 +615,7 @@ function CoachCMS() {
           </Col>
         </Row>
       </Space>
-    </div>
+    </>
   );
 }
 
