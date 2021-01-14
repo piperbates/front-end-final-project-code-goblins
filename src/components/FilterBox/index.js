@@ -20,6 +20,7 @@ function FilterBox({ lecturerData, weekData, tagData }) {
   } = useContext(SearchContext);
 
   return (
+
     <Row style={{ width: "350px" }}>
       <Col span={6}>
         <Space direction="vertical">
