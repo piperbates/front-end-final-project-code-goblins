@@ -12,7 +12,13 @@ const { Search } = Input; //imports Search from ant.d
 function HeaderBar() {
   const { currentUser } = useContext(AuthContext);
   const adminUsers = useContext(AdminUsersContext);
-  const { getSearchText } = useContext(SearchContext);
+  const {
+    getSearchText,
+    getSearchTags,
+    getSearchWeek,
+    getSearchLecturer,
+    setTagState,
+  } = useContext(SearchContext);
   return (
     <Row
       style={{
@@ -50,7 +56,19 @@ function HeaderBar() {
           <></>
         )}
 
-        <Button type="primary" onClick={() => app.auth().signOut()}>
+        <Button
+          type="primary"
+          onClick={() => {
+            getSearchText("");
+            getSearchTags([]);
+            getSearchWeek("All Weeks");
+            getSearchLecturer("All Lecturers");
+            setTagState({
+              selectedTags: [],
+            });
+            app.auth().signOut();
+          }}
+        >
           Log Out
         </Button>
       </Space>

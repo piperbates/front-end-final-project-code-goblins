@@ -42,10 +42,9 @@ const CmsVideoSelector = ({
 
       setTotal(data.total);
       updateVideoSelectPageOutput(data.data);
-      setViewerData(data.data[0]);
+      // setViewerData(data.data[0]);
     }
     if (modeSelector) {
-      console.log("fetch vimeo");
       getVimeoVideoData();
     }
   }, [modeSelector, paging]);
@@ -59,7 +58,6 @@ const CmsVideoSelector = ({
       setTotal(data.length);
     };
     if (!modeSelector) {
-      console.log("fetch local");
       getRecapVideoData();
     }
   }, [modeSelector, paging]);
@@ -68,7 +66,6 @@ const CmsVideoSelector = ({
     setViewerVisible(!viewerVisible);
   };
 
-  console.log(pageOutput);
   if (!pageOutput || pageOutput === undefined) {
     return <Skeleton rows="20" />;
   } else
@@ -91,7 +88,11 @@ const CmsVideoSelector = ({
                 playing
               />
 
-              <DescriptionBox width={640} data={viewerData} />
+              <DescriptionBox
+                width={640}
+                data={viewerData}
+                modeSelector={modeSelector}
+              />
             </>
           )}
         </Modal>
@@ -101,7 +102,7 @@ const CmsVideoSelector = ({
             {modeSelector ? (
               <h3>Vimeo API Video Selector</h3>
             ) : (
-              <h3>re:Cap Video Editor</h3>
+              <h3>re:cap Video Editor</h3>
             )}
           </Row>
           <Row justify={"start"}>
@@ -164,15 +165,33 @@ const CmsVideoSelector = ({
                       <Tooltip title={"Select"}>
                         <CheckCircleOutlined
                           key="select"
-                          onClick={() =>
-                            setFormVideoData({
-                              title: modeSelector ? vItem.name : vItem.title,
-                              url: modeSelector ? vItem.link : vItem.video_url,
-                              thumbnail: modeSelector
-                                ? vItem.pictures.sizes[4].link
-                                : vItem.thumbnail_url,
-                            })
-                          }
+                          onClick={() => {
+                            if (modeSelector) {
+                              setFormVideoData({
+                                title: vItem.name,
+                                url: vItem.link,
+                                thumbnail: vItem.pictures.sizes[4].link,
+                              });
+                            } else {
+                              console.log(vItem);
+                              // console.log(vItem.tags);
+                              setFormVideoData({
+                                title: vItem.title,
+                                lecturer: vItem.lecturer,
+                                url: vItem.video_url,
+                                thumbnail: vItem.thumbnail_url,
+                                tags: vItem.tags,
+                                lecture_date: moment(vItem.lecture_date),
+                                bootcamp_week: vItem.bootcamp_week,
+                                cohort: vItem.cohort,
+                                description: vItem.description,
+                                timestamps: vItem.timestamps,
+                                github_links: vItem.github_links,
+                                slides: vItem.slides,
+                                other_links: vItem.other_links,
+                              });
+                            }
+                          }}
                         />
                       </Tooltip>,
                     ]}

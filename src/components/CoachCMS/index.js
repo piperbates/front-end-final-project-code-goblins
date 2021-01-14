@@ -143,11 +143,48 @@ function CoachCMS() {
   //set form data from api video selector
   const setFormVideoData = (selectData) => {
     setTimestampVideoUrl(selectData.url);
-    form.setFieldsValue({
-      title: selectData.title,
-      video_url: selectData.url,
-      thumbnail_url: selectData.thumbnail,
-    });
+    //set guest lecturer
+    if (modeSelector) {
+      form.setFieldsValue({
+        title: selectData.title,
+        video_url: selectData.url,
+        thumbnail_url: selectData.thumbnail,
+      });
+    } else {
+      form.setFieldsValue({
+        title: selectData.title,
+        lecturer: selectData.lecturer,
+        video_url: selectData.url,
+        thumbnail_url: selectData.thumbnail,
+        lecture_date: selectData.lecture_date,
+        bootcamp_week: selectData.bootcamp_week,
+        cohort: selectData.cohort,
+        description: selectData.description,
+      });
+      //add tags
+      setTags(selectData.tags);
+
+      //add github links
+      if (selectData.github_links !== undefined) {
+        form.setFieldsValue({
+          github_links: selectData.github_links,
+        });
+      }
+
+      //add slide links
+      if (selectData.slides !== undefined) {
+        form.setFieldsValue({
+          slides: selectData.slides,
+        });
+      }
+
+      //add other links
+      if (selectData.other_links !== undefined) {
+        form.setFieldsValue({
+          other_links: selectData.other_links,
+        });
+      }
+    }
     message.success("Video selected. Added to form data.", 1);
   };
 
@@ -157,6 +194,7 @@ function CoachCMS() {
 
   //submit form function
   const submitForm = (values) => {
+    console.log(values);
     postResource({
       ...values,
       tags: tags,
@@ -370,8 +408,8 @@ function CoachCMS() {
             </Form.Item>
 
             <Form.Item
-              label="Tutorial"
               // name="tutorial_switch"
+              label="Tutorial"
               valuePropName="checked"
             >
               <Switch

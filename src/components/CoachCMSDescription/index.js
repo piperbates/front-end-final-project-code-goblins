@@ -4,6 +4,7 @@ import moment from "moment";
 
 const DescriptionBox = ({ width, data, modeSelector }) => {
   console.log(data);
+  console.log(modeSelector);
   return (
     <Descriptions
       title="Video Info"

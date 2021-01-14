@@ -47,6 +47,7 @@ const CmsMenu = ({
         key="3"
         icon={<VideoCameraOutlined />}
         onClick={() => {
+          toggleVisible();
           updateVideoSelectPageOutput(false);
           switchVideoMode(!modeSelector);
         }}
