@@ -62,11 +62,18 @@ export default function LectureViewer() {
                 {videoData.title}
               </h1>
               <h2 style={{ padding: "0px" }}>{videoData.lecturer}</h2>
-              <Divider style={{ width: "300px" }} />
-              {videoData.description}
-                {adminUsers[0].find((user) => user.email === currentUser.email) ? 
-                  <FeedbackViewer /> : 
-                    <></>}
+              <Space direction="vertical">
+                <Divider style={{ width: "300px" }} />
+                {videoData.description}
+                <Divider style={{ width: "300px" }} />
+                {adminUsers[0].find(
+                  (user) => user.email === currentUser.email
+                ) ? (
+                  <FeedbackViewer />
+                ) : (
+                  <></>
+                )}
+              </Space>
             </Col>
           </Col>
           <Col span={5}>
