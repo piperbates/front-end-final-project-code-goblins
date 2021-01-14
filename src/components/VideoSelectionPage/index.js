@@ -5,8 +5,10 @@ import { SearchContext } from "../../contexts/searchContext";
 import FilterBox from "../FilterBox";
 import "./style.css";
 import config from "../../config";
+import moment from "moment";
 
 const { Option } = Select;
+const { CheckableTag } = Tag;
 
 export default function VideoSelectionPage({ allVideoData }) {
   const [videoData, setVideoData] = useState(allVideoData);
@@ -14,6 +16,7 @@ export default function VideoSelectionPage({ allVideoData }) {
   const [lecturerData, setLecturerData] = useState();
   const [weekData, setWeekData] = useState();
   const [tagData, setTagData] = useState();
+  const { tagState, handleTagChange } = useContext(SearchContext);
 
   useEffect(() => {
     async function getSearchData() {
@@ -91,23 +94,55 @@ export default function VideoSelectionPage({ allVideoData }) {
                 {videoData.map((data) => {
                   return (
                     <Col key={data.id}>
-                      <Link to={`/videoviewer/${data.id}`}>
-                        <Card
-                          hoverable
-                          style={{ width: 200, height: 320 }}
-                          bordered={true}
-                          className="video-card"
-                          title={data.title}
-                          cover={
-                            <img alt="placeholder" src={data.thumbnail_url} />
-                          }
-                        >
-                          <p>Lecturer: {data.lecturer}</p>
-                          {data.tags.map((tag, index) => (
-                            <Tag key={tag}>{tag}</Tag>
+                      <Card
+                        style={{
+                          width: 250,
+                          minHeight: 280,
+                        }}
+                        bodyStyle={{ padding: "3px 3px" }}
+                        bordered={false}
+                        className="video-card"
+                        cover={
+                          <Link to={`/videoviewer/${data.id}`}>
+                            <img
+                              alt="placeholder"
+                              src={data.thumbnail_url}
+                              style={{ width: 250, border: "1px solid #ccc" }}
+                            />
+                          </Link>
+                        }
+                      >
+                        <h3 style={{ marginBottom: 9 }}>
+                          {`Week ${data.bootcamp_week}`}: {data.title}
+                        </h3>
+                        <p style={{ marginBottom: 2 }}>
+                          {data.lecturer} on{" "}
+                          {moment(data.lecture_date).format("DD MMM YYYY")}
+                        </p>
+                        <div className="card-tag-container">
+                          {data.tags.map((tag) => (
+                            <CheckableTag
+                              key={tag}
+                              checked={tagState.selectedTags.indexOf(tag) > -1}
+                              onChange={(checked) => {
+                                handleTagChange(tag, checked);
+                              }}
+                              style={{
+                                margin: "0px",
+                                padding: "0px 3px",
+                                border: "none",
+                                fontSize: "13px",
+                                color:
+                                  tagState.selectedTags.indexOf(tag) > -1
+                                    ? "#fff"
+                                    : "#40a9ff",
+                              }}
+                            >
+                              {`#${tag}`}
+                            </CheckableTag>
                           ))}
-                        </Card>
-                      </Link>
+                        </div>
+                      </Card>
                     </Col>
                   );
                 })}
@@ -118,3 +153,4 @@ export default function VideoSelectionPage({ allVideoData }) {
       </>
     );
 }
+//<Tag key={tag}>{tag}</Tag>

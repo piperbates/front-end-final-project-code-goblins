@@ -12,6 +12,7 @@ import HeaderBar from "../HeaderBar";
 import Login from "../Login";
 import PrivateRoute from "../PrivateRoute";
 import Restricted from "../Restricted";
+import Footer from "../Footer";
 
 function App() {
   const { currentUser } = useContext(AuthContext);
@@ -27,45 +28,45 @@ function App() {
           </>
         )}
       />
-      <main>
-        <Switch>
-          <Route exact path="/login" component={Login} />
 
-          <PrivateRoute
-            exact
-            path="/"
-            render={() => (
+      <Switch>
+        <Route exact path="/login" component={Login} />
+
+        <PrivateRoute
+          exact
+          path="/"
+          render={() => (
+            <>
+              <VideoSelectionPage />
+            </>
+          )}
+        />
+
+        <PrivateRoute
+          exact
+          path={"/videoviewer/:id"}
+          render={() => (
+            <>
+              <LectureViewer />
+            </>
+          )}
+        />
+
+        <PrivateRoute
+          exact
+          path={"/cms"}
+          render={() =>
+            adminUsers[0].find((user) => user.email === currentUser.email) ? (
               <>
-                <VideoSelectionPage />
+                <CoachCMS />
               </>
-            )}
-          />
+            ) : (
+              <Restricted />
+            )
+          }
+        />
+      </Switch>
 
-          <PrivateRoute
-            exact
-            path={"/videoviewer/:id"}
-            render={() => (
-              <>
-                <LectureViewer />
-              </>
-            )}
-          />
-
-          <PrivateRoute
-            exact
-            path={"/cms"}
-            render={() =>
-              adminUsers[0].find((user) => user.email === currentUser.email) ? (
-                <>
-                  <CoachCMS />
-                </>
-              ) : (
-                <Restricted />
-              )
-            }
-          />
-        </Switch>
-      </main>
       {/* <PrivateRoute
         path="/"
         render={() => (

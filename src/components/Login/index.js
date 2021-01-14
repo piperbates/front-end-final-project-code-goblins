@@ -8,7 +8,6 @@ import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import background from "../../images/waveBackground.svg";
 import logo from "../../images/soc-logo.png";
 
-
 const Login = ({ history }) => {
   const { currentUser } = useContext(AuthContext);
 
@@ -34,7 +33,6 @@ const Login = ({ history }) => {
     <Row
       justify="end"
       style={{
-
         backgroundImage: `url(${background})`,
         backgroundRepeat: "no-repeat",
         backgroundSize: "100%",
@@ -121,7 +119,7 @@ const Login = ({ history }) => {
             color: "#aaa",
           }}
         >
-          Lecture Resources Hub
+          re:cap
           <img
             src={logo}
             alt="school of code logo"
