@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import socLogo from "../../images/soc-logo.png";
+import socLogo from "../../images/recap_logo.svg";
 import app from "../../firebase/Base";
 import { AuthContext } from "../../firebase/Auth";
 import ContentManagementLink from "../ContentManagementLink";
@@ -12,7 +12,14 @@ const { Search } = Input; //imports Search from ant.d
 function HeaderBar() {
   const { currentUser } = useContext(AuthContext);
   const adminUsers = useContext(AdminUsersContext);
-  const { getSearchText } = useContext(SearchContext);
+  const {
+    getSearchText,
+    getSearchTags,
+    getSearchWeek,
+    getSearchLecturer,
+    setTagState,
+    searchText,
+  } = useContext(SearchContext);
   return (
     <Row
       style={{
@@ -29,14 +36,15 @@ function HeaderBar() {
           <img
             src={socLogo}
             alt="logo"
-            style={{ marginLeft: "32px", width: "90px" }}
+            style={{ marginLeft: "32px", height: "80px" }}
           />
         </Link>
         <Search
           placeholder="input search text"
           allowClear={true}
-          onSearch={(value) => getSearchText(value)}
+          onChange={(e) => getSearchText(e.target.value)}
           style={{ width: 200 }}
+          value={searchText}
         />
       </Space>
       <Space style={{ marginRight: "32px" }} size="large">
@@ -50,7 +58,19 @@ function HeaderBar() {
           <></>
         )}
 
-        <Button type="primary" onClick={() => app.auth().signOut()}>
+        <Button
+          type="primary"
+          onClick={() => {
+            getSearchText("");
+            getSearchTags([]);
+            getSearchWeek("All Weeks");
+            getSearchLecturer("All Lecturers");
+            setTagState({
+              selectedTags: [],
+            });
+            app.auth().signOut();
+          }}
+        >
           Log Out
         </Button>
       </Space>

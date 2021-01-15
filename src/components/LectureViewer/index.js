@@ -5,7 +5,11 @@ import "./style.css";
 import { SearchContext } from "../../contexts/searchContext";
 import config from "../../config";
 import FeedbackForm from "../FeedbackForm";
-import FeedbackViewer from "../FeedbackViewer";
+import {
+  GithubOutlined,
+  FundProjectionScreenOutlined,
+  FileTextOutlined,
+} from "@ant-design/icons";
 import { AuthContext } from "../../firebase/Auth";
 import { AdminUsersContext } from "../../contexts/adminUsersContext";
 import { Spin, Row, Col, Space, Button, Divider } from "antd";
@@ -80,18 +84,44 @@ export default function LectureViewer() {
             <FeedbackForm />
             <Divider orientation="left">Resources</Divider>​
             <Space direction="vertical">
-              {[
-                ...videoData.github_links,
-                ...videoData.slides,
-                ...videoData.other_links,
-              ].map((value) => (
+              {videoData.github_links !== [] &&
+                videoData.github_links.map((value) => (
+                  <a
+                    key={value.uuid}
+                    href={value.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Space>
+                      <GithubOutlined />
+                      {value.desc}
+                    </Space>
+                  </a>
+                ))}
+              {videoData.slides !== [] &&
+                videoData.slides.map((value) => (
+                  <a
+                    key={value.uuid}
+                    href={value.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Space>
+                      <FundProjectionScreenOutlined /> {value.desc}
+                    </Space>
+                  </a>
+                ))}
+              {videoData.other_links.map((value) => (
                 <a
                   key={value.uuid}
                   href={value.link}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {value.desc}
+                  <Space>
+                    <FileTextOutlined />
+                    {value.desc}
+                  </Space>
                 </a>
               ))}
             </Space>
@@ -101,7 +131,7 @@ export default function LectureViewer() {
                 return (
                   <Button
                     key={value.uuid}
-                    style={{ width: "200px", textAlign: "left" }}
+                    style={{ width: "305px", textAlign: "left" }}
                     onClick={() => seekToTimestamp(value.timeSecondsValue)}
                   >
                     {`${value.timeString} - ${value.timeDesc}`}

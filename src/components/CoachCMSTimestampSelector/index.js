@@ -1,11 +1,7 @@
-import React, { useRef, useState, useCallback } from "react";
+import React, { useRef, useState, useCallback, useEffect } from "react";
 import { Modal, Button, Input, Form, Space, TimePicker, message } from "antd";
 import ReactPlayer from "react-player";
-import {
-  MinusCircleOutlined,
-  PlaySquareFilled,
-  PlusOutlined,
-} from "@ant-design/icons";
+import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import moment from "moment";
 import { v4 as uuidv4 } from "uuid";
 
@@ -17,6 +13,8 @@ const TimestampSelector = ({
   submitFailed,
   getTimeStampData,
   modalHide,
+  modeSelector,
+  editTimestampData,
 }) => {
   const player = useRef(null);
   const [form] = Form.useForm();
@@ -26,6 +24,17 @@ const TimestampSelector = ({
   const [seekTimeSeconds, setSeekTimeSeconds] = useState(0);
   const [seekTimeString, setSeekTimeString] = useState("00:00:00");
   const [playerBuffering, setPlayerBuffering] = useState(false);
+
+  useEffect(() => {
+    if (editTimestampData) {
+      form.setFieldsValue({
+        timestamps: editTimestampData.map((value) => ({
+          ...value,
+          timeMoment: moment(value.timeMoment),
+        })),
+      });
+    }
+  }, [form, editTimestampData, modeSelector]);
 
   const submitForm = useCallback(
     (timestamps) => {
@@ -40,9 +49,11 @@ const TimestampSelector = ({
       title="Timestamp Selector"
       visible={timestampsVisible}
       onOk={form.submit}
-      onCancel={modalDisplay}
+      onCancel={() => {
+        modalDisplay();
+      }}
       width="fit-content"
-      destroyOnClose
+      destroyOnClose={true}
       okText={"Finish"}
     >
       <>
@@ -66,13 +77,15 @@ const TimestampSelector = ({
           remember: false,
         }}
         onFinish={submitForm}
-        onFinishFailed={(value) => submitFailed(value)}
+        onFinishFailed={(value) => {
+          submitFailed(value);
+        }}
       >
         <Form.Item label="Timestamps" required>
           <Form.List name="timestamps" rules={ruleSetRequired}>
             {(fields, { add, remove }) => (
               <>
-                {fields.map((field, index) => (
+                {fields.map((field) => (
                   <Space
                     key={field.key}
                     style={{ display: "flex", marginBottom: 0 }}
@@ -136,7 +149,6 @@ const TimestampSelector = ({
                 <Form.Item>
                   <Button
                     disabled={playerBuffering}
-                    te
                     type="dashed"
                     onClick={() => {
                       const timeString = new Date(

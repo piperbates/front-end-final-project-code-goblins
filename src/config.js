@@ -3,7 +3,9 @@ const url = process.env.REACT_APP_BACKEND_URL;
 const config = {
   BACKEND_URL_SEARCH: `${url}/search/?`,
   BACKEND_URL_SEARCH_BY_ID: `${url}/searchbyid/`,
-  BACKEND_URL_ADD_CONTENT: `${url}/addcontent/`,
+  BACKEND_URL_ADD_CONTENT: `${url}/cms/addcontent/`,
+  BACKEND_URL_DELETE_CONTENT: `${url}/cms/deletecontent/`,
+  BACKEND_URL_UPDATE_CONTENT: `${url}/cms/updatecontent/`,
   BACKEND_URL_VIMEO_GET_ALL_DATA: `${url}/vimeo/allData/`,
   BACKEND_URL_FEEDBACK_UPDATE: `${url}/feedback/`,
   BACKEND_URL_TAGS_GET_ALL_DATA: `${url}/tags/`,

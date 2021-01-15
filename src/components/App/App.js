@@ -12,7 +12,6 @@ import HeaderBar from "../HeaderBar";
 import Login from "../Login";
 import PrivateRoute from "../PrivateRoute";
 import Restricted from "../Restricted";
-import Footer from "../Footer";
 
 function App() {
   const { currentUser } = useContext(AuthContext);

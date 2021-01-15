@@ -3,7 +3,13 @@ import { Button, Dropdown } from "antd";
 import { MenuOutlined } from "@ant-design/icons";
 import CmsMenu from "../CoachCMSMenu";
 
-const CmsDropdown = ({ toggleTagDisplay, toggleLecturerDisplay }) => {
+const CmsDropdown = ({
+  toggleTagDisplay,
+  toggleLecturerDisplay,
+  switchVideoMode,
+  modeSelector,
+  updateVideoSelectPageOutput,
+}) => {
   const [dropdownVisible, setDropdownVisible] = useState(false);
 
   const toggleVisible = () => {
@@ -17,6 +23,9 @@ const CmsDropdown = ({ toggleTagDisplay, toggleLecturerDisplay }) => {
           toggleTagDisplay={toggleTagDisplay}
           toggleLecturerDisplay={toggleLecturerDisplay}
           toggleVisible={toggleVisible}
+          switchVideoMode={switchVideoMode}
+          modeSelector={modeSelector}
+          updateVideoSelectPageOutput={updateVideoSelectPageOutput}
         />
       }
       visible={dropdownVisible}
