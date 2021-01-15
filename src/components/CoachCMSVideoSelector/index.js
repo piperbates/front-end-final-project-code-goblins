@@ -9,23 +9,27 @@ import {
   Popover,
   Tooltip,
   Skeleton,
+  Popconfirm,
 } from "antd";
 import config from "../../config";
 import {
-  CheckCircleOutlined,
+  PlusCircleOutlined,
   PlayCircleOutlined,
   QuestionCircleOutlined,
+  CloseCircleOutlined,
 } from "@ant-design/icons";
 import Meta from "antd/lib/card/Meta";
 import moment from "moment";
 import ReactPlayer from "react-player";
 import DescriptionBox from "../CoachCMSDescription";
+import { v4 as uuidv4 } from "uuid";
 
 const CmsVideoSelector = ({
   setFormVideoData,
   modeSelector,
   pageOutput,
   updateVideoSelectPageOutput,
+  deleteLecture,
 }) => {
   const [total, setTotal] = useState(0);
   const [paging, setPaging] = useState({ position: 1, paging: 30 });
@@ -34,15 +38,25 @@ const CmsVideoSelector = ({
 
   useEffect(() => {
     async function getVimeoVideoData() {
-      const response = await fetch(
+      const vimRes = await fetch(
         config.BACKEND_URL_VIMEO_GET_ALL_DATA +
           `?pagePosition=${paging.position}&perPageCount=${paging.paging}`
       );
-      const data = await response.json();
+      const vimData = await vimRes.json();
 
-      setTotal(data.total);
-      updateVideoSelectPageOutput(data.data);
-      // setViewerData(data.data[0]);
+      const recapRes = await fetch(config.BACKEND_URL_SEARCH);
+      const recapData = await recapRes.json();
+
+      const vimPageData = [];
+
+      vimData.data.forEach((vim) => {
+        if (!recapData.some((rec) => rec.video_url === vim.link)) {
+          vimPageData.push(vim);
+        }
+      });
+
+      setTotal(vimData.total);
+      updateVideoSelectPageOutput(vimPageData);
     }
     if (modeSelector) {
       getVimeoVideoData();
@@ -151,19 +165,32 @@ const CmsVideoSelector = ({
                           }}
                         />
                       </Tooltip>,
-                      <Popover
-                        content={
-                          <DescriptionBox
-                            width={350}
-                            data={vItem}
-                            modeSelector={modeSelector}
-                          />
-                        }
-                      >
-                        <QuestionCircleOutlined key="info" />
-                      </Popover>,
+
+                      modeSelector ? (
+                        <Popover
+                          content={
+                            <DescriptionBox
+                              width={350}
+                              data={vItem}
+                              modeSelector={modeSelector}
+                            />
+                          }
+                        >
+                          <QuestionCircleOutlined key="info" />
+                        </Popover>
+                      ) : (
+                        <Tooltip title={"Delete"}>
+                          <Popconfirm
+                            title="Confirm deletion of this lecture"
+                            okText="Delete"
+                            onConfirm={() => deleteLecture(vItem.id)}
+                          >
+                            <CloseCircleOutlined />
+                          </Popconfirm>
+                        </Tooltip>
+                      ),
                       <Tooltip title={"Select"}>
-                        <CheckCircleOutlined
+                        <PlusCircleOutlined
                           key="select"
                           onClick={() => {
                             if (modeSelector) {
@@ -171,11 +198,19 @@ const CmsVideoSelector = ({
                                 title: vItem.name,
                                 url: vItem.link,
                                 thumbnail: vItem.pictures.sizes[4].link,
+                                timestamps: [
+                                  {
+                                    timeMoment: "2021-01-14T00:00:00.000Z",
+                                    timeSecondsValue: 0,
+                                    timeString: "00:00:00",
+                                    uuid: uuidv4(),
+                                    timeDesc: "start",
+                                  },
+                                ],
                               });
                             } else {
-                              console.log(vItem);
-                              // console.log(vItem.tags);
                               setFormVideoData({
+                                id: vItem.id,
                                 title: vItem.title,
                                 lecturer: vItem.lecturer,
                                 url: vItem.video_url,

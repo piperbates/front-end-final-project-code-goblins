@@ -12,6 +12,7 @@ import {
   message,
   Row,
   Col,
+  Popconfirm,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { SearchContext } from "../../contexts/searchContext";
@@ -23,6 +24,7 @@ import { v4 as uuidv4 } from "uuid";
 import CmsDropdown from "../CoachCMSDropdown";
 import CmsTagEditor from "../CoachCMSTagEditor";
 import CmsLecturerEditor from "../CoachCMSLectureEditor";
+import moment from "moment";
 
 //global required field rules object, default false
 const ruleSetRequired = [
@@ -69,6 +71,7 @@ function CoachCMS() {
   const [lastLecturerId, setLastLecturerId] = useState(null);
   const [modeSelector, setModeSelector] = useState(true);
   const [pageOutput, setPageOutput] = useState(false);
+  const [editTimestampData, setEditTimestampData] = useState(null);
 
   //tag data and last tag ID from db
   useEffect(() => {
@@ -139,11 +142,16 @@ function CoachCMS() {
   }
 
   const { Option } = Select;
-
   //set form data from api video selector
   const setFormVideoData = (selectData) => {
+    form.resetFields();
+    setTags(["lecture"]);
+    setEditTimestampData([]);
     setTimestampVideoUrl(selectData.url);
-    //set guest lecturer
+    setEditTimestampData(selectData.timestamps);
+    setTimestampData(selectData.timestamps);
+    //TODO guest lecturer switch
+    //TODO tutorial switch
     if (modeSelector) {
       form.setFieldsValue({
         title: selectData.title,
@@ -152,6 +160,7 @@ function CoachCMS() {
       });
     } else {
       form.setFieldsValue({
+        id: selectData.id,
         title: selectData.title,
         lecturer: selectData.lecturer,
         video_url: selectData.url,
@@ -161,6 +170,7 @@ function CoachCMS() {
         cohort: selectData.cohort,
         description: selectData.description,
       });
+
       //add tags
       setTags(selectData.tags);
 
@@ -194,8 +204,7 @@ function CoachCMS() {
 
   //submit form function
   const submitForm = (values) => {
-    console.log(values);
-    postResource({
+    const lectureData = {
       ...values,
       tags: tags,
       date: String(values.lecture_date._d).split(" ").slice(0, 4).join(" "),
@@ -203,7 +212,17 @@ function CoachCMS() {
       github_links: setLinkType(values.github_links, "github"),
       slides: setLinkType(values.slides, "presentation slide"),
       other_links: setLinkType(values.other_links, "additional reading"),
-    });
+    };
+
+    if (modeSelector) {
+      addLecture(lectureData);
+    } else {
+      const originVideo = pageOutput.filter(
+        (origin) => origin.id === values.id
+      );
+      console.log(originVideo);
+      updateLecture(lectureData);
+    }
   };
 
   const submitFailed = (value) => {
@@ -220,20 +239,52 @@ function CoachCMS() {
   //form reset button function
   const onReset = () => {
     form.resetFields();
-    form.setFieldsValue({
-      vimeoAPI: "",
-    });
-    setTags([]);
+    setTags(["lecture"]);
+    setEditTimestampData([
+      {
+        timeMoment: "2021-01-14T00:00:00.000Z",
+        timeSecondsValue: 0,
+        timeString: "00:00:00",
+        uuid: uuidv4(),
+        timeDesc: "start",
+      },
+    ]);
   };
 
-  //Post request async function
-  async function postResource(resource) {
+  //POST
+  async function addLecture(resource) {
     await fetch(config.BACKEND_URL_ADD_CONTENT, {
       method: "POST",
       body: JSON.stringify(resource),
       headers: { "Content-Type": "application/json" },
     });
     await message.success("Form data submitted successfully", 1.5, onReset());
+    setPageOutput(
+      pageOutput.filter((item) => item.link !== resource.video_url)
+    );
+  }
+
+  //DELETE
+  async function deleteLecture(value) {
+    await fetch(config.BACKEND_URL_DELETE_CONTENT + `${value}`, {
+      method: "DELETE",
+    });
+    setPageOutput(pageOutput.filter((item) => item.id !== value));
+    message.success("Lecture deleted", 1.5, onReset());
+  }
+
+  //PUT
+  async function updateLecture(value) {
+    await fetch(config.BACKEND_URL_UPDATE_CONTENT, {
+      method: "PUT",
+      body: JSON.stringify(value),
+      headers: { "Content-Type": "application/json" },
+    });
+    setPageOutput([
+      ...pageOutput.filter((item) => item.id !== value.id),
+      value,
+    ]);
+    message.success("Lecture updated", 1.5, onReset());
   }
 
   //show modal
@@ -294,6 +345,8 @@ function CoachCMS() {
         submitFailed={submitFailed}
         modalHide={modalHide}
         getTimeStampData={getTimeStampData}
+        modeSelector={modeSelector}
+        editTimestampData={editTimestampData}
       />
 
       <CmsTagEditor
@@ -339,6 +392,7 @@ function CoachCMS() {
             setFormVideoData={setFormVideoData}
             pageOutput={pageOutput}
             updateVideoSelectPageOutput={updateVideoSelectPageOutput}
+            deleteLecture={deleteLecture}
           />
         </Col>
 
@@ -355,6 +409,10 @@ function CoachCMS() {
             onFinish={submitForm}
             onFinishFailed={(value) => submitFailed(value)}
           >
+            <Form.Item name="id" hidden>
+              <Input />
+            </Form.Item>
+
             <Form.Item label="Video Title" name="title" rules={ruleSetRequired}>
               <Input />
             </Form.Item>
@@ -444,7 +502,7 @@ function CoachCMS() {
               name="lecture_date"
               rules={ruleSetRequired}
             >
-              <DatePicker />
+              <DatePicker defaultPickerValue={moment()} />
             </Form.Item>
 
             <Form.Item
@@ -643,7 +701,7 @@ function CoachCMS() {
 
             <Form.Item {...tailLayout}>
               <Button type="primary" htmlType="submit">
-                Submit
+                {modeSelector ? "Submit New Lecture" : "Submit Changes"}
               </Button>
             </Form.Item>
           </Form>

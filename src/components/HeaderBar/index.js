@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
-import socLogo from "../../images/soc-logo.png";
+import socLogo from "../../images/recap_logo.svg";
 import app from "../../firebase/Base";
 import { AuthContext } from "../../firebase/Auth";
 import ContentManagementLink from "../ContentManagementLink";
@@ -18,6 +18,7 @@ function HeaderBar() {
     getSearchWeek,
     getSearchLecturer,
     setTagState,
+    searchText,
   } = useContext(SearchContext);
   return (
     <Row
@@ -35,14 +36,15 @@ function HeaderBar() {
           <img
             src={socLogo}
             alt="logo"
-            style={{ marginLeft: "32px", width: "90px" }}
+            style={{ marginLeft: "32px", height: "80px" }}
           />
         </Link>
         <Search
           placeholder="input search text"
           allowClear={true}
-          onSearch={(value) => getSearchText(value)}
+          onChange={(e) => getSearchText(e.target.value)}
           style={{ width: 200 }}
+          value={searchText}
         />
       </Space>
       <Space style={{ marginRight: "32px" }} size="large">

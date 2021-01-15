@@ -17,6 +17,7 @@ function FilterBox({ lecturerData, weekData, tagData }) {
     setTagState,
     tagState,
     handleTagChange,
+    getSearchText,
   } = useContext(SearchContext);
 
   return (
@@ -84,6 +85,20 @@ function FilterBox({ lecturerData, weekData, tagData }) {
             }}
           >
             Clear Tags
+          </Button>
+          <Button
+            type="primary"
+            onClick={() => {
+              getSearchText("");
+              getSearchTags([]);
+              getSearchWeek("All Weeks");
+              getSearchLecturer("All Lecturers");
+              setTagState({
+                selectedTags: [],
+              });
+            }}
+          >
+            Reset Search
           </Button>
         </Space>
       </Col>

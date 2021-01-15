@@ -6,6 +6,11 @@ import { SearchContext } from "../../contexts/searchContext";
 import config from "../../config";
 import FeedbackForm from "../FeedbackForm";
 import { Spin, Row, Col, Space, Button, Divider, Anchor } from "antd";
+import {
+  GithubOutlined,
+  FundProjectionScreenOutlined,
+  FileTextOutlined,
+} from "@ant-design/icons";
 
 const { Link } = Anchor;
 
@@ -67,18 +72,44 @@ export default function LectureViewer() {
             <FeedbackForm />
             <Divider orientation="left">Resources</Divider>​
             <Space direction="vertical">
-              {[
-                ...videoData.github_links,
-                ...videoData.slides,
-                ...videoData.other_links,
-              ].map((value) => (
+              {videoData.github_links !== [] &&
+                videoData.github_links.map((value) => (
+                  <a
+                    key={value.uuid}
+                    href={value.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Space>
+                      <GithubOutlined />
+                      {value.desc}
+                    </Space>
+                  </a>
+                ))}
+              {videoData.slides !== [] &&
+                videoData.slides.map((value) => (
+                  <a
+                    key={value.uuid}
+                    href={value.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Space>
+                      <FundProjectionScreenOutlined /> {value.desc}
+                    </Space>
+                  </a>
+                ))}
+              {videoData.other_links.map((value) => (
                 <a
                   key={value.uuid}
                   href={value.link}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {value.desc}
+                  <Space>
+                    <FileTextOutlined />
+                    {value.desc}
+                  </Space>
                 </a>
               ))}
             </Space>
