@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import "antd/dist/antd.css";
 import "./style.css";
-import { Modal, Button, Input } from "antd";
-import { message } from "antd";
+import { Modal, Button, Input, message } from "antd";
 import config from "../../config";
 
 const { TextArea } = Input;
@@ -19,41 +18,45 @@ function errorMsg() {
   message.error("An error occured. Please try again.");
 }
 
-//Gets the video id from the url
-let url = window.location.href; //gets the whole url
-let split = url.split("/"); //splits the url into an array by /
-let ref = split[split.length - 1]; //Collects the last part of the array, which in this case will be the video id that is displaying on this page
 
 //Sets whether or not the modal is visable
 export default function FeedbackModal() {
+  //Gets the video id from the url
+  let url = window.location.href; //gets the whole url
+  let split = url.split("/"); //splits the url into an array by /
+  let ref = split[split.length - 1]; //Collects the last part of the array, which in this case will be the video id that is displaying on this page
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [feedback, setFeedback] = useState("");
 
+  const [feedback, setFeedback] = useState("");
   //Posts the feedback to the database
   function postFeedback(value) {
-    //Value is the feedback to be submitted
-    fetch(`${config.BACKEND_URL_FEEDBACK_UPDATE}`, {
-      //Change this url on deployment
-      method: "post",
-      body: JSON.stringify({
-        videoId: value.videoId, //Taken from ref - see feedbackToSubmit below
-        feedback: value.feedback,
-      }),
-      headers: { "Content-Type": "application/json" },
-      //Validation: ContentType
-    })
-      .then((res) => res.json()) //res.json() is an async function
-      .then((data) => {
-        console.log(data, "Thanks for the feedback: " + feedback);
-        setFeedback(""); //Resets the form
-
-        setIsModalVisible(false); //closes the modal
-        successMsg(); //message confirming to the user that the feedback has gone through
+    if (!value.videoId) {
+      errorMsg()
+    } else {
+      //Value is the feedback to be submitted
+      fetch(`${config.BACKEND_URL_FEEDBACK_UPDATE}`, {
+        //Change this url on deployment
+        method: "post",
+        body: JSON.stringify({
+          videoId: value.videoId, //Taken from ref - see feedbackToSubmit below
+          feedback: value.feedback,
+        }),
+        headers: { "Content-Type": "application/json" },
+        //Validation: ContentType
       })
-      .catch((error) => {
-        errorMsg(); //message alerting user that there has been an error and they may need to try again
-        console.log(error, "my error");
-      }); //uncaught promise rejection. The promise throws and error and I need to catch otherwise it will be thrown into the ether
+        .then((res) => res.json()) //res.json() is an async function
+        .then((data) => {
+          console.log(data, "Feedback received: " + feedback + " for video " + value.videoId);
+          setFeedback(""); //Resets the form
+
+          setIsModalVisible(false); //closes the modal
+          successMsg(); //message confirming to the user that the feedback has gone through
+        })
+        .catch((error) => {
+          errorMsg(); //message alerting user that there has been an error and they may need to try again
+          console.log(error, "my error");
+        }); //uncaught promise rejection. The promise throws and error and I need to catch otherwise it will be thrown into the ether
+    }
   }
 
   //This function changes the feedback state to whatever is inserted into the feedback textbox onChange
@@ -72,7 +75,6 @@ export default function FeedbackModal() {
       feedback: feedback,
     };
     postFeedback(feedbackToSubmit);
-    // console.log({feedbackToSubmit});
   }
   const showModal = () => {
     //Sets modal visibility to true
@@ -103,6 +105,7 @@ export default function FeedbackModal() {
                 placeholder="Insert Feedback"
                 value={feedback}
                 onChange={handleChange}
+                
               />
             </form>
           </div>

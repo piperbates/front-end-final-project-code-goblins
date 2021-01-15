@@ -5,16 +5,18 @@ import "./style.css";
 import { SearchContext } from "../../contexts/searchContext";
 import config from "../../config";
 import FeedbackForm from "../FeedbackForm";
-import { Spin, Row, Col, Space, Button, Divider, Anchor } from "antd";
 import {
   GithubOutlined,
   FundProjectionScreenOutlined,
   FileTextOutlined,
 } from "@ant-design/icons";
-
-const { Link } = Anchor;
+import { AuthContext } from "../../firebase/Auth";
+import { AdminUsersContext } from "../../contexts/adminUsersContext";
+import { Spin, Row, Col, Space, Button, Divider } from "antd";
 
 export default function LectureViewer() {
+  const { currentUser } = useContext(AuthContext);
+  const adminUsers = useContext(AdminUsersContext);
   const id = useLocation().pathname.split("/").pop();
   const player = useRef(null);
   const [videoData, setVideoData] = useState(false);
@@ -64,8 +66,18 @@ export default function LectureViewer() {
                 {videoData.title}
               </h1>
               <h2 style={{ padding: "0px" }}>{videoData.lecturer}</h2>
-              <Divider style={{ width: "300px" }} />
-              {videoData.description}
+              <Space direction="vertical">
+                <Divider style={{ width: "300px" }} />
+                {videoData.description}
+                <Divider style={{ width: "300px" }} />
+                {adminUsers[0].find(
+                  (user) => user.email === currentUser.email
+                ) ? (
+                  <FeedbackViewer />
+                ) : (
+                  <></>
+                )}
+              </Space>
             </Col>
           </Col>
           <Col span={5}>
