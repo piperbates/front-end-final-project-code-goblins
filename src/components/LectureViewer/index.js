@@ -13,8 +13,9 @@ import {
 import { AuthContext } from "../../firebase/Auth";
 import { AdminUsersContext } from "../../contexts/adminUsersContext";
 import { Spin, Row, Col, Space, Button, Divider } from "antd";
+import FeedbackViewer from "../FeedbackViewer";
 
-export default function LectureViewer() {
+const LectureViewer = () => {
   const { currentUser } = useContext(AuthContext);
   const adminUsers = useContext(AdminUsersContext);
   const id = useLocation().pathname.split("/").pop();
@@ -144,4 +145,6 @@ export default function LectureViewer() {
         </Row>
       </>
     );
-}
+};
+
+export default LectureViewer;
