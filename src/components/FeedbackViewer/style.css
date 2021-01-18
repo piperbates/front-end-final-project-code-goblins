@@ -1,18 +1,26 @@
-#feedback-ul {
-    padding: 0px; margin: 0px;
-    display: flex; flex-direction: column; 
-
+.ant-comment-inner {
+  padding: 0;
+  padding-bottom: 16px;
 }
 
+.feedback-viewer-column {
+  max-height: 400px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
 
+.feedback-viewer-column::-webkit-scrollbar {
+  width: 7px;
+}
 
-.feedback-item {
-    border-bottom: 1px solid #c7c7c7;
-    display: flex;
-    align-items: center;
+.feedback-viewer-column::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
 
-    list-style-type: none;
-   
-    margin: 0px;
-    
+.feedback-viewer-column::-webkit-scrollbar-thumb {
+  background: #c2c2c2;
+}
+
+.feedback-viewer-column::-webkit-scrollbar-thumb:hover {
+  background: #d2d2d2;
 }

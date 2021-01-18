@@ -2,6 +2,8 @@ const url = process.env.REACT_APP_BACKEND_URL;
 
 const config = {
   BACKEND_URL_SEARCH: `${url}/search/?`,
+  BACKEND_URL_SEARCH_PAGINATION: `${url}/search/pagination/?`,
+  BACKEND_URL_SEARCH_VIDEO_COUNT: `${url}/search/count/`,
   BACKEND_URL_SEARCH_BY_ID: `${url}/searchbyid/`,
   BACKEND_URL_ADD_CONTENT: `${url}/cms/addcontent/`,
   BACKEND_URL_DELETE_CONTENT: `${url}/cms/deletecontent/`,

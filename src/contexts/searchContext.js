@@ -11,6 +11,8 @@ export function SearchProvider({ children }) {
   const [tagState, setTagState] = useState({
     selectedTags: [],
   });
+  const [paginationSize] = useState(15);
+  const [paging, setPaging] = useState({ position: 1, paging: paginationSize });
 
   useEffect(() => {
     let searchArray = [];
@@ -34,6 +36,18 @@ export function SearchProvider({ children }) {
     let searchTagsConvert = [];
     if (searchTags !== []) {
       searchTagsConvert = [...searchTags.map((tag) => ["tag", tag])];
+    }
+
+    //no search clearing
+    if (
+      searchText === "" &&
+      searchWeek === "All Weeks" &&
+      searchLecturer === "All Lecturers" &&
+      tagState.selectedTags.length < 1
+    ) {
+      console.log("no search clearing firing");
+      setPaging();
+      setPaging({ position: 1, paging: paginationSize });
     }
 
     searchArray = [...searchArray, ...searchTagsConvert];
@@ -81,6 +95,8 @@ export function SearchProvider({ children }) {
         setTagState,
         tagState,
         handleTagChange,
+        paging,
+        setPaging,
       }}
     >
       {children}

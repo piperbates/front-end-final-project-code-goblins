@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext } from "react";
-import "antd/dist/antd.css";
 import {
   Form,
   Input,
@@ -12,7 +11,7 @@ import {
   message,
   Row,
   Col,
-  Popconfirm,
+  Divider,
 } from "antd";
 import { MinusCircleOutlined, PlusOutlined } from "@ant-design/icons";
 import { SearchContext } from "../../contexts/searchContext";
@@ -21,10 +20,10 @@ import TimestampSelector from "../CoachCMSTimestampSelector";
 import config from "../../config";
 import CmsVideoSelector from "../CoachCMSVideoSelector";
 import { v4 as uuidv4 } from "uuid";
-import CmsDropdown from "../CoachCMSDropdown";
 import CmsTagEditor from "../CoachCMSTagEditor";
 import CmsLecturerEditor from "../CoachCMSLectureEditor";
 import moment from "moment";
+import DrawerToolsMenu from "../CoachCMSDrawerMenu";
 
 //global required field rules object, default false
 const ruleSetRequired = [
@@ -45,7 +44,7 @@ const formLayout = {
 };
 const tailLayout = {
   wrapperCol: {
-    offset: 12,
+    offset: 0,
     span: 24,
   },
 };
@@ -373,15 +372,16 @@ function CoachCMS() {
         </Space>
       </Row>
 
-      <Row style={{ marginBottom: "32px" }}>
-        <Col span={24}>
-          <CmsDropdown
+      <Row style={{ marginBottom: "32px" }} justify="center">
+        <Col span={22}>
+          <DrawerToolsMenu
             toggleTagDisplay={toggleTagDisplay}
             toggleLecturerDisplay={toggleLecturerDisplay}
+            updateVideoSelectPageOutput={updateVideoSelectPageOutput}
             switchVideoMode={switchVideoMode}
             modeSelector={modeSelector}
-            updateVideoSelectPageOutput={updateVideoSelectPageOutput}
           />
+          <Divider style={{ marginBottom: "0", marginTop: "42px" }} />
         </Col>
       </Row>
 

@@ -7,6 +7,7 @@ import ContentManagementLink from "../ContentManagementLink";
 import { AdminUsersContext } from "../../contexts/adminUsersContext";
 import { Input, Space, Row, Button } from "antd";
 import { SearchContext } from "../../contexts/searchContext";
+import "./style.css";
 
 const { Search } = Input; //imports Search from ant.d
 function HeaderBar() {
@@ -40,15 +41,15 @@ function HeaderBar() {
           />
         </Link>
         <Search
-          placeholder="input search text"
+          placeholder="search title and description"
           allowClear={true}
           onChange={(e) => getSearchText(e.target.value)}
-          style={{ width: 200 }}
+          style={{ width: 260 }}
           value={searchText}
         />
       </Space>
-      <Space style={{ marginRight: "32px" }} size="large">
-        <Link to="/" style={{ color: "#000" }}>
+      <Space style={{ marginRight: "32px", userSelect: "none" }} size="large">
+        <Link className="header-bar-links" to="/" style={{ color: "#000" }}>
           Home
         </Link>
 

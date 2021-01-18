@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import config from "../../config";
 import "./style.css";
 import moment from "moment";
-import { Comment, Divider} from "antd";
+import { Comment, Divider } from "antd";
 
 export default function FeedbackViewer() {
   let url = window.location.href; //gets the whole url
@@ -22,25 +22,15 @@ export default function FeedbackViewer() {
 
   if (feedbackArr.length > 0) {
     return (
-      <div>
-        <h2>Feedback</h2>
-        <div>
-          <ul id="feedback-ul">
-            {feedbackArr.map((item) => {
-              return (<>
-                <Comment
-                  author={moment(item.created_at).format("DD MM yy hh:mma")}
-                  bodyStyle={{padding: "0px", margin: "0px"}}
-                  // avatar={<UserOutlined  style={{position: "absolute", marginTop: "10px"}} />}
-                  content={item.feedback}
-                />
-                <Divider style={{padding: "0px", margin: "0px"}} />
-
-                </>
-              );
-            })}
-          </ul>
-        </div>
+      <div className="feedback-viewer-column">
+        {feedbackArr.map((item) => {
+          return (
+            <Comment
+              author={moment(item.created_at).format("DD MM yy hh:mma")}
+              content={item.feedback}
+            />
+          );
+        })}
       </div>
     );
   } else {

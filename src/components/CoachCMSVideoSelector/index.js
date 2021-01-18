@@ -3,13 +3,12 @@ import {
   Pagination,
   Spin,
   Card,
-  Row,
-  Space,
   Modal,
   Popover,
   Tooltip,
   Skeleton,
   Popconfirm,
+  Layout,
 } from "antd";
 import config from "../../config";
 import {
@@ -23,6 +22,8 @@ import moment from "moment";
 import ReactPlayer from "react-player";
 import DescriptionBox from "../CoachCMSDescription";
 import { v4 as uuidv4 } from "uuid";
+
+const { Content } = Layout;
 
 const CmsVideoSelector = ({
   setFormVideoData,
@@ -81,7 +82,7 @@ const CmsVideoSelector = ({
   };
 
   if (!pageOutput || pageOutput === undefined) {
-    return <Skeleton rows="20" />;
+    return <Skeleton />;
   } else
     return (
       <>
@@ -111,35 +112,50 @@ const CmsVideoSelector = ({
           )}
         </Modal>
 
-        <Space direction={"vertical"} size={"middle"}>
-          <Row justify={"start"}>
-            {modeSelector ? (
-              <h3>Vimeo API Video Selector</h3>
-            ) : (
-              <h3>re:cap Video Editor</h3>
-            )}
-          </Row>
-          <Row justify={"start"}>
-            <Pagination
-              onChange={(page, pageSize) => {
-                setPaging({ position: page, paging: pageSize });
-              }}
-              total={total}
-              current={paging.position}
-              pageSize={paging.paging}
-              defaultCurrent={1}
-              defaultPageSize={30}
-              responsive={true}
-              pageSizeOptions={[30, 40, 50]}
-            />
-          </Row>
-          <Row style={{ maxHeight: "1685px", overflow: "auto" }}>
-            <Space wrap size={"middle"} style={{ justifyContent: "center" }}>
-              {pageOutput ? (
-                pageOutput.map((vItem) => (
+        {modeSelector ? (
+          <h3>Vimeo API Video Selector</h3>
+        ) : (
+          <h3>re:cap Video Editor</h3>
+        )}
+
+        <Pagination
+          onChange={(page, pageSize) => {
+            setPaging({ position: page, paging: pageSize });
+          }}
+          total={total}
+          current={paging.position}
+          pageSize={paging.paging}
+          defaultCurrent={1}
+          defaultPageSize={30}
+          responsive={true}
+          pageSizeOptions={[30, 40, 50]}
+          style={{ marginBottom: "16px" }}
+        />
+
+        <Content style={{ backgroundColor: "#fff" }}>
+          <ul
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(240px, 1fr))",
+              position: "relative",
+              padding: "0",
+              listStyle: "none",
+            }}
+          >
+            {pageOutput ? (
+              pageOutput.map((vItem) => (
+                <li
+                  style={{
+                    padding: "0",
+                    listStyle: "none",
+                    minWidth: "120px",
+                    maxWidth: "480px",
+                    marginRight: "1.5em",
+                    marginBottom: "1.5em",
+                  }}
+                >
                   <Card
                     hoverable
-                    style={{ width: "200px" }}
                     cover={
                       <img
                         src={
@@ -242,15 +258,15 @@ const CmsVideoSelector = ({
                       ).format("DD MMM YYYY")}
                     />
                   </Card>
-                ))
-              ) : (
-                <>
-                  <Spin />
-                </>
-              )}
-            </Space>
-          </Row>
-        </Space>
+                </li>
+              ))
+            ) : (
+              <li>
+                <Spin />
+              </li>
+            )}
+          </ul>
+        </Content>
       </>
     );
 };

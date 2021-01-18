@@ -1,14 +1,14 @@
 import React, { useEffect, useState, useContext } from "react";
-import { Card, Col, Row, Tag, Spin, Space, Select } from "antd";
+import { Card, Col, Row, Tag, Spin, Select, Pagination, Layout } from "antd";
 import { Link } from "react-router-dom";
 import { SearchContext } from "../../contexts/searchContext";
 import FilterBox from "../FilterBox";
-import "./style.css";
 import config from "../../config";
 import moment from "moment";
 
 const { Option } = Select;
 const { CheckableTag } = Tag;
+const { Sider, Content } = Layout;
 
 export default function VideoSelectionPage({ allVideoData }) {
   const [videoData, setVideoData] = useState(allVideoData);
@@ -16,15 +16,42 @@ export default function VideoSelectionPage({ allVideoData }) {
   const [lecturerData, setLecturerData] = useState();
   const [weekData, setWeekData] = useState();
   const [tagData, setTagData] = useState();
-  const { tagState, handleTagChange } = useContext(SearchContext);
+  const { tagState, handleTagChange, paging, setPaging } = useContext(
+    SearchContext
+  );
 
+  const [total, setTotal] = useState(0);
+
+  //pagination page count + population for pages
+  useEffect(() => {
+    const getPaginationData = async () => {
+      console.log("pagination fire");
+      const countRes = await fetch(config.BACKEND_URL_SEARCH_VIDEO_COUNT);
+      const countData = await countRes.json();
+      setTotal(countData[0].count);
+
+      const pagRes = await fetch(
+        config.BACKEND_URL_SEARCH_PAGINATION +
+          `position=${paging.position}&paging=${paging.paging}`
+      );
+      const pagData = await pagRes.json();
+      setVideoData(pagData);
+    };
+    if (!searchUrl) {
+      getPaginationData();
+    }
+  }, [paging]);
+
+  //search for text, tags, weeks, lecturers
   useEffect(() => {
     async function getSearchData() {
       const response = await fetch(config.BACKEND_URL_SEARCH + searchUrl);
       const data = await response.json();
       setVideoData(data);
     }
-    getSearchData();
+    if (searchUrl) {
+      getSearchData();
+    }
   }, [searchUrl]);
 
   //get lecturer data and create options
@@ -81,76 +108,112 @@ export default function VideoSelectionPage({ allVideoData }) {
     );
   } else
     return (
-      <>
-        <div id="video-selection-wrapper">
-          <FilterBox
-            lecturerData={lecturerData}
-            weekData={weekData}
-            tagData={tagData}
-          />
-          <div id="video-selection-box">
-            <Row>
-              <Space wrap size="middle">
+      <Row justify="center">
+        <Col span={23}>
+          <Layout>
+            <Sider width={266} theme="light">
+              <FilterBox
+                lecturerData={lecturerData}
+                weekData={weekData}
+                tagData={tagData}
+              />
+            </Sider>
+
+            <Content style={{ backgroundColor: "#fff" }}>
+              {!!!searchUrl && (
+                <Pagination
+                  onChange={(page, pageSize) => {
+                    setPaging({ position: page, paging: pageSize });
+                  }}
+                  total={total}
+                  current={paging.position}
+                  pageSize={paging.paging}
+                  defaultCurrent={1}
+                  defaultPageSize={15}
+                  responsive={true}
+                  pageSizeOptions={[15, 20, 25]}
+                  style={{ marginBottom: "8px" }}
+                  showSizeChanger
+                />
+              )}
+              <ul
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))",
+                  position: "relative",
+                  padding: "0",
+                  listStyle: "none",
+                }}
+              >
                 {videoData.map((data) => {
                   return (
-                    <Col key={data.id}>
+                    <li
+                      key={data.id}
+                      style={{
+                        padding: "0",
+                        listStyle: "none",
+                        minWidth: "150px",
+                        maxWidth: "600px",
+                        marginRight: "1.5em",
+                        marginBottom: "3em",
+                      }}
+                    >
                       <Card
-                        style={{
-                          width: 250,
-                          minHeight: 280,
-                        }}
                         bodyStyle={{ padding: "3px 3px" }}
                         bordered={false}
-                        className="video-card"
                         cover={
                           <Link to={`/videoviewer/${data.id}`}>
                             <img
                               alt="placeholder"
                               src={data.thumbnail_url}
-                              style={{ width: 250, border: "1px solid #ccc" }}
+                              style={{
+                                width: "100%",
+                                margin: "0px",
+                                padding: "0px",
+                              }}
                             />
                           </Link>
                         }
                       >
-                        <h3 style={{ marginBottom: 9 }}>
+                        <h3 style={{ marginBottom: 0 }}>
                           {`Week ${data.bootcamp_week}`}: {data.title}
                         </h3>
-                        <p style={{ marginBottom: 2 }}>
+                        <p style={{ marginBottom: 10 }}>
                           {data.lecturer} on{" "}
                           {moment(data.lecture_date).format("DD MMM YYYY")}
                         </p>
-                        <div className="card-tag-container">
-                          {data.tags.map((tag) => (
-                            <CheckableTag
-                              key={tag}
-                              checked={tagState.selectedTags.indexOf(tag) > -1}
-                              onChange={(checked) => {
-                                handleTagChange(tag, checked);
-                              }}
-                              style={{
-                                margin: "0px",
-                                padding: "0px 3px",
-                                border: "none",
-                                fontSize: "13px",
-                                color:
-                                  tagState.selectedTags.indexOf(tag) > -1
-                                    ? "#fff"
-                                    : "#40a9ff",
-                              }}
-                            >
-                              {`#${tag}`}
-                            </CheckableTag>
-                          ))}
-                        </div>
+
+                        {data.tags.map((tag) => (
+                          <CheckableTag
+                            key={tag}
+                            checked={tagState.selectedTags.indexOf(tag) > -1}
+                            onChange={(checked) => {
+                              handleTagChange(tag, checked);
+                            }}
+                            style={{
+                              userSelect: "none",
+                              margin: "0px",
+                              padding: "0px 3px",
+                              border: "none",
+                              fontSize: "1em",
+                              color:
+                                tagState.selectedTags.indexOf(tag) > -1
+                                  ? "#fff"
+                                  : "#40a9ff",
+                            }}
+                          >
+                            {`#${tag}`}
+                          </CheckableTag>
+                        ))}
                       </Card>
-                    </Col>
+                    </li>
                   );
                 })}
-              </Space>
-            </Row>
-          </div>
-        </div>
-      </>
+              </ul>
+            </Content>
+          </Layout>
+        </Col>
+      </Row>
     );
 }
 //<Tag key={tag}>{tag}</Tag>
